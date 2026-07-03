@@ -322,7 +322,7 @@ function renderVia(k,q){
   var dc=DC[k]||DC.tot;
   var rows=_fV.map(function(d,i){
     var ds=calcDias(d);
-    return "<tr onclick="abrirVia("+i+")">"
+    return "<tr onclick='abrirVia('+i+')'>"
       +"<td class="nowrap">"+esc(d.cli||"-")+"</td>"
       +"<td class="nowrap">"+esc(d.rem||"-")+"</td>"
       +"<td class="nowrap">"+ivB(d.iv)+"</td>"
@@ -359,19 +359,20 @@ function renderMan(q){
       if(dm<0)dm=0;
     }
     var cl=dl?"dk dk-ok":((pD(m.prev)&&(hj-pD(m.prev))>0)?"dk dk-a":"dk dk-w");
-    return "<tr onclick="abrirMan("+i+")">"
-      +"<td class="nowrap"><span class="placa">"+esc(m.pcav||"-")+"</span></td>"
-      +"<td class="nowrap">"+esc(m.km||"-")+"</td>"
-      +"<td class="nowrap"><span class="placa-man">"+esc(m.pman||"-")+"</span></td>"
-      +"<td class="nowrap"><span class="os-num">"+esc(m.os||"-")+"</span></td>"
-      +"<td class="nowrap"><span class="dc">"+fD(m.dtab)+"</span></td>"
-      +"<td class="wrap-serv">"+esc(m.serv||"-")+"</td>"
-      +"<td class="nowrap"><span class="dc">"+fD(m.dtch)+"</span></td>"
-      +"<td class="nowrap"><span class="dc">"+fD(m.dtin)+"</span></td>"
-      +"<td class="nowrap"><span class="dc">"+fD(m.prev)+"</span></td>"
-      +"<td class="nowrap">"+(dl?"<span class="dk dk-ok">"+fD(m.dtlib)+"</span>":"<span class="dk-n">Em aberto</span>")+"</td>"
-      +"<td class="nowrap">"+(dm!==null?"<span class=""+cl+"">"+dm+"d</span>":"<span class="dk-n">-</span>")+"</td>"
-      +"</tr>";
+    var r='<tr onclick="abrirMan('+i+')">';
+    r+='<td><span class="placa">'+esc(m.pcav||'-')+'</span></td>';
+    r+='<td>'+esc(m.km||'-')+'</td>';
+    r+='<td><span class="placa-man">'+esc(m.pman||'-')+'</span></td>';
+    r+='<td><span class="os-num">'+esc(m.os||'-')+'</span></td>';
+    r+='<td><span class="dc">'+fD(m.dtab)+'</span></td>';
+    r+='<td class="wrap-serv">'+esc(m.serv||'-')+'</td>';
+    r+='<td><span class="dc">'+fD(m.dtch)+'</span></td>';
+    r+='<td><span class="dc">'+fD(m.dtin)+'</span></td>';
+    r+='<td><span class="dc">'+fD(m.prev)+'</span></td>';
+    r+='<td>'+(dl?'<span class="dk dk-ok">'+fD(m.dtlib)+'</span>':'<span class="dk-n">Em aberto</span>')+'</td>';
+    r+='<td>'+(dm!==null?'<span class="'+cl+'">'+dm+'d</span>':'<span class="dk-n">-</span>')+'</td>';
+    r+='</tr>';
+    return r;
   }).join("");
   document.getElementById("tc").innerHTML="<table style="min-width:1300px"><thead><tr>"
     +"<th>Placa Cavalo</th><th>KM</th><th>Placa Manut.</th><th>N. OS</th>"
