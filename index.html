@@ -12,7 +12,7 @@ html,body{height:100%;font-family:Arial,Helvetica,sans-serif;background:#F0EFEC;
 body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .topbar{background:#fff;border-bottom:1px solid #DDD9D0;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0;z-index:200}
 .tl{display:flex;align-items:center;gap:14px}
-.logo-box{background:#E8521A;border-radius:8px;padding:6px 12px;display:flex;align-items:center}
+.logo-box{background:#E8521A;border-radius:8px;padding:6px 12px}
 .logo-box span{font-size:13px;font-weight:700;color:#fff;letter-spacing:.02em}
 .tdiv{width:1px;height:34px;background:#DDD9D0}
 .tt h1{font-size:15px;font-weight:700;color:#1A1A18;margin:0}
@@ -32,8 +32,8 @@ body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.08)}
 .card.active{box-shadow:0 4px 14px rgba(0,0,0,.1)}
 .card-lbl{font-size:10px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
-.card-val{font-size:26px;font-weight:700;color:#1A1A18;line-height:1;margin-bottom:3px}
-.card-pct{font-size:11px;font-weight:600;color:#99968F;margin-bottom:2px}
+.card-val{font-size:26px;font-weight:700;color:#1A1A18;line-height:1;margin-bottom:2px}
+.card-pct{font-size:11px;font-weight:600;color:#99968F;margin-bottom:3px}
 .card-sub{font-size:10px;color:#99968F}
 .card-mark{position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:0 0 10px 10px;opacity:0}
 .card.active .card-mark{opacity:1}
@@ -62,13 +62,11 @@ table{width:100%;border-collapse:collapse;min-width:1400px}
 thead tr{background:#F0EFEC}
 thead th{position:sticky;top:0;z-index:10;background:#F0EFEC}
 th{text-align:left;font-size:10px;font-weight:700;color:#1A1A18;text-transform:uppercase;letter-spacing:.05em;padding:9px 11px;border-bottom:1px solid #DDD9D0;white-space:nowrap}
-td{font-size:12px;padding:9px 11px;border-bottom:1px solid #E8E5DF;color:#1A1A18;vertical-align:middle}
+td{font-size:12px;padding:9px 11px;border-bottom:1px solid #E8E5DF;color:#1A1A18;vertical-align:middle;white-space:nowrap}
+td.wrap-serv{white-space:normal;min-width:180px;max-width:260px;word-break:break-word;line-height:1.4}
 tbody tr:last-child td{border-bottom:none}
 tbody tr{cursor:pointer;transition:background .1s}
 tbody tr:hover td{background:#FFF8F3}
-/* celulas normais sem quebra, exceto servico */
-td.nowrap{white-space:nowrap}
-td.wrap-serv{white-space:normal;min-width:180px;max-width:260px;word-break:break-word;line-height:1.4}
 .placa{font-family:'Courier New',monospace;font-size:11px;font-weight:700;background:#F0EFEC;border:1px solid #DDD9D0;padding:2px 8px;border-radius:5px;display:inline-block;letter-spacing:.04em}
 .placa-man{font-family:'Courier New',monospace;font-size:11px;font-weight:700;background:#FEE2E2;border:1px solid #FECACA;padding:2px 8px;border-radius:5px;display:inline-block;color:#9F1239}
 .cte{font-family:'Courier New',monospace;font-size:11px;color:#6B21A8;font-weight:600}
@@ -261,104 +259,213 @@ td.wrap-serv{white-space:normal;min-width:180px;max-width:260px;word-break:break
 </div>
 <div class="toast" id="toast"></div>
 <script>
-var _D=[],_M=[],_card="tot",_vaz=false,_ivF="ambos",_fV=[],_fM=[],_tot=0;
+
+var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_tot=0;
 window.onload=function(){buscar();};
+
 function buscar(){
-  document.getElementById("tc").innerHTML='<div class="empty">Buscando dados...</div>';
+  document.getElementById('tc').innerHTML='<div class="empty">Buscando dados...</div>';
   var p=[];
-  p.push(fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=0&single=true&output=csv").then(function(r){return r.text();}).then(function(csv){
-    var lns=csv.trim().split("\n").slice(1);
-    _D=lns.map(function(l){var c=pCSV(l);return{cli:c[0]||"",rem:c[1]||"",iv:c[2]||"",placa:(c[3]||"").replace(/-/g,""),tipo:c[4]||"",mot:c[5]||"",prod:c[6]||"",ori:c[7]||"",dst:c[8]||"",cte:c[9]||"",d1:c[10]||"",d2:c[11]||"",d3:c[12]||"",d4:c[13]||"",d5:c[14]||"",d6:c[15]||"",d7:c[16]||"",d8:c[17]||"",st:c[18]||""};}).filter(function(d){return d.placa;});
+  p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=0&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
+    var lns=csv.trim().split('\n').slice(1);
+    _D=lns.map(function(l){
+      var c=pCSV(l);
+      return {cli:c[0]||'',rem:c[1]||'',iv:c[2]||'',
+        placa:(c[3]||'').replace(/-/g,''),tipo:c[4]||'',mot:c[5]||'',
+        prod:c[6]||'',ori:c[7]||'',dst:c[8]||'',cte:c[9]||'',
+        d1:c[10]||'',d2:c[11]||'',d3:c[12]||'',d4:c[13]||'',
+        d5:c[14]||'',d6:c[15]||'',d7:c[16]||'',d8:c[17]||'',st:c[18]||''};
+    }).filter(function(d){return d.placa;});
   }).catch(function(){_D=[];}));
-  p.push(fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv").then(function(r){return r.text();}).then(function(csv){
-    var lns=csv.trim().split("\n").slice(1);
-    _M=lns.map(function(l){var c=pCSV(l);return{pcav:c[0]||"",km:c[1]||"",pman:c[2]||"",os:c[3]||"",dtab:c[4]||"",serv:c[5]||"",dtch:c[6]||"",dtin:c[7]||"",prev:c[8]||"",dtlib:c[9]||""};}).filter(function(m){return m.pcav||m.os;});
+
+  p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
+    var lns=csv.trim().split('\n').slice(1);
+    _M=lns.map(function(l){
+      var c=pCSV(l);
+      return {pcav:c[0]||'',km:c[1]||'',pman:c[2]||'',os:c[3]||'',
+        dtab:c[4]||'',serv:c[5]||'',dtch:c[6]||'',dtin:c[7]||'',
+        prev:c[8]||'',dtlib:c[9]||''};
+    }).filter(function(m){return m.pcav||m.os;});
   }).catch(function(){_M=[];}));
+
   Promise.all(p).then(function(){
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=615595234&single=true&output=csv").then(function(r){return r.text();}).then(function(csv){
-      var n=csv.trim().split("\n").slice(1).filter(function(l){var c=pCSV(l);return(c[1]||"").toLowerCase().trim()==="ativada";}).length;
+    fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=615595234&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
+      var n=csv.trim().split('\n').slice(1).filter(function(l){
+        var c=pCSV(l);return (c[1]||'').toLowerCase().trim()==='ativada';
+      }).length;
       _tot=n||(_D.length+_M.length);
       aCards(true,n);renderTab();setTs();
     }).catch(function(){_tot=_D.length+_M.length;aCards(false,0);renderTab();setTs();});
   });
 }
-function pCSV(l){var r=[],c="",q=false;for(var i=0;i<l.length;i++){var x=l[i];if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c.trim());c="";}else{c+=x;}}r.push(c.trim());return r;}
-function setTs(){var h=new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});document.getElementById("ts").textContent="Atualizado as "+h+" - Google Sheets";}
-function pct(n){if(!_tot||_tot===0)return"0%";return Math.round((n/_tot)*100)+"%";}
-function mSt(s,k){var v=(s||"").toLowerCase().trim();if(k==="agc")return v.indexOf("carregamento")>=0;if(k==="agi")return v.indexOf("nicio")>=0;if(k==="via")return v==="em viagem"||v==="viagem";if(k==="agd")return v.indexOf("descarga")>=0||v.indexOf("descarregamento")>=0;if(k==="vaz")return v==="vazio";return true;}
+
+function pCSV(l){
+  var r=[],c='',q=false;
+  for(var i=0;i<l.length;i++){
+    var x=l[i];
+    if(x==='"'){q=!q;}
+    else if(x===','&&!q){r.push(c.trim());c='';}
+    else{c+=x;}
+  }
+  r.push(c.trim());return r;
+}
+
+function setTs(){
+  var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('ts').textContent='Atualizado as '+h+' - Google Sheets';
+}
+
+function pct(n){
+  if(!_tot||_tot===0)return'0%';
+  return Math.round((n/_tot)*100)+'%';
+}
+
+function mSt(s,k){
+  var v=(s||'').toLowerCase().trim();
+  if(k==='agc')return v.indexOf('carregamento')>=0;
+  if(k==='agi')return v.indexOf('nicio')>=0;
+  if(k==='via')return v==='em viagem'||v==='viagem';
+  if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;
+  if(k==='vaz')return v==='vazio';
+  return true;
+}
+
 function aCards(u,n){
   var tot=u?n:(_D.length+_M.length);
   _tot=tot;
-  document.getElementById("v-tot").textContent=tot;
-  document.getElementById("p-tot").textContent="100%";
-  var nagc=_D.filter(function(d){return mSt(d.st,"agc");}).length;
-  var nagi=_D.filter(function(d){return mSt(d.st,"agi");}).length;
-  var nvia=_D.filter(function(d){return mSt(d.st,"via");}).length;
-  var nagd=_D.filter(function(d){return mSt(d.st,"agd");}).length;
-  var nman=_M.filter(function(m){return!m.dtlib;}).length;
-  document.getElementById("v-agc").textContent=nagc;document.getElementById("p-agc").textContent=pct(nagc);
-  document.getElementById("v-agi").textContent=nagi;document.getElementById("p-agi").textContent=pct(nagi);
-  document.getElementById("v-via").textContent=nvia;document.getElementById("p-via").textContent=pct(nvia);
-  document.getElementById("v-agd").textContent=nagd;document.getElementById("p-agd").textContent=pct(nagd);
-  document.getElementById("v-man").textContent=nman;document.getElementById("p-man").textContent=pct(nman);
+  document.getElementById('v-tot').textContent=tot;
+  document.getElementById('p-tot').textContent='100%';
+  var nagc=_D.filter(function(d){return mSt(d.st,'agc');}).length;
+  var nagi=_D.filter(function(d){return mSt(d.st,'agi');}).length;
+  var nvia=_D.filter(function(d){return mSt(d.st,'via');}).length;
+  var nagd=_D.filter(function(d){return mSt(d.st,'agd');}).length;
+  var nman=_M.filter(function(m){return !m.dtlib;}).length;
+  document.getElementById('v-agc').textContent=nagc;
+  document.getElementById('p-agc').textContent=pct(nagc);
+  document.getElementById('v-agi').textContent=nagi;
+  document.getElementById('p-agi').textContent=pct(nagi);
+  document.getElementById('v-via').textContent=nvia;
+  document.getElementById('p-via').textContent=pct(nvia);
+  document.getElementById('v-agd').textContent=nagd;
+  document.getElementById('p-agd').textContent=pct(nagd);
+  document.getElementById('v-man').textContent=nman;
+  document.getElementById('p-man').textContent=pct(nman);
 }
-var TITS={tot:{t:"Todos os veiculos",b:"Total",bc:""},agc:{t:"Ag. Carregamento",b:"Ag. Carregamento",bc:"c-agc"},agi:{t:"Ag. Inicio de Viagem",b:"Ag. Inicio Viagem",bc:"c-agi"},via:{t:"Em Viagem",b:"Em Viagem",bc:"c-via"},agd:{t:"Ag. Descarga",b:"Ag. Descarga",bc:"c-agd"},man:{t:"Veiculos em Manutencao",b:"Manutencao",bc:"c-man"}};
-var DC={agc:{col:"d2",lbl:"Dt. Chegada Origem"},agi:{col:"d2",lbl:"Dt. Chegada Origem"},via:{col:"d4",lbl:"Dt. Inicio Viagem"},agd:{col:"d6",lbl:"Dt. Chegada Destino"},tot:{col:"d1",lbl:"Dt. Agendamento"}};
-function filtrarCard(k){_card=k;["tot","agc","agi","via","agd","man"].forEach(function(c){document.getElementById("card-"+c).classList.toggle("active",c===k);});var m=k==="man";document.getElementById("btn-vaz").style.display=m?"none":"";document.getElementById("btn-iv").style.display=m?"none":"";renderTab();}
-function toggleVaz(){_vaz=!_vaz;var b=document.getElementById("btn-vaz");b.classList.toggle("on",_vaz);b.textContent=_vaz?"Ocultar Vazio":"Mostrar Vazio";renderTab();}
-function toggleIV(){if(_ivF==="ambos"){_ivF="ida";}else if(_ivF==="ida"){_ivF="volta";}else{_ivF="ambos";}var b=document.getElementById("btn-iv");if(_ivF==="ida"){b.textContent="Somente Ida";b.className="fbtn on";}else if(_ivF==="volta"){b.textContent="Somente Volta";b.className="fbtn on";}else{b.textContent="Ida e Volta";b.className="fbtn";}renderTab();}
-function renderTab(){var k=_card,tm=TITS[k];document.getElementById("tit-l").textContent=tm.t;var bg=document.getElementById("tit-b");bg.textContent=tm.b;bg.className="tbadge "+tm.bc;var q=(document.getElementById("busca").value||"").toLowerCase();if(k==="man"){renderMan(q);}else{renderVia(k,q);}}
+
+var TITS={
+  tot:{t:'Todos os veiculos',b:'Total',bc:''},
+  agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},
+  agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},
+  via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},
+  agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},
+  man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'}
+};
+var DC={
+  agc:{col:'d2',lbl:'Data Status'},
+  agi:{col:'d2',lbl:'Data Status'},
+  via:{col:'d4',lbl:'Data Status'},
+  agd:{col:'d6',lbl:'Data Status'},
+  tot:{col:'d1',lbl:'Data Status'}
+};
+
+function filtrarCard(k){
+  _card=k;
+  ['tot','agc','agi','via','agd','man'].forEach(function(c){
+    document.getElementById('card-'+c).classList.toggle('active',c===k);
+  });
+  var m=k==='man';
+  document.getElementById('btn-vaz').style.display=m?'none':'';
+  document.getElementById('btn-iv').style.display=m?'none':'';
+  renderTab();
+}
+
+function toggleVaz(){
+  _vaz=!_vaz;
+  var b=document.getElementById('btn-vaz');
+  b.classList.toggle('on',_vaz);
+  b.textContent=_vaz?'Ocultar Vazio':'Mostrar Vazio';
+  renderTab();
+}
+
+function toggleIV(){
+  if(_ivF==='ambos'){_ivF='ida';}
+  else if(_ivF==='ida'){_ivF='volta';}
+  else{_ivF='ambos';}
+  var b=document.getElementById('btn-iv');
+  if(_ivF==='ida'){b.textContent='Somente Ida';b.className='fbtn on';}
+  else if(_ivF==='volta'){b.textContent='Somente Volta';b.className='fbtn on';}
+  else{b.textContent='Ida e Volta';b.className='fbtn';}
+  renderTab();
+}
+
+function renderTab(){
+  var k=_card,tm=TITS[k];
+  document.getElementById('tit-l').textContent=tm.t;
+  var bg=document.getElementById('tit-b');
+  bg.textContent=tm.b;bg.className='tbadge '+tm.bc;
+  var q=(document.getElementById('busca').value||'').toLowerCase();
+  if(k==='man'){renderMan(q);}else{renderVia(k,q);}
+}
+
 function renderVia(k,q){
   _fV=_D.filter(function(d){
-    if(mSt(d.st,"vaz")&&!_vaz)return false;
-    if(k!=="tot"&&!mSt(d.st,k))return false;
-    if(_ivF==="ida"&&(d.iv||"").toLowerCase()!=="ida")return false;
-    if(_ivF==="volta"&&(d.iv||"").toLowerCase()!=="volta")return false;
+    if(mSt(d.st,'vaz')&&!_vaz)return false;
+    if(k!=='tot'&&!mSt(d.st,k))return false;
+    if(_ivF==='ida'&&(d.iv||'').toLowerCase()!=='ida')return false;
+    if(_ivF==='volta'&&(d.iv||'').toLowerCase()!=='volta')return false;
     if(q&&(d.cli+d.placa+d.mot+d.rem+d.prod+d.ori+d.dst+d.cte).toLowerCase().indexOf(q)<0)return false;
     return true;
   });
-  document.getElementById("rc").textContent=_fV.length+" registro"+(_fV.length!==1?"s":"");
-  if(!_fV.length){document.getElementById("tc").innerHTML='<div class="empty">Nenhum registro encontrado.</div>';return;}
+  document.getElementById('rc').textContent=_fV.length+' registro'+(_fV.length!==1?'s':'');
+  if(!_fV.length){
+    document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro encontrado.</div>';
+    return;
+  }
   var dc=DC[k]||DC.tot;
   var rows=_fV.map(function(d,i){
     var ds=calcDias(d);
-    return "<tr onclick='abrirVia('+i+')'>"
-      +"<td class="nowrap">"+esc(d.cli||"-")+"</td>"
-      +"<td class="nowrap">"+esc(d.rem||"-")+"</td>"
-      +"<td class="nowrap">"+ivB(d.iv)+"</td>"
-      +"<td class="nowrap"><span class="placa">"+esc(d.placa)+"</span></td>"
-      +"<td class="nowrap">"+esc(d.tipo||"-")+"</td>"
-      +"<td class="nowrap">"+esc(d.mot||"-")+"</td>"
-      +"<td class="nowrap">"+esc(d.prod||"-")+"</td>"
-      +"<td class="nowrap">"+esc(d.ori||"-")+"</td>"
-      +"<td class="nowrap">"+esc(d.dst||"-")+"</td>"
-      +"<td class="nowrap"><span class="cte">"+esc(d.cte||"-")+"</span></td>"
-      +"<td class="nowrap"><span class="dc">"+fD(d[dc.col]||"")+"</span></td>"
-      +"<td class="nowrap">"+dB(ds)+"</td>"
-      +"<td class="nowrap"><span class="sp "+sC(d.st)+"">"+esc(d.st||"-")+"</span></td>"
-      +"</tr>";
-  }).join("");
-  document.getElementById("tc").innerHTML="<table><thead><tr>"
-    +"<th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th><th>Tipo Veiculo</th>"
-    +"<th>Motorista</th><th>Produto</th><th>Origem</th><th>Destino</th>"
-    +"<th>ID CTE</th><th>Data Status</th><th>Dias Status</th><th>Status</th>"
-    +"</tr></thead><tbody>"+rows+"</tbody></table>";
+    var r='<tr onclick="abrirVia('+i+')">';
+    r+='<td>'+esc(d.cli||'-')+'</td>';
+    r+='<td>'+esc(d.rem||'-')+'</td>';
+    r+='<td>'+ivB(d.iv)+'</td>';
+    r+='<td><span class="placa">'+esc(d.placa)+'</span></td>';
+    r+='<td>'+esc(d.tipo||'-')+'</td>';
+    r+='<td>'+esc(d.mot||'-')+'</td>';
+    r+='<td>'+esc(d.prod||'-')+'</td>';
+    r+='<td>'+esc(d.ori||'-')+'</td>';
+    r+='<td>'+esc(d.dst||'-')+'</td>';
+    r+='<td><span class="cte">'+esc(d.cte||'-')+'</span></td>';
+    r+='<td><span class="dc">'+fD(d[dc.col]||'')+'</span></td>';
+    r+='<td>'+dB(ds)+'</td>';
+    r+='<td><span class="sp '+sC(d.st)+'">'+esc(d.st||'-')+'</span></td>';
+    r+='</tr>';
+    return r;
+  }).join('');
+  document.getElementById('tc').innerHTML=
+    '<table><thead><tr>'
+    +'<th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th>'
+    +'<th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th>'
+    +'<th>Origem</th><th>Destino</th><th>ID CTE</th>'
+    +'<th>Data Status</th><th>Dias Status</th><th>Status</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
+
 function renderMan(q){
-  _fM=_M.filter(function(m){if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;return true;});
-  document.getElementById("rc").textContent=_fM.length+" registro"+(_fM.length!==1?"s":"");
-  if(!_fM.length){document.getElementById("tc").innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
+  _fM=_M.filter(function(m){
+    if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
+  if(!_fM.length){
+    document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';
+    return;
+  }
   var hj=new Date();hj.setHours(0,0,0,0);
   var rows=_fM.map(function(m,i){
-    var di=pD(m.dtin),dl=pD(m.dtlib);
-    // Dias em manutencao: dtin -> dtlib se tiver, senao dtin -> hoje
+    var di=pD(m.dtin),dl=pD(m.dtlib),dp=pD(m.prev);
     var dm=null;
-    if(di){
-      var fim=dl?dl:hj;
-      dm=Math.round((fim-di)/86400000);
-      if(dm<0)dm=0;
-    }
-    var cl=dl?"dk dk-ok":((pD(m.prev)&&(hj-pD(m.prev))>0)?"dk dk-a":"dk dk-w");
+    if(di){var fim=dl?dl:hj;dm=Math.round((fim-di)/86400000);if(dm<0)dm=0;}
+    var cl=dl?'dk dk-ok':(dp&&(hj-dp)>0?'dk dk-a':'dk dk-w');
     var r='<tr onclick="abrirMan('+i+')">';
     r+='<td><span class="placa">'+esc(m.pcav||'-')+'</span></td>';
     r+='<td>'+esc(m.km||'-')+'</td>';
@@ -373,135 +480,158 @@ function renderMan(q){
     r+='<td>'+(dm!==null?'<span class="'+cl+'">'+dm+'d</span>':'<span class="dk-n">-</span>')+'</td>';
     r+='</tr>';
     return r;
-  }).join("");
-  document.getElementById("tc").innerHTML="<table style="min-width:1300px"><thead><tr>"
-    +"<th>Placa Cavalo</th><th>KM</th><th>Placa Manut.</th><th>N. OS</th>"
-    +"<th>Dt. Abertura OS</th><th>Servico</th><th>Dt. Chegada</th>"
-    +"<th>Dt. Inicial</th><th>Prev. Liberacao</th><th>Dt. Liberacao</th>"
-    +"<th>Dias em Manut.</th>"
-    +"</tr></thead><tbody>"+rows+"</tbody></table>";
+  }).join('');
+  document.getElementById('tc').innerHTML=
+    '<table style="min-width:1300px"><thead><tr>'
+    +'<th>Placa Cavalo</th><th>KM</th><th>Placa Manut.</th><th>N. OS</th>'
+    +'<th>Dt. Abertura OS</th><th>Servico</th><th>Dt. Chegada</th>'
+    +'<th>Dt. Inicial</th><th>Prev. Liberacao</th><th>Dt. Liberacao</th>'
+    +'<th>Dias em Manut.</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function calcDias(d){var v=(d.st||"").toLowerCase(),r="";if(v.indexOf("carregamento")>=0)r=d.d2||d.d1;else if(v.indexOf("nicio")>=0)r=d.d3||d.d2;else if(v==="em viagem")r=d.d4;else if(v.indexOf("descarga")>=0)r=d.d6;else r=d.d1;if(!r)return null;var dt=pD(r);if(!dt)return null;var hj=new Date();hj.setHours(0,0,0,0);var df=Math.round((hj-dt)/86400000);return df>0?df-1:0;}
+
+function calcDias(d){
+  var v=(d.st||'').toLowerCase(),r='';
+  if(v.indexOf('carregamento')>=0)r=d.d2||d.d1;
+  else if(v.indexOf('nicio')>=0)r=d.d3||d.d2;
+  else if(v==='em viagem')r=d.d4;
+  else if(v.indexOf('descarga')>=0)r=d.d6;
+  else r=d.d1;
+  if(!r)return null;
+  var dt=pD(r);if(!dt)return null;
+  var hj=new Date();hj.setHours(0,0,0,0);
+  var df=Math.round((hj-dt)/86400000);
+  return df>0?df-1:0;
+}
+
 function abrirVia(i){
   var d=_fV[i];if(!d)return;
   var hj=new Date();hj.setHours(0,0,0,0);
   var sc=sC(d.st);
-  document.getElementById("pp-strip").className="pp-strip "+sc;
-  document.getElementById("pv-placa").textContent=d.placa;
-  document.getElementById("pv-mot").textContent=d.mot||"-";
-  document.getElementById("pv-tipo").textContent=d.tipo||"-";
-  var se=document.getElementById("pv-st");se.textContent=d.st||"-";se.className="sp "+sc;
-  document.getElementById("pv-ori").textContent=d.ori||"-";
-  document.getElementById("pv-dst").textContent=d.dst||"-";
-  document.getElementById("pv-prod").textContent=d.prod||"-";
-  document.getElementById("pv-cte").textContent=d.cte||"-";
-  document.getElementById("pv-rem").textContent=d.rem||"-";
-  document.getElementById("pv-cte2").textContent=d.cte||"-";
-  document.getElementById("pv-rem2").textContent=d.rem||"-";
-  document.getElementById("pv-cli").textContent=d.cli||"-";
-  var iv=document.getElementById("pv-iv");
-  var vv=(d.iv||"").toLowerCase();
-  if(vv==="ida"){iv.textContent="Ida";iv.className="pp-box-val";iv.style.color="#854D0E";}
-  else if(vv==="volta"){iv.textContent="Volta";iv.className="pp-box-val";iv.style.color="#075985";}
-  else{iv.textContent="-";iv.className="pp-box-val nd";iv.style.color="";}
+  document.getElementById('pp-strip').className='pp-strip '+sc;
+  document.getElementById('pv-placa').textContent=d.placa;
+  document.getElementById('pv-mot').textContent=d.mot||'-';
+  document.getElementById('pv-tipo').textContent=d.tipo||'-';
+  var se=document.getElementById('pv-st');se.textContent=d.st||'-';se.className='sp '+sc;
+  document.getElementById('pv-ori').textContent=d.ori||'-';
+  document.getElementById('pv-dst').textContent=d.dst||'-';
+  document.getElementById('pv-prod').textContent=d.prod||'-';
+  document.getElementById('pv-cte').textContent=d.cte||'-';
+  document.getElementById('pv-rem').textContent=d.rem||'-';
+  document.getElementById('pv-cte2').textContent=d.cte||'-';
+  document.getElementById('pv-rem2').textContent=d.rem||'-';
+  document.getElementById('pv-cli').textContent=d.cli||'-';
+  var iv=document.getElementById('pv-iv');
+  var vv=(d.iv||'').toLowerCase();
+  if(vv==='ida'){iv.textContent='Ida';iv.className='pp-box-val';iv.style.color='#854D0E';}
+  else if(vv==='volta'){iv.textContent='Volta';iv.className='pp-box-val';iv.style.color='#075985';}
+  else{iv.textContent='-';iv.className='pp-box-val nd';iv.style.color='';}
   var ds=calcDias(d);
-  var de=document.getElementById("pv-dias");
-  if(ds===null){de.textContent="-";de.className="pp-box-val nd";}
-  else if(ds<=2){de.textContent=ds+"d";de.className="pp-box-val grn";}
-  else if(ds<=6){de.textContent=ds+"d";de.className="pp-box-val amb";}
-  else{de.textContent=ds+"d";de.className="pp-box-val red";}
+  var de=document.getElementById('pv-dias');
+  if(ds===null){de.textContent='-';de.className='pp-box-val nd';}
+  else if(ds<=2){de.textContent=ds+'d';de.className='pp-box-val grn';}
+  else if(ds<=6){de.textContent=ds+'d';de.className='pp-box-val amb';}
+  else{de.textContent=ds+'d';de.className='pp-box-val red';}
   var DT=[
-    {lbl:"Data de Agendamento",val:d.d1,ag:null},
-    {lbl:"Data Chegada na Origem",val:d.d2,ag:null},
-    {lbl:"Data do Carregamento",val:d.d3,ag:null},
-    {lbl:"Data Inicio de Viagem",val:d.d4,ag:null},
-    {lbl:"Data Previsao de Chegada",val:d.d5,ag:null},
-    {lbl:"Data de Chegada ao Destino",val:d.d6,ag:d.d5},
-    {lbl:"Data de Agendamento de Entrega",val:d.d7,ag:null},
-    {lbl:"Data do Descarregamento",val:d.d8,ag:null}
+    {lbl:'Data de Agendamento',val:d.d1,ag:null},
+    {lbl:'Data Chegada na Origem',val:d.d2,ag:null},
+    {lbl:'Data do Carregamento',val:d.d3,ag:null},
+    {lbl:'Data Inicio de Viagem',val:d.d4,ag:null},
+    {lbl:'Data Previsao de Chegada',val:d.d5,ag:null},
+    {lbl:'Data de Chegada ao Destino',val:d.d6,ag:d.d5},
+    {lbl:'Data de Agendamento de Entrega',val:d.d7,ag:null},
+    {lbl:'Data do Descarregamento',val:d.d8,ag:null}
   ];
-  document.getElementById("pv-lista").innerHTML=bTL(DT,hj);
-  document.getElementById("ov-via").classList.add("show");
-  document.body.style.overflow="hidden";
+  document.getElementById('pv-lista').innerHTML=bTL(DT,hj);
+  document.getElementById('ov-via').classList.add('show');
+  document.body.style.overflow='hidden';
 }
+
 function abrirMan(i){
   var m=_fM[i];if(!m)return;
   var hj=new Date();hj.setHours(0,0,0,0);
-  document.getElementById("pm-cav").textContent=m.pcav||"-";
-  document.getElementById("pm-pman").textContent=m.pman||"-";
-  document.getElementById("pm-os").textContent=m.os||"-";
-  document.getElementById("pm-serv").textContent=m.serv||"-";
-  document.getElementById("pm-fc").textContent=m.pcav||"-";
-  document.getElementById("pm-fm").textContent=m.pman||"-";
-  document.getElementById("pm-fos").textContent=m.os||"-";
+  document.getElementById('pm-cav').textContent=m.pcav||'-';
+  document.getElementById('pm-pman').textContent=m.pman||'-';
+  document.getElementById('pm-os').textContent=m.os||'-';
+  document.getElementById('pm-serv').textContent=m.serv||'-';
+  document.getElementById('pm-fc').textContent=m.pcav||'-';
+  document.getElementById('pm-fm').textContent=m.pman||'-';
+  document.getElementById('pm-fos').textContent=m.os||'-';
   var di=pD(m.dtin),dl=pD(m.dtlib),dp=pD(m.prev);
-  // Dias em manutencao: dtin -> dtlib (se tiver), senao dtin -> hoje
   var dm=null;
   if(di){var fim=dl?dl:hj;dm=Math.round((fim-di)/86400000);if(dm<0)dm=0;}
-  var de=document.getElementById("pm-dtot");
-  if(dm===null){de.textContent="-";de.className="pp-box-val nd";}
-  else if(dm<=5){de.textContent=dm+"d";de.className="pp-box-val grn";}
-  else if(dm<=15){de.textContent=dm+"d";de.className="pp-box-val amb";}
-  else{de.textContent=dm+"d";de.className="pp-box-val red";}
-  var pe=document.getElementById("pm-dprev");
-  if(dl){pe.textContent="Liberado";pe.className="pp-box-val grn";}
+  var de=document.getElementById('pm-dtot');
+  if(dm===null){de.textContent='-';de.className='pp-box-val nd';}
+  else if(dm<=5){de.textContent=dm+'d';de.className='pp-box-val grn';}
+  else if(dm<=15){de.textContent=dm+'d';de.className='pp-box-val amb';}
+  else{de.textContent=dm+'d';de.className='pp-box-val red';}
+  var pe=document.getElementById('pm-dprev');
+  if(dl){pe.textContent='Liberado';pe.className='pp-box-val grn';}
   else if(dp){
     var d2=Math.round((dp-hj)/86400000);
-    if(d2<0){pe.textContent="Atrasado "+Math.abs(d2)+"d";pe.className="pp-box-val red";}
-    else if(d2===0){pe.textContent="Hoje";pe.className="pp-box-val amb";}
-    else{pe.textContent=d2+"d restantes";pe.className="pp-box-val amb";}
-  }else{pe.textContent="-";pe.className="pp-box-val nd";}
-  var sit=document.getElementById("pm-sit");
-  if(dl){sit.textContent="Liberado em "+fD(m.dtlib);sit.className="pp-box-val grn";}
-  else if(dp&&dp<hj){sit.textContent="Em atraso";sit.className="pp-box-val red";}
-  else{sit.textContent="Em andamento";sit.className="pp-box-val amb";}
+    if(d2<0){pe.textContent='Atrasado '+Math.abs(d2)+'d';pe.className='pp-box-val red';}
+    else if(d2===0){pe.textContent='Hoje';pe.className='pp-box-val amb';}
+    else{pe.textContent=d2+'d restantes';pe.className='pp-box-val amb';}
+  }else{pe.textContent='-';pe.className='pp-box-val nd';}
+  var sit=document.getElementById('pm-sit');
+  if(dl){sit.textContent='Liberado em '+fD(m.dtlib);sit.className='pp-box-val grn';}
+  else if(dp&&dp<hj){sit.textContent='Em atraso';sit.className='pp-box-val red';}
+  else{sit.textContent='Em andamento';sit.className='pp-box-val amb';}
   var DT=[
-    {lbl:"Abertura da OS",val:m.dtab,ag:null},
-    {lbl:"Chegada do Veiculo",val:m.dtch,ag:null},
-    {lbl:"Inicio do Servico",val:m.dtin,ag:null},
-    {lbl:"Prev. de Liberacao",val:m.prev,ag:null},
-    {lbl:"Liberacao Real",val:m.dtlib,ag:m.prev}
+    {lbl:'Abertura da OS',val:m.dtab,ag:null},
+    {lbl:'Chegada do Veiculo',val:m.dtch,ag:null},
+    {lbl:'Inicio do Servico',val:m.dtin,ag:null},
+    {lbl:'Prev. de Liberacao',val:m.prev,ag:null},
+    {lbl:'Liberacao Real',val:m.dtlib,ag:m.prev}
   ];
-  document.getElementById("pm-lista").innerHTML=bTL(DT,hj);
-  document.getElementById("ov-man").classList.add("show");
-  document.body.style.overflow="hidden";
+  document.getElementById('pm-lista').innerHTML=bTL(DT,hj);
+  document.getElementById('ov-man').classList.add('show');
+  document.body.style.overflow='hidden';
 }
+
 function bTL(dts,hj){
-  var h="";
-  dts.forEach(function(it,i){
+  var h='';
+  dts.forEach(function(it,idx){
     var dt=pD(it.val);
-    var cl=dt?((dt<=hj)?"ok":"pend"):"pend";
-    var tg="";
+    var cl=dt?((dt<=hj)?'ok':'pend'):'pend';
+    var tg='';
     if(it.ag){
       var dp=pD(it.ag);
       if(dt&&dp){
         var df=Math.round((dt-dp)/86400000);
         if(df===0)tg='<span class="tag tag-ok">No prazo</span>';
-        else if(df>0){cl="atr";tg='<span class="tag tag-atr">+'+df+'d atraso</span>';}
+        else if(df>0){cl='atr';tg='<span class="tag tag-atr">+'+df+'d atraso</span>';}
         else tg='<span class="tag tag-ok">'+Math.abs(df)+'d adiantado</span>';
       }else if(!dt){
-        if(dp&&dp<hj){cl="atr";var da=Math.round((hj-dp)/86400000);tg='<span class="tag tag-atr">+'+da+'d sem data</span>';}
+        if(dp&&dp<hj){cl='atr';var da=Math.round((hj-dp)/86400000);tg='<span class="tag tag-atr">+'+da+'d sem data</span>';}
         else tg='<span class="tag tag-pend">Aguardando</span>';
       }
     }
-    h+='<div class="pp-row '+cl+'"><div class="pp-num">'+(i+1)+'</div>'
-      +'<span class="pp-row-lbl">'+it.lbl+'</span>'
-      +'<span class="pp-row-val'+(dt?'':" nd")+'">'+(dt?fD(it.val):"-")+'</span>'
-      +tg+'</div>';
+    h+='<div class="pp-row '+cl+'">';
+    h+='<div class="pp-num">'+(idx+1)+'</div>';
+    h+='<span class="pp-row-lbl">'+it.lbl+'</span>';
+    h+='<span class="pp-row-val'+(dt?'':' nd')+'">'+(dt?fD(it.val):'-')+'</span>';
+    h+=tg+'</div>';
   });
   return h;
 }
-function fechar(id){document.getElementById(id).classList.remove("show");document.body.style.overflow="";}
+
+function fechar(id){document.getElementById(id).classList.remove('show');document.body.style.overflow='';}
 function fecharFora(ev,id){if(ev.target===document.getElementById(id))fechar(id);}
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){fechar("ov-via");fechar("ov-man");}});
-function ivB(iv){var v=(iv||"").toLowerCase().trim();if(v==="ida")return'<span class="iv-ida">Ida</span>';if(v==="volta")return'<span class="iv-volta">Volta</span>';return'<span class="iv-nd">-</span>';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');}});
+function ivB(iv){var v=(iv||'').toLowerCase().trim();if(v==='ida')return'<span class="iv-ida">Ida</span>';if(v==='volta')return'<span class="iv-volta">Volta</span>';return'<span class="iv-nd">-</span>';}
 function dB(n){if(n===null)return'<span class="dk-n">-</span>';if(n<=2)return'<span class="dk dk-ok">'+n+'d</span>';if(n<=6)return'<span class="dk dk-w">'+n+'d</span>';return'<span class="dk dk-a">'+n+'d</span>';}
-function sC(s){var v=(s||"").toLowerCase();if(v.indexOf("carregamento")>=0)return"s-agc";if(v.indexOf("nicio")>=0)return"s-agi";if(v==="em viagem"||v==="viagem")return"s-via";if(v.indexOf("descarga")>=0)return"s-agd";if(v==="vazio")return"s-vaz";return"s-out";}
-function pD(s){if(!s)return null;var d;if(s.indexOf("/")>=0){var p=s.split("/");d=new Date(+p[2],(+p[1])-1,+p[0]);}else{d=new Date(s+"T00:00:00");}return isNaN(d.getTime())?null:d;}
-function fD(s){if(!s)return"-";var d=pD(s);if(!d)return esc(s);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"});}
-function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';if(v==='vazio')return's-vaz';return's-out';}
+function pD(s){if(!s)return null;var d;if(s.indexOf('/')>=0){var p=s.split('/');d=new Date(+p[2],(+p[1])-1,+p[0]);}else{d=new Date(s+'T00:00:00');}return isNaN(d.getTime())?null:d;}
+function fD(s){if(!s)return'-';var d=pD(s);if(!d)return esc(s);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 var seg=120;
-setInterval(function(){seg--;if(seg<=0){seg=120;buscar();}var m=Math.floor(seg/60),s=seg%60;document.getElementById("cd").textContent="Atualiza em "+m+":"+(s<10?"0":"")+s;},1000);
+setInterval(function(){
+  seg--;if(seg<=0){seg=120;buscar();}
+  var m=Math.floor(seg/60),s=seg%60;
+  document.getElementById('cd').textContent='Atualiza em '+m+':'+(s<10?'0':'')+s;
+},1000);
+
 </script>
 </body>
 </html>
