@@ -58,12 +58,12 @@ body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .vbtn:hover{background:#F0EFEC}.vbtn.on{background:#FFF7ED;border-color:#FED7AA;color:#9A3412}
 .rc{font-size:11px;color:#99968F;margin-left:auto;white-space:nowrap}
 .tov{overflow:auto;flex:1}
-table{width:100%;border-collapse:collapse;min-width:1400px}
+table{width:100%;border-collapse:collapse;min-width:1200px}
 thead tr{background:#F0EFEC}
 thead th{position:sticky;top:0;z-index:10;background:#F0EFEC}
 th{text-align:left;font-size:10px;font-weight:700;color:#1A1A18;text-transform:uppercase;letter-spacing:.05em;padding:9px 11px;border-bottom:1px solid #DDD9D0;white-space:nowrap}
 td{font-size:12px;padding:9px 11px;border-bottom:1px solid #E8E5DF;color:#1A1A18;vertical-align:middle;white-space:nowrap}
-td.wrap-serv{white-space:normal;min-width:180px;max-width:260px;word-break:break-word;line-height:1.4}
+td.wrap-serv{white-space:normal;min-width:180px;max-width:280px;word-break:break-word;line-height:1.4}
 tbody tr:last-child td{border-bottom:none}
 tbody tr{cursor:pointer;transition:background .1s}
 tbody tr:hover td{background:#FFF8F3}
@@ -78,14 +78,14 @@ tbody tr:hover td{background:#FFF8F3}
 .iv-ida{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#FEF9C3;color:#854D0E;border:1px solid #FDE68A}
 .iv-volta{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#E0F2FE;color:#075985;border:1px solid #BAE6FD}
 .iv-nd{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB}
-.dk{display:inline-block;min-width:32px;text-align:center;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px}
+.dk{display:inline-block;min-width:36px;text-align:center;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px}
 .dk-ok{background:#DCFCE7;color:#166534}.dk-w{background:#FEF3C7;color:#92400E}.dk-a{background:#FEE2E2;color:#9F1239}.dk-n{color:#99968F;font-size:11px}
 .dc{font-size:11px;color:#1A1A18}
 .empty{text-align:center;padding:48px;color:#99968F;font-size:13px}
 .tfoot{font-size:10px;color:#99968F;padding:6px 14px;text-align:right;border-top:1px solid #DDD9D0;background:#F8F7F5;flex-shrink:0}
 .overlay{display:none;position:fixed;inset:0;background:rgba(15,15,15,.55);z-index:9000;align-items:center;justify-content:center}
 .overlay.show{display:flex}
-.popup{background:#fff;border-radius:14px;box-shadow:0 24px 64px rgba(0,0,0,.2);width:540px;max-width:95vw;max-height:92vh;overflow-y:auto;position:relative}
+.popup{background:#fff;border-radius:14px;box-shadow:0 24px 64px rgba(0,0,0,.2);width:560px;max-width:95vw;max-height:92vh;overflow-y:auto;position:relative}
 .pp-strip{height:5px;border-radius:14px 14px 0 0}
 .pp-strip.s-agc{background:linear-gradient(90deg,#F59E0B,#D97706)}
 .pp-strip.s-agi{background:linear-gradient(90deg,#3B82F6,#1D4ED8)}
@@ -98,21 +98,35 @@ tbody tr:hover td{background:#FFF8F3}
 .pp-hero{padding:16px 20px 13px;border-bottom:1px solid #EDE9E1}
 .pp-row1{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
 .pp-placa-tag{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#F0EFEC;border:1px solid #C9C6BD;padding:4px 10px;border-radius:7px;letter-spacing:.05em}
+.pp-placa-man{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#FEE2E2;border:1px solid #FECACA;padding:4px 10px;border-radius:7px;letter-spacing:.05em;color:#9F1239}
 .pp-nome{font-size:14px;font-weight:700;color:#1A1A18}
 .pp-sub{font-size:11px;color:#99968F;margin-top:1px}
+.pp-os-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA;margin-top:8px}
+.pp-os-num{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:#DC2626}
+.pp-os-dt{font-size:11px;color:#99968F;margin-left:auto}
+.pp-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 20px;border-bottom:1px solid #EDE9E1}
+.pp-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 13px}
+.pp-box{background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
+.pp-box.red{background:#FEF2F2;border-color:#FECACA}
+.pp-box.grn{background:#F0FDF4;border-color:#BBF7D0}
+.pp-box.amb{background:#FFFBF0;border-color:#FDE68A}
+.pp-box-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pp-box-val{font-size:20px;font-weight:700;color:#1A1A18;line-height:1;margin-bottom:3px}
+.pp-box-val.nd{color:#99968F;font-weight:400;font-size:11px}
+.pp-box-val.grn{color:#166534}.pp-box-val.amb{color:#92400E}.pp-box-val.red{color:#DC2626}
+.pp-box-just{font-size:11px;color:#58564F;margin-top:4px;line-height:1.4;word-break:break-word}
+.pp-box-dts{font-size:10px;color:#99968F;margin-top:3px}
+.pp-serv-box{margin:0 20px 13px;background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
+.pp-serv-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pp-serv-txt{font-size:12px;color:#1A1A18;line-height:1.5;word-break:break-word}
+.pp-foot{padding:11px 20px 15px;background:#F8F7F5;border-top:1px solid #EDE9E1;border-radius:0 0 14px 14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.pp-ft-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.pp-ft-val{font-size:12px;font-weight:600;color:#1A1A18}
+.pp-ft-val.nd{color:#99968F;font-weight:400}
 .pp-rota{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#F8F7F5;border-radius:8px;border:1px solid #EDE9E1}
 .pp-rota-ori{font-size:12px;font-weight:600;color:#1A1A18;flex:1}
 .pp-rota-arr{color:#E8521A;font-size:16px;font-weight:700}
 .pp-rota-dst{font-size:12px;font-weight:600;color:#1A1A18;flex:1;text-align:right}
-.pp-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 20px;border-bottom:1px solid #EDE9E1}
-.pp-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 13px}
-.pp-box{background:#F8F7F5;border-radius:8px;padding:9px 11px;border:1px solid #EDE9E1}
-.pp-box.red{background:#FEF2F2;border-color:#FECACA}
-.pp-box.pur{background:#FAF5FF;border-color:#E9D5FF}
-.pp-box-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
-.pp-box-val{font-size:13px;font-weight:700;color:#1A1A18}
-.pp-box-val.nd{color:#99968F;font-weight:400;font-size:11px}
-.pp-box-val.grn{color:#166534}.pp-box-val.amb{color:#92400E}.pp-box-val.red{color:#DC2626}.pp-box-val.pur{color:#6B21A8}
 .pp-tl{padding:13px 20px 8px}
 .pp-tl-tit{font-size:10px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px}
 .pp-row{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:8px;margin-bottom:4px;border:1px solid transparent}
@@ -126,10 +140,7 @@ tbody tr:hover td{background:#FFF8F3}
 .pp-row-val.nd{color:#99968F;font-weight:400}
 .tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:12px;white-space:nowrap}
 .tag-ok{background:#DCFCE7;color:#166534}.tag-atr{background:#FEE2E2;color:#9F1239}.tag-pend{background:#F3F4F6;color:#6B7280}
-.pp-foot{padding:11px 20px 15px;background:#F8F7F5;border-top:1px solid #EDE9E1;border-radius:0 0 14px 14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.pp-ft-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
-.pp-ft-val{font-size:12px;font-weight:600;color:#1A1A18}
-.pp-ft-val.nd{color:#99968F;font-weight:400}
+.pp-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 13px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A18;color:#fff;font-size:12px;font-weight:600;padding:9px 18px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99999}
 .toast.show{opacity:1}
 </style>
@@ -150,40 +161,28 @@ tbody tr:hover td{background:#FFF8F3}
 <div class="main">
   <div class="cards">
     <div class="card c-tot active" id="card-tot" onclick="filtrarCard('tot')">
-      <div class="card-lbl">Total Veiculos</div>
-      <div class="card-val" id="v-tot">0</div>
-      <div class="card-pct" id="p-tot">100%</div>
-      <div class="card-sub">placas ativas</div><div class="card-mark"></div>
+      <div class="card-lbl">Total Veiculos</div><div class="card-val" id="v-tot">0</div>
+      <div class="card-pct" id="p-tot">100%</div><div class="card-sub">placas ativas</div><div class="card-mark"></div>
     </div>
     <div class="card c-agc" id="card-agc" onclick="filtrarCard('agc')">
-      <div class="card-lbl">Ag. Carregamento</div>
-      <div class="card-val" id="v-agc">0</div>
-      <div class="card-pct" id="p-agc">0%</div>
-      <div class="card-sub">aguardando carga</div><div class="card-mark"></div>
+      <div class="card-lbl">Ag. Carregamento</div><div class="card-val" id="v-agc">0</div>
+      <div class="card-pct" id="p-agc">0%</div><div class="card-sub">aguardando carga</div><div class="card-mark"></div>
     </div>
     <div class="card c-agi" id="card-agi" onclick="filtrarCard('agi')">
-      <div class="card-lbl">Ag. Inicio Viagem</div>
-      <div class="card-val" id="v-agi">0</div>
-      <div class="card-pct" id="p-agi">0%</div>
-      <div class="card-sub">carregados, aguardando</div><div class="card-mark"></div>
+      <div class="card-lbl">Ag. Inicio Viagem</div><div class="card-val" id="v-agi">0</div>
+      <div class="card-pct" id="p-agi">0%</div><div class="card-sub">carregados, aguardando</div><div class="card-mark"></div>
     </div>
     <div class="card c-via" id="card-via" onclick="filtrarCard('via')">
-      <div class="card-lbl">Em Viagem</div>
-      <div class="card-val" id="v-via">0</div>
-      <div class="card-pct" id="p-via">0%</div>
-      <div class="card-sub">em transito</div><div class="card-mark"></div>
+      <div class="card-lbl">Em Viagem</div><div class="card-val" id="v-via">0</div>
+      <div class="card-pct" id="p-via">0%</div><div class="card-sub">em transito</div><div class="card-mark"></div>
     </div>
     <div class="card c-agd" id="card-agd" onclick="filtrarCard('agd')">
-      <div class="card-lbl">Ag. Descarga</div>
-      <div class="card-val" id="v-agd">0</div>
-      <div class="card-pct" id="p-agd">0%</div>
-      <div class="card-sub">no destino</div><div class="card-mark"></div>
+      <div class="card-lbl">Ag. Descarga</div><div class="card-val" id="v-agd">0</div>
+      <div class="card-pct" id="p-agd">0%</div><div class="card-sub">no destino</div><div class="card-mark"></div>
     </div>
     <div class="card c-man" id="card-man" onclick="filtrarCard('man')">
-      <div class="card-lbl">Manutencao</div>
-      <div class="card-val" id="v-man">0</div>
-      <div class="card-pct" id="p-man">0%</div>
-      <div class="card-sub">veiculos na oficina</div><div class="card-mark"></div>
+      <div class="card-lbl">Manutencao</div><div class="card-val" id="v-man">0</div>
+      <div class="card-pct" id="p-man">0%</div><div class="card-sub">veiculos na oficina</div><div class="card-mark"></div>
     </div>
   </div>
   <div class="tw">
@@ -199,6 +198,8 @@ tbody tr:hover td{background:#FFF8F3}
     <div class="tfoot" id="ts"></div>
   </div>
 </div>
+
+<!-- POPUP VIAGENS -->
 <div class="overlay" id="ov-via" onclick="fecharFora(event,'ov-via')">
   <div class="popup">
     <div class="pp-strip" id="pp-strip"></div>
@@ -217,17 +218,19 @@ tbody tr:hover td{background:#FFF8F3}
       <div class="pp-box"><div class="pp-box-lbl">Dias no Status</div><div class="pp-box-val" id="pv-dias"></div></div>
     </div>
     <div class="pp-grid2">
-      <div class="pp-box pur"><div class="pp-box-lbl">ID CTE</div><div class="pp-box-val pur" id="pv-cte"></div></div>
+      <div class="pp-box" style="background:#FAF5FF;border-color:#E9D5FF"><div class="pp-box-lbl">ID CTE</div><div class="pp-box-val" style="color:#6B21A8" id="pv-cte"></div></div>
       <div class="pp-box"><div class="pp-box-lbl">Remessa</div><div class="pp-box-val" id="pv-rem"></div></div>
     </div>
     <div class="pp-tl"><div class="pp-tl-tit">Linha do tempo das datas</div><div id="pv-lista"></div></div>
     <div class="pp-foot">
       <div><div class="pp-ft-lbl">Cliente</div><div class="pp-ft-val" id="pv-cli"></div></div>
       <div><div class="pp-ft-lbl">Remessa</div><div class="pp-ft-val" id="pv-rem2"></div></div>
-      <div><div class="pp-ft-lbl">ID CTE</div><div class="pp-ft-val pur" id="pv-cte2"></div></div>
+      <div><div class="pp-ft-lbl">ID CTE</div><div class="pp-ft-val" style="color:#6B21A8" id="pv-cte2"></div></div>
     </div>
   </div>
 </div>
+
+<!-- POPUP MANUTENÇÃO -->
 <div class="overlay" id="ov-man" onclick="fecharFora(event,'ov-man')">
   <div class="popup">
     <div class="pp-strip s-man"></div>
@@ -235,21 +238,22 @@ tbody tr:hover td{background:#FFF8F3}
     <div class="pp-hero">
       <div class="pp-row1">
         <span class="pp-placa-tag" id="pm-cav"></span>
-        <div style="flex:1"><div class="pp-nome" id="pm-pman"></div><div class="pp-sub">Placa em manutencao</div></div>
+        <span class="pp-placa-man" id="pm-pman"></span>
+        <div style="flex:1"></div>
         <span class="sp s-man">Manutencao</span>
       </div>
-      <div class="pp-rota" style="background:#FEF2F2;border-color:#FECACA">
-        <span style="font-size:13px;font-weight:700;color:#DC2626">OS:</span>
-        <span style="font-size:14px;font-weight:700;color:#DC2626;flex:1;margin-left:8px" id="pm-os"></span>
-        <span style="font-size:11px;color:#58564F;flex:1;text-align:right;word-break:break-word" id="pm-serv"></span>
+      <div class="pp-os-row">
+        <span class="pp-os-num" id="pm-os"></span>
+        <span class="pp-os-dt" id="pm-os-dt"></span>
       </div>
     </div>
-    <div class="pp-grid3">
-      <div class="pp-box red"><div class="pp-box-lbl">Dias em Manut.</div><div class="pp-box-val" id="pm-dtot"></div></div>
-      <div class="pp-box red"><div class="pp-box-lbl">Dias p/ Liberacao</div><div class="pp-box-val" id="pm-dprev"></div></div>
-      <div class="pp-box"><div class="pp-box-lbl">Situacao</div><div class="pp-box-val" id="pm-sit"></div></div>
+    <!-- 3 boxes de dias -->
+    <div class="pp-grid3" id="pm-grid3" style="padding-bottom:0"></div>
+    <!-- Servico -->
+    <div class="pp-serv-box">
+      <div class="pp-serv-lbl">Servico</div>
+      <div class="pp-serv-txt" id="pm-serv"></div>
     </div>
-    <div class="pp-tl"><div class="pp-tl-tit">Linha do tempo da manutencao</div><div id="pm-lista"></div></div>
     <div class="pp-foot">
       <div><div class="pp-ft-lbl">Placa Cavalo</div><div class="pp-ft-val" id="pm-fc"></div></div>
       <div><div class="pp-ft-lbl">Placa Manut.</div><div class="pp-ft-val" id="pm-fm"></div></div>
@@ -266,6 +270,7 @@ window.onload=function(){buscar();};
 function buscar(){
   document.getElementById('tc').innerHTML='<div class="empty">Buscando dados...</div>';
   var p=[];
+
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=0&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
     var lns=csv.trim().split('\n').slice(1);
     _D=lns.map(function(l){
@@ -278,13 +283,19 @@ function buscar(){
     }).filter(function(d){return d.placa;});
   }).catch(function(){_D=[];}));
 
+  // Novas colunas manutenção:
+  // c[0]=PlacaCavalo c[1]=KM c[2]=PlacaManut c[3]=NumOS
+  // c[4]=DtChegada c[5]=DtAberturaOS c[6]=JustOS c[7]=Servico
+  // c[8]=DtInicial c[9]=PrevLiberacao c[10]=DtFinalizacao c[11]=JustManut
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
     var lns=csv.trim().split('\n').slice(1);
     _M=lns.map(function(l){
       var c=pCSV(l);
-      return {pcav:c[0]||'',km:c[1]||'',pman:c[2]||'',os:c[3]||'',
-        dtab:c[4]||'',serv:c[5]||'',dtch:c[6]||'',dtin:c[7]||'',
-        prev:c[8]||'',dtlib:c[9]||''};
+      return {
+        pcav:c[0]||'', km:c[1]||'', pman:c[2]||'', os:c[3]||'',
+        dtch:c[4]||'', dtab:c[5]||'', justos:c[6]||'', serv:c[7]||'',
+        dtin:c[8]||'', prev:c[9]||'', dtfin:c[10]||'', justman:c[11]||''
+      };
     }).filter(function(m){return m.pcav||m.os;});
   }).catch(function(){_M=[];}));
 
@@ -339,17 +350,50 @@ function aCards(u,n){
   var nagi=_D.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=_D.filter(function(d){return mSt(d.st,'via');}).length;
   var nagd=_D.filter(function(d){return mSt(d.st,'agd');}).length;
-  var nman=_M.filter(function(m){return !m.dtlib;}).length;
-  document.getElementById('v-agc').textContent=nagc;
-  document.getElementById('p-agc').textContent=pct(nagc);
-  document.getElementById('v-agi').textContent=nagi;
-  document.getElementById('p-agi').textContent=pct(nagi);
-  document.getElementById('v-via').textContent=nvia;
-  document.getElementById('p-via').textContent=pct(nvia);
-  document.getElementById('v-agd').textContent=nagd;
-  document.getElementById('p-agd').textContent=pct(nagd);
-  document.getElementById('v-man').textContent=nman;
-  document.getElementById('p-man').textContent=pct(nman);
+  var nman=_M.filter(function(m){return !m.dtfin;}).length;
+  document.getElementById('v-agc').textContent=nagc;document.getElementById('p-agc').textContent=pct(nagc);
+  document.getElementById('v-agi').textContent=nagi;document.getElementById('p-agi').textContent=pct(nagi);
+  document.getElementById('v-via').textContent=nvia;document.getElementById('p-via').textContent=pct(nvia);
+  document.getElementById('v-agd').textContent=nagd;document.getElementById('p-agd').textContent=pct(nagd);
+  document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
+}
+
+// ── Calcular dias entre duas datas ──────────────────────────────────────
+function diffDias(d1,d2){
+  // d1 e d2 sao objetos Date. Retorna d2-d1 em dias inteiros (>=0)
+  if(!d1||!d2)return null;
+  var diff=Math.round((d2-d1)/86400000);
+  return diff<0?0:diff;
+}
+
+// ── Badge colorido conforme regra de dias ───────────────────────────────
+// <1 dia = verde, 1-2 = amarelo, >2 = vermelho
+function dkMan(n){
+  if(n===null)return'<span class="dk-n">-</span>';
+  var cl=n<1?'dk-ok':(n<=2?'dk-w':'dk-a');
+  return'<span class="dk '+cl+'">'+n+'d</span>';
+}
+
+// Badge geral de dias de viagem
+function dB(n){
+  if(n===null)return'<span class="dk-n">-</span>';
+  if(n<=2)return'<span class="dk dk-ok">'+n+'d</span>';
+  if(n<=6)return'<span class="dk dk-w">'+n+'d</span>';
+  return'<span class="dk dk-a">'+n+'d</span>';
+}
+
+// Classe do box popup conforme dias
+function boxClsMan(n){
+  if(n===null)return'pp-box';
+  if(n<1)return'pp-box grn';
+  if(n<=2)return'pp-box amb';
+  return'pp-box red';
+}
+function boxValClsMan(n){
+  if(n===null)return'pp-box-val nd';
+  if(n<1)return'pp-box-val grn';
+  if(n<=2)return'pp-box-val amb';
+  return'pp-box-val red';
 }
 
 var TITS={
@@ -360,24 +404,23 @@ var TITS={
   agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},
   man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'}
 };
-var DC={
-  agc:{col:'d2',lbl:'Data Status'},
-  agi:{col:'d3',lbl:'Data Status'},
-  via:{col:'d4',lbl:'Data Status'},
-  agd:{col:'d6',lbl:'Data Status'},
-  tot:{col:'',lbl:'Data Status'}
-};
 
-// Retorna a data status correta conforme status do veiculo
-// Ignora: d1 (agendamento), d5 (previsao), d7 (agend.entrega)
 function getDataStatus(d){
   var v=(d.st||'').toLowerCase();
-  if(v.indexOf('carregamento')>=0) return d.d2||'';
-  if(v.indexOf('nicio')>=0)        return d.d3||'';
+  if(v.indexOf('carregamento')>=0)return d.d2||'';
+  if(v.indexOf('nicio')>=0)return d.d3||'';
   if(v==='em viagem'||v==='viagem')return d.d4||'';
-  if(v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0) return d.d6||'';
-  // Para total/vazio: ultima data real preenchida (d8>d6>d4>d3>d2)
+  if(v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0)return d.d6||'';
   return d.d8||d.d6||d.d4||d.d3||d.d2||'';
+}
+
+function calcDias(d){
+  var r=getDataStatus(d);
+  if(!r)return null;
+  var dt=pD(r);if(!dt)return null;
+  var hj=new Date();hj.setHours(0,0,0,0);
+  var df=Math.round((hj-dt)/86400000);
+  return df>0?df-1:0;
 }
 
 function filtrarCard(k){
@@ -429,11 +472,7 @@ function renderVia(k,q){
     return true;
   });
   document.getElementById('rc').textContent=_fV.length+' registro'+(_fV.length!==1?'s':'');
-  if(!_fV.length){
-    document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro encontrado.</div>';
-    return;
-  }
-  var dc=DC[k]||DC.tot;
+  if(!_fV.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro encontrado.</div>';return;}
   var rows=_fV.map(function(d,i){
     var ds=calcDias(d);
     var r='<tr onclick="abrirVia('+i+')">';
@@ -468,47 +507,40 @@ function renderMan(q){
     return true;
   });
   document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
-  if(!_fM.length){
-    document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';
-    return;
-  }
+  if(!_fM.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
   var hj=new Date();hj.setHours(0,0,0,0);
   var rows=_fM.map(function(m,i){
-    var di=pD(m.dtin)||pD(m.dtab),dl=pD(m.dtlib),dp=pD(m.prev);
-    var dm=null;
-    if(di){var fim=dl?dl:hj;dm=Math.round((fim-di)/86400000);if(dm<0)dm=0;}
-    var cl=dl?'dk dk-ok':(dp&&(hj-dp)>0?'dk dk-a':'dk dk-w');
+    // Dias Ag Abertura OS: dtch -> dtab (se nao tiver dtab, dtch -> hoje)
+    var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
+    var dag_ab=diffDias(dch, dab||hj);
+    // Dias Ag Inicio Manut: dtab -> dtin (se nao tiver dtin, dtab -> hoje)
+    var dag_in=diffDias(dab, din||hj);
+    // Dias em Manut: dtin -> dtfin (se nao tiver dtfin, dtin -> hoje)
+    var dm=diffDias(din||dab, dfin||hj);
+
     var r='<tr onclick="abrirMan('+i+')">';
     r+='<td><span class="placa">'+esc(m.pcav||'-')+'</span></td>';
-    r+='<td>'+esc(m.km||'-')+'</td>';
     r+='<td><span class="placa-man">'+esc(m.pman||'-')+'</span></td>';
     r+='<td><span class="os-num">'+esc(m.os||'-')+'</span></td>';
+    r+='<td><span class="dc">'+fD(m.dtch)+'</span></td>';
     r+='<td><span class="dc">'+fD(m.dtab)+'</span></td>';
     r+='<td class="wrap-serv">'+esc(m.serv||'-')+'</td>';
-    r+='<td><span class="dc">'+fD(m.dtch)+'</span></td>';
     r+='<td><span class="dc">'+fD(m.dtin)+'</span></td>';
     r+='<td><span class="dc">'+fD(m.prev)+'</span></td>';
-    r+='<td>'+(dl?'<span class="dk dk-ok">'+fD(m.dtlib)+'</span>':'<span class="dk-n">Em aberto</span>')+'</td>';
-    r+='<td>'+(dm!==null?'<span class="'+cl+'">'+dm+'d</span>':'<span class="dk-n">-</span>')+'</td>';
+    r+='<td>'+(dfin?'<span class="dc">'+fD(m.dtfin)+'</span>':'<span class="dk-n">Em aberto</span>')+'</td>';
+    r+='<td>'+dkMan(dag_ab)+'</td>';
+    r+='<td>'+dkMan(dag_in)+'</td>';
+    r+='<td>'+dkMan(dm)+'</td>';
     r+='</tr>';
     return r;
   }).join('');
   document.getElementById('tc').innerHTML=
-    '<table style="min-width:1300px"><thead><tr>'
-    +'<th>Placa Cavalo</th><th>KM</th><th>Placa Manut.</th><th>N. OS</th>'
-    +'<th>Dt. Abertura OS</th><th>Servico</th><th>Dt. Chegada</th>'
-    +'<th>Dt. Inicial</th><th>Prev. Liberacao</th><th>Dt. Liberacao</th>'
-    +'<th>Dias em Manut.</th>'
+    '<table style="min-width:1400px"><thead><tr>'
+    +'<th>Placa Cavalo</th><th>Placa Manut.</th><th>N. OS</th>'
+    +'<th>Dt. Chegada</th><th>Dt. Abertura OS</th><th>Servico</th>'
+    +'<th>Dt. Inicial</th><th>Prev. Liberacao</th><th>Dt. Finalizacao</th>'
+    +'<th>Dias Ag. Abertura</th><th>Dias Ag. Inicio</th><th>Dias em Manut.</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table>';
-}
-
-function calcDias(d){
-  var r=getDataStatus(d);
-  if(!r)return null;
-  var dt=pD(r);if(!dt)return null;
-  var hj=new Date();hj.setHours(0,0,0,0);
-  var df=Math.round((hj-dt)/86400000);
-  return df>0?df-1:0;
 }
 
 function abrirVia(i){
@@ -557,41 +589,56 @@ function abrirVia(i){
 function abrirMan(i){
   var m=_fM[i];if(!m)return;
   var hj=new Date();hj.setHours(0,0,0,0);
+  var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
+
+  // Placa cavalo e placa manut
   document.getElementById('pm-cav').textContent=m.pcav||'-';
   document.getElementById('pm-pman').textContent=m.pman||'-';
   document.getElementById('pm-os').textContent=m.os||'-';
+  document.getElementById('pm-os-dt').textContent=m.dtab?('Abertura: '+fD(m.dtab)):'';
   document.getElementById('pm-serv').textContent=m.serv||'-';
   document.getElementById('pm-fc').textContent=m.pcav||'-';
   document.getElementById('pm-fm').textContent=m.pman||'-';
   document.getElementById('pm-fos').textContent=m.os||'-';
-  var di=pD(m.dtin)||pD(m.dtab),dl=pD(m.dtlib),dp=pD(m.prev);
-  var dm=null;
-  if(di){var fim=dl?dl:hj;dm=Math.round((fim-di)/86400000);if(dm<0)dm=0;}
-  var de=document.getElementById('pm-dtot');
-  if(dm===null){de.textContent='-';de.className='pp-box-val nd';}
-  else if(dm<=5){de.textContent=dm+'d';de.className='pp-box-val grn';}
-  else if(dm<=15){de.textContent=dm+'d';de.className='pp-box-val amb';}
-  else{de.textContent=dm+'d';de.className='pp-box-val red';}
-  var pe=document.getElementById('pm-dprev');
-  if(dl){pe.textContent='Liberado';pe.className='pp-box-val grn';}
-  else if(dp){
-    var d2=Math.round((dp-hj)/86400000);
-    if(d2<0){pe.textContent='Atrasado '+Math.abs(d2)+'d';pe.className='pp-box-val red';}
-    else if(d2===0){pe.textContent='Hoje';pe.className='pp-box-val amb';}
-    else{pe.textContent=d2+'d restantes';pe.className='pp-box-val amb';}
-  }else{pe.textContent='-';pe.className='pp-box-val nd';}
-  var sit=document.getElementById('pm-sit');
-  if(dl){sit.textContent='Liberado em '+fD(m.dtlib);sit.className='pp-box-val grn';}
-  else if(dp&&dp<hj){sit.textContent='Em atraso';sit.className='pp-box-val red';}
-  else{sit.textContent='Em andamento';sit.className='pp-box-val amb';}
-  var DT=[
-    {lbl:'Abertura da OS',val:m.dtab,ag:null},
-    {lbl:'Chegada do Veiculo',val:m.dtch,ag:null},
-    {lbl:'Inicio do Servico',val:m.dtin,ag:null},
-    {lbl:'Prev. de Liberacao',val:m.prev,ag:null},
-    {lbl:'Liberacao Real',val:m.dtlib,ag:m.prev}
-  ];
-  document.getElementById('pm-lista').innerHTML=bTL(DT,hj);
+
+  // Calcular os 3 dias
+  var dag_ab=diffDias(dch, dab||hj);
+  var dag_in=diffDias(dab, din||hj);
+  var dm=diffDias(din||dab, dfin||hj);
+
+  // Montar os 3 boxes
+  var grid='';
+
+  // BOX 1: Dias Ag Abertura OS
+  var bc1=boxClsMan(dag_ab);
+  var bv1=boxValClsMan(dag_ab);
+  grid+='<div class="'+bc1+'">';
+  grid+='<div class="pp-box-lbl">Dias Ag. Abertura OS</div>';
+  grid+='<div class="'+bv1+'">'+(dag_ab!==null?dag_ab+'d':'-')+'</div>';
+  if(m.justos){grid+='<div class="pp-box-just">'+esc(m.justos)+'</div>';}
+  grid+='<div class="pp-box-dts">'+fD(m.dtch)+' &rarr; '+fD(m.dtab)+'</div>';
+  grid+='</div>';
+
+  // BOX 2: Dias Ag Inicio Manut
+  var bc2=boxClsMan(dag_in);
+  var bv2=boxValClsMan(dag_in);
+  grid+='<div class="'+bc2+'">';
+  grid+='<div class="pp-box-lbl">Dias Ag. Inicio Manut.</div>';
+  grid+='<div class="'+bv2+'">'+(dag_in!==null?dag_in+'d':'-')+'</div>';
+  if(m.justman){grid+='<div class="pp-box-just">'+esc(m.justman)+'</div>';}
+  grid+='<div class="pp-box-dts">'+fD(m.dtab)+' &rarr; '+fD(m.dtin)+'</div>';
+  grid+='</div>';
+
+  // BOX 3: Dias em Manutencao
+  var bc3=boxClsMan(dm);
+  var bv3=boxValClsMan(dm);
+  grid+='<div class="'+bc3+'">';
+  grid+='<div class="pp-box-lbl">Dias em Manut.</div>';
+  grid+='<div class="'+bv3+'">'+(dm!==null?dm+'d':'-')+'</div>';
+  grid+='<div class="pp-box-dts">'+fD(m.dtin||m.dtab)+' &rarr; '+(dfin?fD(m.dtfin):'hoje')+'</div>';
+  grid+='</div>';
+
+  document.getElementById('pm-grid3').innerHTML=grid;
   document.getElementById('ov-man').classList.add('show');
   document.body.style.overflow='hidden';
 }
@@ -627,7 +674,6 @@ function fechar(id){document.getElementById(id).classList.remove('show');documen
 function fecharFora(ev,id){if(ev.target===document.getElementById(id))fechar(id);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');}});
 function ivB(iv){var v=(iv||'').toLowerCase().trim();if(v==='ida')return'<span class="iv-ida">Ida</span>';if(v==='volta')return'<span class="iv-volta">Volta</span>';return'<span class="iv-nd">-</span>';}
-function dB(n){if(n===null)return'<span class="dk-n">-</span>';if(n<=2)return'<span class="dk dk-ok">'+n+'d</span>';if(n<=6)return'<span class="dk dk-w">'+n+'d</span>';return'<span class="dk dk-a">'+n+'d</span>';}
 function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';if(v==='vazio')return's-vaz';return's-out';}
 function pD(s){
   if(!s)return null;
