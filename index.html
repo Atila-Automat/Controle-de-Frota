@@ -10,7 +10,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:Arial,Helvetica,sans-serif;background:#F0EFEC;color:#1A1A18;font-size:14px}
 body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.topbar{background:#fff;border-bottom:1px solid #DDD9D0;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0;z-index:200}
+.topbar{background:#fff;border-bottom:1px solid #DDD9D0;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;z-index:200}
 .tl{display:flex;align-items:center;gap:14px}
 .logo-box{background:#E8521A;border-radius:8px;padding:6px 12px}
 .logo-box span{font-size:13px;font-weight:700;color:#fff;letter-spacing:.02em}
@@ -58,7 +58,7 @@ body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .vbtn:hover{background:#F0EFEC}.vbtn.on{background:#FFF7ED;border-color:#FED7AA;color:#9A3412}
 .rc{font-size:11px;color:#99968F;margin-left:auto;white-space:nowrap}
 .tov{overflow:auto;flex:1}
-table{width:100%;border-collapse:collapse;min-width:1200px}
+table{width:100%;border-collapse:collapse;min-width:1400px}
 thead tr{background:#F0EFEC}
 thead th{position:sticky;top:0;z-index:10;background:#F0EFEC}
 th{text-align:left;font-size:10px;font-weight:700;color:#1A1A18;text-transform:uppercase;letter-spacing:.05em;padding:9px 11px;border-bottom:1px solid #DDD9D0;white-space:nowrap}
@@ -75,72 +75,108 @@ tbody tr:hover td{background:#FFF8F3}
 .s-agc{background:#FEF3C7;color:#92400E}.s-agi{background:#EEF2FF;color:#1D4ED8}
 .s-via{background:#DCFCE7;color:#166534}.s-agd{background:#F3E8FF;color:#6B21A8}
 .s-vaz{background:#F3F4F6;color:#6B7280}.s-out{background:#F0EFEC;color:#58564F}.s-man{background:#FEE2E2;color:#DC2626}
+.s-dentro{background:#DCFCE7;color:#166534;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.s-fora{background:#FEE2E2;color:#9F1239;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.s-agcheg{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
 .iv-ida{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#FEF9C3;color:#854D0E;border:1px solid #FDE68A}
 .iv-volta{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#E0F2FE;color:#075985;border:1px solid #BAE6FD}
 .iv-nd{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB}
-.dk{display:inline-block;min-width:36px;text-align:center;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px}
+.dk{display:inline-block;min-width:32px;text-align:center;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px}
 .dk-ok{background:#DCFCE7;color:#166534}.dk-w{background:#FEF3C7;color:#92400E}.dk-a{background:#FEE2E2;color:#9F1239}.dk-n{color:#99968F;font-size:11px}
 .dc{font-size:11px;color:#1A1A18}
 .empty{text-align:center;padding:48px;color:#99968F;font-size:13px}
 .tfoot{font-size:10px;color:#99968F;padding:6px 14px;text-align:right;border-top:1px solid #DDD9D0;background:#F8F7F5;flex-shrink:0}
-.overlay{display:none;position:fixed;inset:0;background:rgba(15,15,15,.55);z-index:9000;align-items:center;justify-content:center}
+/* ── POPUP GERAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,15,15,.6);z-index:9000;align-items:center;justify-content:center}
 .overlay.show{display:flex}
-.popup{background:#fff;border-radius:14px;box-shadow:0 24px 64px rgba(0,0,0,.2);width:560px;max-width:95vw;max-height:92vh;overflow-y:auto;position:relative}
-.pp-strip{height:5px;border-radius:14px 14px 0 0}
-.pp-strip.s-agc{background:linear-gradient(90deg,#F59E0B,#D97706)}
-.pp-strip.s-agi{background:linear-gradient(90deg,#3B82F6,#1D4ED8)}
-.pp-strip.s-via{background:linear-gradient(90deg,#22C55E,#166534)}
-.pp-strip.s-agd{background:linear-gradient(90deg,#A855F7,#6B21A8)}
-.pp-strip.s-man{background:linear-gradient(90deg,#EF4444,#DC2626)}
-.pp-strip.s-vaz,.pp-strip.s-out{background:linear-gradient(90deg,#D1D5DB,#9CA3AF)}
-.pp-close{position:absolute;top:12px;right:12px;background:#F0EFEC;border:none;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;color:#58564F;font-weight:700;line-height:28px;text-align:center}
-.pp-close:hover{background:#DDD9D0}
-.pp-hero{padding:16px 20px 13px;border-bottom:1px solid #EDE9E1}
-.pp-row1{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
-.pp-placa-tag{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#F0EFEC;border:1px solid #C9C6BD;padding:4px 10px;border-radius:7px;letter-spacing:.05em}
-.pp-placa-man{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#FEE2E2;border:1px solid #FECACA;padding:4px 10px;border-radius:7px;letter-spacing:.05em;color:#9F1239}
-.pp-nome{font-size:14px;font-weight:700;color:#1A1A18}
-.pp-sub{font-size:11px;color:#99968F;margin-top:1px}
-.pp-os-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA;margin-top:8px}
-.pp-os-num{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:#DC2626}
-.pp-os-dt{font-size:11px;color:#99968F;margin-left:auto}
-.pp-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 20px;border-bottom:1px solid #EDE9E1}
-.pp-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 13px}
-.pp-box{background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
-.pp-box.red{background:#FEF2F2;border-color:#FECACA}
-.pp-box.grn{background:#F0FDF4;border-color:#BBF7D0}
-.pp-box.amb{background:#FFFBF0;border-color:#FDE68A}
-.pp-box-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.pp-box-val{font-size:20px;font-weight:700;color:#1A1A18;line-height:1;margin-bottom:3px}
-.pp-box-val.nd{color:#99968F;font-weight:400;font-size:11px}
-.pp-box-val.grn{color:#166534}.pp-box-val.amb{color:#92400E}.pp-box-val.red{color:#DC2626}
-.pp-box-just{font-size:11px;color:#58564F;margin-top:4px;line-height:1.4;word-break:break-word}
-.pp-box-dts{font-size:10px;color:#99968F;margin-top:3px}
-.pp-serv-box{margin:0 20px 13px;background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
-.pp-serv-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.pp-serv-txt{font-size:12px;color:#1A1A18;line-height:1.5;word-break:break-word}
-.pp-foot{padding:11px 20px 15px;background:#F8F7F5;border-top:1px solid #EDE9E1;border-radius:0 0 14px 14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.popup{background:#fff;border-radius:16px;box-shadow:0 32px 80px rgba(0,0,0,.22);width:600px;max-width:96vw;max-height:94vh;overflow-y:auto;position:relative}
+/* ── POPUP VIAGEM ── */
+.pv-header{border-radius:16px 16px 0 0;overflow:hidden}
+.pv-banner{padding:20px 22px 16px;display:flex;flex-direction:column;gap:10px}
+.pv-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pv-placa-tag{font-family:'Courier New',monospace;font-size:16px;font-weight:700;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);color:#fff;padding:5px 12px;border-radius:8px;letter-spacing:.06em}
+.pv-mot-blk{flex:1}
+.pv-mot-name{font-size:15px;font-weight:700;color:#fff}
+.pv-mot-tipo{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+.pv-status-badge{font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.pv-rota{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.15);border-radius:10px;padding:10px 14px}
+.pv-rota-loc{flex:1}
+.pv-rota-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.pv-rota-name{font-size:12px;font-weight:600;color:#fff}
+.pv-rota-arrow{color:rgba(255,255,255,.6);font-size:18px;font-weight:300}
+.pv-rota-right{text-align:right}
+.pv-meta-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 22px 14px}
+.pv-meta-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,.9)}
+.pp-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.2);border:none;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;color:#fff;font-weight:700;line-height:28px;text-align:center;z-index:10}
+.pp-close:hover{background:rgba(0,0,0,.35)}
+/* info section */
+.pv-body{padding:18px 22px 0}
+.pv-info-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.pv-info-item{flex:1;min-width:120px;background:#F8F7F5;border-radius:8px;padding:9px 12px;border:1px solid #EDE9E1}
+.pv-info-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.pv-info-val{font-size:12px;font-weight:600;color:#1A1A18}
+.pv-info-val.nd{color:#B0ADA6;font-weight:400;font-style:italic}
+.pv-info-val.grn{color:#166534}.pv-info-val.amb{color:#92400E}.pv-info-val.red{color:#DC2626}
+.pv-info-sub{font-size:10px;color:#99968F;margin-top:2px}
+/* datas grid */
+.pv-section-title{font-size:10px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.08em;margin:14px 22px 8px}
+.pv-dates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 22px}
+.pv-date-card{background:#F8F7F5;border-radius:10px;padding:10px 12px;border:1px solid #EDE9E1;position:relative;overflow:hidden}
+.pv-date-card.done{background:#F0FDF4;border-color:#BBF7D0}
+.pv-date-card.pending{background:#F8F7F5;border-color:#EDE9E1}
+.pv-date-card.overdue{background:#FFF1F2;border-color:#FECDD3}
+.pv-date-card.highlight{background:#EEF3FF;border-color:#BFDBFE}
+.pv-date-card-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.pv-date-card-val{font-size:14px;font-weight:700;color:#1A1A18}
+.pv-date-card-val.nd{font-size:11px;color:#B0ADA6;font-weight:400;font-style:italic}
+.pv-date-card-sub{font-size:10px;color:#99968F;margin-top:3px}
+.pv-date-card-dot{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%}
+.dot-done{background:#22C55E}.dot-pending{background:#D1D5DB}.dot-overdue{background:#EF4444}.dot-highlight{background:#3B82F6}
+/* dias calculados */
+.pv-calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 22px 18px}
+.pv-calc-card{border-radius:10px;padding:12px;text-align:center;border:1px solid}
+.pv-calc-card.grn{background:#F0FDF4;border-color:#86EFAC}
+.pv-calc-card.amb{background:#FFFBF0;border-color:#FDE68A}
+.pv-calc-card.red{background:#FFF1F2;border-color:#FECDD3}
+.pv-calc-card.nd{background:#F8F7F5;border-color:#EDE9E1}
+.pv-calc-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;color:#99968F}
+.pv-calc-val{font-size:22px;font-weight:800;line-height:1}
+.pv-calc-val.grn{color:#166534}.pv-calc-val.amb{color:#92400E}.pv-calc-val.red{color:#DC2626}.pv-calc-val.nd{color:#B0ADA6;font-size:14px;font-weight:400}
+.pv-calc-sub{font-size:10px;color:#99968F;margin-top:4px}
+/* footer popup */
+.pp-foot{padding:12px 22px 16px;background:#F8F7F5;border-top:1px solid #EDE9E1;border-radius:0 0 16px 16px;display:flex;gap:14px;flex-wrap:wrap}
+.pp-ft-item{flex:1;min-width:80px}
 .pp-ft-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
 .pp-ft-val{font-size:12px;font-weight:600;color:#1A1A18}
-.pp-ft-val.nd{color:#99968F;font-weight:400}
-.pp-rota{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#F8F7F5;border-radius:8px;border:1px solid #EDE9E1}
-.pp-rota-ori{font-size:12px;font-weight:600;color:#1A1A18;flex:1}
-.pp-rota-arr{color:#E8521A;font-size:16px;font-weight:700}
-.pp-rota-dst{font-size:12px;font-weight:600;color:#1A1A18;flex:1;text-align:right}
-.pp-tl{padding:13px 20px 8px}
-.pp-tl-tit{font-size:10px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px}
-.pp-row{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:8px;margin-bottom:4px;border:1px solid transparent}
-.pp-row.ok{background:#F0FDF4;border-color:#BBF7D0}
-.pp-row.pend{background:#F8F7F5;border-color:#EDE9E1}
-.pp-row.atr{background:#FFF1F2;border-color:#FECDD3}
-.pp-num{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ok .pp-num{background:#86EFAC;color:#166534}.pend .pp-num{background:#DDD9D0;color:#58564F}.atr .pp-num{background:#FECDD3;color:#9F1239}
-.pp-row-lbl{font-size:11px;color:#58564F;font-weight:500;flex:1}
-.pp-row-val{font-size:11px;font-weight:700;color:#1A1A18;white-space:nowrap}
-.pp-row-val.nd{color:#99968F;font-weight:400}
-.tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:12px;white-space:nowrap}
-.tag-ok{background:#DCFCE7;color:#166534}.tag-atr{background:#FEE2E2;color:#9F1239}.tag-pend{background:#F3F4F6;color:#6B7280}
-.pp-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 13px}
+/* agendamento status badge inline */
+.ag-dentro{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:#DCFCE7;color:#166534;white-space:nowrap}
+.ag-fora{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:#FEE2E2;color:#9F1239;white-space:nowrap}
+.ag-aguard{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:#FEF3C7;color:#92400E;white-space:nowrap}
+/* POPUP MANUTENÇÃO */
+.pp-strip{height:5px;border-radius:16px 16px 0 0}
+.pp-strip.s-man{background:linear-gradient(90deg,#EF4444,#DC2626)}
+.pp-strip.s-vaz,.pp-strip.s-out{background:linear-gradient(90deg,#D1D5DB,#9CA3AF)}
+.pm-hero{padding:16px 20px 14px;border-bottom:1px solid #EDE9E1}
+.pm-row1{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.pm-placa-cav{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#F0EFEC;border:1px solid #C9C6BD;padding:4px 10px;border-radius:7px;letter-spacing:.05em}
+.pm-placa-man{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#FEE2E2;border:1px solid #FECACA;padding:4px 10px;border-radius:7px;letter-spacing:.05em;color:#9F1239}
+.pm-os-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA}
+.pm-os-num{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:#DC2626}
+.pm-os-dt{font-size:11px;color:#99968F;margin-left:auto}
+.pm-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 20px}
+.pm-box{background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
+.pm-box.red{background:#FEF2F2;border-color:#FECACA}
+.pm-box.grn{background:#F0FDF4;border-color:#BBF7D0}
+.pm-box.amb{background:#FFFBF0;border-color:#FDE68A}
+.pm-box-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pm-box-val{font-size:20px;font-weight:700;color:#1A1A18;line-height:1;margin-bottom:3px}
+.pm-box-val.nd{color:#99968F;font-weight:400;font-size:11px}
+.pm-box-val.grn{color:#166534}.pm-box-val.amb{color:#92400E}.pm-box-val.red{color:#DC2626}
+.pm-box-just{font-size:11px;color:#58564F;margin-top:4px;line-height:1.4;word-break:break-word}
+.pm-box-dts{font-size:10px;color:#99968F;margin-top:3px}
+.pm-serv-box{margin:0 20px 13px;background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
+.pm-serv-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pm-serv-txt{font-size:12px;color:#1A1A18;line-height:1.5;word-break:break-word}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A18;color:#fff;font-size:12px;font-weight:600;padding:9px 18px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99999}
 .toast.show{opacity:1}
 </style>
@@ -199,33 +235,67 @@ tbody tr:hover td{background:#FFF8F3}
   </div>
 </div>
 
-<!-- POPUP VIAGENS -->
+<!-- POPUP VIAGEM -->
 <div class="overlay" id="ov-via" onclick="fecharFora(event,'ov-via')">
   <div class="popup">
-    <div class="pp-strip" id="pp-strip"></div>
-    <button class="pp-close" onclick="fechar('ov-via')">X</button>
-    <div class="pp-hero">
-      <div class="pp-row1">
-        <span class="pp-placa-tag" id="pv-placa"></span>
-        <div style="flex:1"><div class="pp-nome" id="pv-mot"></div><div class="pp-sub" id="pv-tipo"></div></div>
-        <span class="sp" id="pv-st"></span>
+    <button class="pp-close" onclick="fechar('ov-via')">&#x2715;</button>
+    <div class="pv-header">
+      <div class="pv-banner" id="pv-banner">
+        <div class="pv-top">
+          <span class="pv-placa-tag" id="pv-placa"></span>
+          <div class="pv-mot-blk">
+            <div class="pv-mot-name" id="pv-mot"></div>
+            <div class="pv-mot-tipo" id="pv-tipo"></div>
+          </div>
+          <span class="pv-status-badge" id="pv-st"></span>
+        </div>
+        <div class="pv-rota">
+          <div class="pv-rota-loc">
+            <div class="pv-rota-label">Origem</div>
+            <div class="pv-rota-name" id="pv-ori"></div>
+          </div>
+          <div class="pv-rota-arrow">&#8594;</div>
+          <div class="pv-rota-loc pv-rota-right">
+            <div class="pv-rota-label">Destino</div>
+            <div class="pv-rota-name" id="pv-dst"></div>
+          </div>
+        </div>
+        <div class="pv-meta-strip">
+          <span class="pv-meta-pill" id="pv-prod-pill"></span>
+          <span class="pv-meta-pill" id="pv-iv-pill"></span>
+          <span class="pv-meta-pill" id="pv-ag-pill"></span>
+        </div>
       </div>
-      <div class="pp-rota"><span class="pp-rota-ori" id="pv-ori"></span><span class="pp-rota-arr">&#8594;</span><span class="pp-rota-dst" id="pv-dst"></span></div>
     </div>
-    <div class="pp-grid3">
-      <div class="pp-box"><div class="pp-box-lbl">Produto</div><div class="pp-box-val" id="pv-prod"></div></div>
-      <div class="pp-box"><div class="pp-box-lbl">Ida / Volta</div><div class="pp-box-val" id="pv-iv"></div></div>
-      <div class="pp-box"><div class="pp-box-lbl">Dias no Status</div><div class="pp-box-val" id="pv-dias"></div></div>
+    <div class="pv-body">
+      <div class="pv-info-row">
+        <div class="pv-info-item">
+          <div class="pv-info-lbl">Cliente</div>
+          <div class="pv-info-val" id="pv-cli"></div>
+        </div>
+        <div class="pv-info-item">
+          <div class="pv-info-lbl">Dias no Status</div>
+          <div class="pv-info-val" id="pv-dias-val"></div>
+          <div class="pv-info-sub" id="pv-dias-dt"></div>
+        </div>
+        <div class="pv-info-item">
+          <div class="pv-info-lbl">ID CTE</div>
+          <div class="pv-info-val" style="color:#6B21A8" id="pv-cte"></div>
+        </div>
+        <div class="pv-info-item">
+          <div class="pv-info-lbl">Remessa</div>
+          <div class="pv-info-val" id="pv-rem"></div>
+        </div>
+      </div>
     </div>
-    <div class="pp-grid2">
-      <div class="pp-box" style="background:#FAF5FF;border-color:#E9D5FF"><div class="pp-box-lbl">ID CTE</div><div class="pp-box-val" style="color:#6B21A8" id="pv-cte"></div></div>
-      <div class="pp-box"><div class="pp-box-lbl">Remessa</div><div class="pp-box-val" id="pv-rem"></div></div>
-    </div>
-    <div class="pp-tl"><div class="pp-tl-tit">Linha do tempo das datas</div><div id="pv-lista"></div></div>
+    <div class="pv-section-title">Linha do Tempo</div>
+    <div class="pv-dates-grid" id="pv-dates-grid"></div>
+    <div class="pv-section-title" id="pv-calc-title" style="display:none">Indicadores Calculados</div>
+    <div class="pv-calc-grid" id="pv-calc-grid" style="padding-bottom:18px"></div>
     <div class="pp-foot">
-      <div><div class="pp-ft-lbl">Cliente</div><div class="pp-ft-val" id="pv-cli"></div></div>
-      <div><div class="pp-ft-lbl">Remessa</div><div class="pp-ft-val" id="pv-rem2"></div></div>
-      <div><div class="pp-ft-lbl">ID CTE</div><div class="pp-ft-val" style="color:#6B21A8" id="pv-cte2"></div></div>
+      <div class="pp-ft-item"><div class="pp-ft-lbl">Cliente</div><div class="pp-ft-val" id="pv-cli2"></div></div>
+      <div class="pp-ft-item"><div class="pp-ft-lbl">Remessa</div><div class="pp-ft-val" id="pv-rem2"></div></div>
+      <div class="pp-ft-item"><div class="pp-ft-lbl">ID CTE</div><div class="pp-ft-val" style="color:#6B21A8" id="pv-cte2"></div></div>
     </div>
   </div>
 </div>
@@ -234,30 +304,28 @@ tbody tr:hover td{background:#FFF8F3}
 <div class="overlay" id="ov-man" onclick="fecharFora(event,'ov-man')">
   <div class="popup">
     <div class="pp-strip s-man"></div>
-    <button class="pp-close" onclick="fechar('ov-man')">X</button>
-    <div class="pp-hero">
-      <div class="pp-row1">
-        <span class="pp-placa-tag" id="pm-cav"></span>
-        <span class="pp-placa-man" id="pm-pman"></span>
+    <button class="pp-close" onclick="fechar('ov-man')">&#x2715;</button>
+    <div class="pm-hero">
+      <div class="pm-row1">
+        <span class="pm-placa-cav" id="pm-cav"></span>
+        <span class="pm-placa-man" id="pm-pman"></span>
         <div style="flex:1"></div>
         <span class="sp s-man">Manutencao</span>
       </div>
-      <div class="pp-os-row">
-        <span class="pp-os-num" id="pm-os"></span>
-        <span class="pp-os-dt" id="pm-os-dt"></span>
+      <div class="pm-os-row">
+        <span class="pm-os-num" id="pm-os"></span>
+        <span class="pm-os-dt" id="pm-os-dt"></span>
       </div>
     </div>
-    <!-- 3 boxes de dias -->
-    <div class="pp-grid3" id="pm-grid3" style="padding-bottom:0"></div>
-    <!-- Servico -->
-    <div class="pp-serv-box">
-      <div class="pp-serv-lbl">Servico</div>
-      <div class="pp-serv-txt" id="pm-serv"></div>
+    <div class="pm-grid3" id="pm-grid3"></div>
+    <div class="pm-serv-box">
+      <div class="pm-serv-lbl">Servico</div>
+      <div class="pm-serv-txt" id="pm-serv"></div>
     </div>
     <div class="pp-foot">
-      <div><div class="pp-ft-lbl">Placa Cavalo</div><div class="pp-ft-val" id="pm-fc"></div></div>
-      <div><div class="pp-ft-lbl">Placa Manut.</div><div class="pp-ft-val" id="pm-fm"></div></div>
-      <div><div class="pp-ft-lbl">N. OS</div><div class="pp-ft-val" id="pm-fos"></div></div>
+      <div class="pp-ft-item"><div class="pp-ft-lbl">Placa Cavalo</div><div class="pp-ft-val" id="pm-fc"></div></div>
+      <div class="pp-ft-item"><div class="pp-ft-lbl">Placa Manut.</div><div class="pp-ft-val" id="pm-fm"></div></div>
+      <div class="pp-ft-item"><div class="pp-ft-lbl">N. OS</div><div class="pp-ft-val" id="pm-fos"></div></div>
     </div>
   </div>
 </div>
@@ -270,7 +338,6 @@ window.onload=function(){buscar();};
 function buscar(){
   document.getElementById('tc').innerHTML='<div class="empty">Buscando dados...</div>';
   var p=[];
-
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=0&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
     var lns=csv.trim().split('\n').slice(1);
     _D=lns.map(function(l){
@@ -282,23 +349,15 @@ function buscar(){
         d5:c[14]||'',d6:c[15]||'',d7:c[16]||'',d8:c[17]||'',st:c[18]||''};
     }).filter(function(d){return d.placa;});
   }).catch(function(){_D=[];}));
-
-  // Novas colunas manutenção:
-  // c[0]=PlacaCavalo c[1]=KM c[2]=PlacaManut c[3]=NumOS
-  // c[4]=DtChegada c[5]=DtAberturaOS c[6]=JustOS c[7]=Servico
-  // c[8]=DtInicial c[9]=PrevLiberacao c[10]=DtFinalizacao c[11]=JustManut
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
     var lns=csv.trim().split('\n').slice(1);
     _M=lns.map(function(l){
       var c=pCSV(l);
-      return {
-        pcav:c[0]||'', km:c[1]||'', pman:c[2]||'', os:c[3]||'',
-        dtch:c[4]||'', dtab:c[5]||'', justos:c[6]||'', serv:c[7]||'',
-        dtin:c[8]||'', prev:c[9]||'', dtfin:c[10]||'', justman:c[11]||''
-      };
+      return {pcav:c[0]||'',km:c[1]||'',pman:c[2]||'',os:c[3]||'',
+        dtch:c[4]||'',dtab:c[5]||'',justos:c[6]||'',serv:c[7]||'',
+        dtin:c[8]||'',prev:c[9]||'',dtfin:c[10]||'',justman:c[11]||''};
     }).filter(function(m){return m.pcav||m.os;});
   }).catch(function(){_M=[];}));
-
   Promise.all(p).then(function(){
     fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=615595234&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
       var n=csv.trim().split('\n').slice(1).filter(function(l){
@@ -314,23 +373,15 @@ function pCSV(l){
   var r=[],c='',q=false;
   for(var i=0;i<l.length;i++){
     var x=l[i];
-    if(x==='"'){q=!q;}
-    else if(x===','&&!q){r.push(c.trim());c='';}
-    else{c+=x;}
+    if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c.trim());c='';}else{c+=x;}
   }
   r.push(c.trim());return r;
 }
-
 function setTs(){
   var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   document.getElementById('ts').textContent='Atualizado as '+h+' - Google Sheets';
 }
-
-function pct(n){
-  if(!_tot||_tot===0)return'0%';
-  return Math.round((n/_tot)*100)+'%';
-}
-
+function pct(n){if(!_tot||_tot===0)return'0%';return Math.round((n/_tot)*100)+'%';}
 function mSt(s,k){
   var v=(s||'').toLowerCase().trim();
   if(k==='agc')return v.indexOf('carregamento')>=0;
@@ -340,10 +391,8 @@ function mSt(s,k){
   if(k==='vaz')return v==='vazio';
   return true;
 }
-
 function aCards(u,n){
-  var tot=u?n:(_D.length+_M.length);
-  _tot=tot;
+  var tot=u?n:(_D.length+_M.length);_tot=tot;
   document.getElementById('v-tot').textContent=tot;
   document.getElementById('p-tot').textContent='100%';
   var nagc=_D.filter(function(d){return mSt(d.st,'agc');}).length;
@@ -358,42 +407,120 @@ function aCards(u,n){
   document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
 }
 
-// ── Calcular dias entre duas datas ──────────────────────────────────────
-function diffDias(d1,d2){
-  // d1 e d2 sao objetos Date. Retorna d2-d1 em dias inteiros (>=0)
-  if(!d1||!d2)return null;
-  var diff=Math.round((d2-d1)/86400000);
-  return diff<0?0:diff;
+// ── Helpers de data ──────────────────────────────────────────────────────
+function pD(s){
+  if(!s)return null;
+  var d;
+  if(s.indexOf('/')>=0){
+    var p=s.split('/');
+    var dia=+p[0],mes=(+p[1])-1,ano=+p[2];
+    if(ano<100)ano+=2000;
+    d=new Date(ano,mes,dia);
+  }else{d=new Date(s+'T00:00:00');}
+  return isNaN(d.getTime())?null:d;
+}
+function fD(s){
+  if(!s)return'-';var d=pD(s);if(!d)return esc(s);
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+}
+function hoje(){var h=new Date();h.setHours(0,0,0,0);return h;}
+function diffDias(d1,d2){if(!d1||!d2)return null;var df=Math.round((d2-d1)/86400000);return df<0?0:df;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Status Agendamento ───────────────────────────────────────────────────
+// d7=data agendamento entrega, d6=chegada destino
+function calcAgStatus(d){
+  if(!d.d7)return null; // sem agendamento, nao mostra
+  var dag=pD(d.d7),dch=pD(d.d6);
+  if(!dch)return 'aguard'; // sem chegada ainda
+  // tem chegada: comparar com agendamento
+  // chegada > agendamento = Fora; <= = Dentro
+  if(dch>dag)return 'fora';
+  return 'dentro';
+}
+function agStatusHTML(d){
+  var st=calcAgStatus(d);
+  if(!st)return '';
+  if(st==='aguard')return '<span class="ag-aguard">Ag. Chegada</span>';
+  if(st==='fora')return '<span class="ag-fora">Fora do Agendamento</span>';
+  return '<span class="ag-dentro">Dentro do Agendamento</span>';
 }
 
-// ── Badge colorido conforme regra de dias ───────────────────────────────
-// <1 dia = verde, 1-2 = amarelo, >2 = vermelho
-function dkMan(n){
-  if(n===null)return'<span class="dk-n">-</span>';
-  var cl=n<1?'dk-ok':(n<=2?'dk-w':'dk-a');
-  return'<span class="dk '+cl+'">'+n+'d</span>';
+// ── Dias Ag Carregamento ─────────────────────────────────────────────────
+// d2=chegada origem, d7=agend entrega (doca), d3=data carregamento
+// Condicao: d2 preenchida. Diferenca: d3 (ou hoje) - d2, descontando os proprios dias (exclusivo em ambos)
+function calcDiasAgCarreg(d){
+  if(!d.d2)return null; // sem chegada origem
+  var dori=pD(d.d2),dcarr=pD(d.d3),hj=hoje();
+  var fim=dcarr||hj;
+  // exclusivo em ambos: (fim - dori) - 1 (nao conta dia chegada nem dia carregamento)
+  var df=Math.round((fim-dori)/86400000);
+  return df>1?df-1:0;
 }
 
-// Badge geral de dias de viagem
+// ── Dias Ag Descarga ────────────────────────────────────────────────────
+// d6=chegada destino, d7=agend entrega, d8=data descarregamento
+// Condicao: d6 e d7 preenchidas. Diferenca: d8 (ou hoje) - d6
+function calcDiasAgDescarga(d){
+  if(!d.d6||!d.d7)return null;
+  var ddst=pD(d.d6),ddesc=pD(d.d8),hj=hoje();
+  var fim=ddesc||hj;
+  var df=Math.round((fim-ddst)/86400000);
+  return df>1?df-1:0;
+}
+
+// ── Dias no Status ───────────────────────────────────────────────────────
+function getDataStatus(d){
+  var v=(d.st||'').toLowerCase();
+  if(v.indexOf('carregamento')>=0)return d.d2||'';
+  if(v.indexOf('nicio')>=0)return d.d3||'';
+  if(v==='em viagem'||v==='viagem')return d.d4||'';
+  if(v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0)return d.d6||'';
+  return d.d8||d.d6||d.d4||d.d3||d.d2||'';
+}
+function calcDias(d){
+  var r=getDataStatus(d);if(!r)return null;
+  var dt=pD(r);if(!dt)return null;
+  var hj=hoje();
+  var df=Math.round((hj-dt)/86400000);
+  return df>0?df-1:0;
+}
+
+// ── Badges ───────────────────────────────────────────────────────────────
 function dB(n){
   if(n===null)return'<span class="dk-n">-</span>';
   if(n<=2)return'<span class="dk dk-ok">'+n+'d</span>';
   if(n<=6)return'<span class="dk dk-w">'+n+'d</span>';
   return'<span class="dk dk-a">'+n+'d</span>';
 }
-
-// Classe do box popup conforme dias
+function dkMan(n){
+  if(n===null)return'<span class="dk-n">-</span>';
+  var cl=n<1?'dk-ok':(n<=2?'dk-w':'dk-a');
+  return'<span class="dk '+cl+'">'+n+'d</span>';
+}
+// Dias Ag Carregamento/Descarga: 0=verde, >0=vermelho
+function dkAgr(n){
+  if(n===null)return'<span class="dk-n">-</span>';
+  var cl=n<=0?'dk-ok':'dk-a';
+  return'<span class="dk '+cl+'">'+n+'d</span>';
+}
 function boxClsMan(n){
-  if(n===null)return'pp-box';
-  if(n<1)return'pp-box grn';
-  if(n<=2)return'pp-box amb';
-  return'pp-box red';
+  if(n===null)return'pm-box';if(n<1)return'pm-box grn';if(n<=2)return'pm-box amb';return'pm-box red';
 }
 function boxValClsMan(n){
-  if(n===null)return'pp-box-val nd';
-  if(n<1)return'pp-box-val grn';
-  if(n<=2)return'pp-box-val amb';
-  return'pp-box-val red';
+  if(n===null)return'pm-box-val nd';if(n<1)return'pm-box-val grn';if(n<=2)return'pm-box-val amb';return'pm-box-val red';
+}
+function sC(s){
+  var v=(s||'').toLowerCase();
+  if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';
+  if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';
+  if(v==='vazio')return's-vaz';return's-out';
+}
+function ivB(iv){
+  var v=(iv||'').toLowerCase().trim();
+  if(v==='ida')return'<span class="iv-ida">Ida</span>';
+  if(v==='volta')return'<span class="iv-volta">Volta</span>';
+  return'<span class="iv-nd">-</span>';
 }
 
 var TITS={
@@ -405,24 +532,6 @@ var TITS={
   man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'}
 };
 
-function getDataStatus(d){
-  var v=(d.st||'').toLowerCase();
-  if(v.indexOf('carregamento')>=0)return d.d2||'';
-  if(v.indexOf('nicio')>=0)return d.d3||'';
-  if(v==='em viagem'||v==='viagem')return d.d4||'';
-  if(v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0)return d.d6||'';
-  return d.d8||d.d6||d.d4||d.d3||d.d2||'';
-}
-
-function calcDias(d){
-  var r=getDataStatus(d);
-  if(!r)return null;
-  var dt=pD(r);if(!dt)return null;
-  var hj=new Date();hj.setHours(0,0,0,0);
-  var df=Math.round((hj-dt)/86400000);
-  return df>0?df-1:0;
-}
-
 function filtrarCard(k){
   _card=k;
   ['tot','agc','agi','via','agd','man'].forEach(function(c){
@@ -433,31 +542,22 @@ function filtrarCard(k){
   document.getElementById('btn-iv').style.display=m?'none':'';
   renderTab();
 }
-
 function toggleVaz(){
-  _vaz=!_vaz;
-  var b=document.getElementById('btn-vaz');
-  b.classList.toggle('on',_vaz);
-  b.textContent=_vaz?'Ocultar Vazio':'Mostrar Vazio';
-  renderTab();
+  _vaz=!_vaz;var b=document.getElementById('btn-vaz');
+  b.classList.toggle('on',_vaz);b.textContent=_vaz?'Ocultar Vazio':'Mostrar Vazio';renderTab();
 }
-
 function toggleIV(){
-  if(_ivF==='ambos'){_ivF='ida';}
-  else if(_ivF==='ida'){_ivF='volta';}
-  else{_ivF='ambos';}
+  if(_ivF==='ambos'){_ivF='ida';}else if(_ivF==='ida'){_ivF='volta';}else{_ivF='ambos';}
   var b=document.getElementById('btn-iv');
   if(_ivF==='ida'){b.textContent='Somente Ida';b.className='fbtn on';}
   else if(_ivF==='volta'){b.textContent='Somente Volta';b.className='fbtn on';}
   else{b.textContent='Ida e Volta';b.className='fbtn';}
   renderTab();
 }
-
 function renderTab(){
   var k=_card,tm=TITS[k];
   document.getElementById('tit-l').textContent=tm.t;
-  var bg=document.getElementById('tit-b');
-  bg.textContent=tm.b;bg.className='tbadge '+tm.bc;
+  var bg=document.getElementById('tit-b');bg.textContent=tm.b;bg.className='tbadge '+tm.bc;
   var q=(document.getElementById('busca').value||'').toLowerCase();
   if(k==='man'){renderMan(q);}else{renderVia(k,q);}
 }
@@ -475,6 +575,8 @@ function renderVia(k,q){
   if(!_fV.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro encontrado.</div>';return;}
   var rows=_fV.map(function(d,i){
     var ds=calcDias(d);
+    var agc=calcDiasAgCarreg(d);
+    var agd=calcDiasAgDescarga(d);
     var r='<tr onclick="abrirVia('+i+')">';
     r+='<td>'+esc(d.cli||'-')+'</td>';
     r+='<td>'+esc(d.rem||'-')+'</td>';
@@ -489,6 +591,9 @@ function renderVia(k,q){
     r+='<td><span class="dc">'+fD(getDataStatus(d))+'</span></td>';
     r+='<td>'+dB(ds)+'</td>';
     r+='<td><span class="sp '+sC(d.st)+'">'+esc(d.st||'-')+'</span></td>';
+    r+='<td>'+agStatusHTML(d)+'</td>';
+    r+='<td>'+dkAgr(agc)+'</td>';
+    r+='<td>'+dkAgr(agd)+'</td>';
     r+='</tr>';
     return r;
   }).join('');
@@ -498,26 +603,22 @@ function renderVia(k,q){
     +'<th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th>'
     +'<th>Origem</th><th>Destino</th><th>ID CTE</th>'
     +'<th>Data Status</th><th>Dias Status</th><th>Status</th>'
+    +'<th>St. Agendamento</th><th>Dias Ag. Carreg.</th><th>Dias Ag. Descarga</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 function renderMan(q){
   _fM=_M.filter(function(m){
-    if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;
-    return true;
+    if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;return true;
   });
   document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
   if(!_fM.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
-  var hj=new Date();hj.setHours(0,0,0,0);
+  var hj=hoje();
   var rows=_fM.map(function(m,i){
-    // Dias Ag Abertura OS: dtch -> dtab (se nao tiver dtab, dtch -> hoje)
     var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
-    var dag_ab=diffDias(dch, dab||hj);
-    // Dias Ag Inicio Manut: dtab -> dtin (se nao tiver dtin, dtab -> hoje)
-    var dag_in=diffDias(dab, din||hj);
-    // Dias em Manut: dtin -> dtfin (se nao tiver dtfin, dtin -> hoje)
-    var dm=diffDias(din||dab, dfin||hj);
-
+    var dag_ab=diffDias(dch,dab||hj);
+    var dag_in=diffDias(dab,din||hj);
+    var dm=diffDias(din||dab,dfin||hj);
     var r='<tr onclick="abrirMan('+i+')">';
     r+='<td><span class="placa">'+esc(m.pcav||'-')+'</span></td>';
     r+='<td><span class="placa-man">'+esc(m.pman||'-')+'</span></td>';
@@ -543,55 +644,142 @@ function renderMan(q){
     +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
+// ─── BANNER CORES POR STATUS ─────────────────────────────────────────────
+var BANNER={
+  's-agc':'linear-gradient(135deg,#92400E,#B45309)',
+  's-agi':'linear-gradient(135deg,#1E3A8A,#1D4ED8)',
+  's-via':'linear-gradient(135deg,#14532D,#166534)',
+  's-agd':'linear-gradient(135deg,#4C1D95,#6B21A8)',
+  's-vaz':'linear-gradient(135deg,#374151,#6B7280)',
+  's-out':'linear-gradient(135deg,#374151,#6B7280)'
+};
+
 function abrirVia(i){
   var d=_fV[i];if(!d)return;
-  var hj=new Date();hj.setHours(0,0,0,0);
+  var hj=hoje();
   var sc=sC(d.st);
-  document.getElementById('pp-strip').className='pp-strip '+sc;
+
+  // Banner
+  var banner=document.getElementById('pv-banner');
+  banner.style.background=BANNER[sc]||BANNER['s-out'];
+
   document.getElementById('pv-placa').textContent=d.placa;
   document.getElementById('pv-mot').textContent=d.mot||'-';
   document.getElementById('pv-tipo').textContent=d.tipo||'-';
-  var se=document.getElementById('pv-st');se.textContent=d.st||'-';se.className='sp '+sc;
+  document.getElementById('pv-st').textContent=d.st||'-';
   document.getElementById('pv-ori').textContent=d.ori||'-';
   document.getElementById('pv-dst').textContent=d.dst||'-';
-  document.getElementById('pv-prod').textContent=d.prod||'-';
+
+  // Pills no banner
+  document.getElementById('pv-prod-pill').textContent=d.prod?('Produto: '+d.prod):'Sem produto';
+  var ivtxt=(d.iv||'').toLowerCase()==='ida'?'Ida':(d.iv||'').toLowerCase()==='volta'?'Volta':'-';
+  document.getElementById('pv-iv-pill').textContent='Sentido: '+ivtxt;
+  var agSt=calcAgStatus(d);
+  var agPill=document.getElementById('pv-ag-pill');
+  if(agSt){
+    var agTxt=agSt==='aguard'?'Ag. Chegada':agSt==='fora'?'Fora do Agendamento':'Dentro do Agendamento';
+    agPill.textContent=agTxt;agPill.style.display='';
+  }else{agPill.style.display='none';}
+
+  // Info row
+  document.getElementById('pv-cli').textContent=d.cli||'-';
   document.getElementById('pv-cte').textContent=d.cte||'-';
   document.getElementById('pv-rem').textContent=d.rem||'-';
-  document.getElementById('pv-cte2').textContent=d.cte||'-';
-  document.getElementById('pv-rem2').textContent=d.rem||'-';
-  document.getElementById('pv-cli').textContent=d.cli||'-';
-  var iv=document.getElementById('pv-iv');
-  var vv=(d.iv||'').toLowerCase();
-  if(vv==='ida'){iv.textContent='Ida';iv.className='pp-box-val';iv.style.color='#854D0E';}
-  else if(vv==='volta'){iv.textContent='Volta';iv.className='pp-box-val';iv.style.color='#075985';}
-  else{iv.textContent='-';iv.className='pp-box-val nd';iv.style.color='';}
+
+  // Dias no status
   var ds=calcDias(d);
-  var de=document.getElementById('pv-dias');
-  if(ds===null){de.textContent='-';de.className='pp-box-val nd';}
-  else if(ds<=2){de.textContent=ds+'d';de.className='pp-box-val grn';}
-  else if(ds<=6){de.textContent=ds+'d';de.className='pp-box-val amb';}
-  else{de.textContent=ds+'d';de.className='pp-box-val red';}
-  var DT=[
-    {lbl:'Data de Agendamento',val:d.d1,ag:null},
-    {lbl:'Data Chegada na Origem',val:d.d2,ag:null},
-    {lbl:'Data do Carregamento',val:d.d3,ag:null},
-    {lbl:'Data Inicio de Viagem',val:d.d4,ag:null},
-    {lbl:'Data Previsao de Chegada',val:d.d5,ag:null},
-    {lbl:'Data de Chegada ao Destino',val:d.d6,ag:d.d5},
-    {lbl:'Data de Agendamento de Entrega',val:d.d7,ag:null},
-    {lbl:'Data do Descarregamento',val:d.d8,ag:null}
+  var dsDt=getDataStatus(d);
+  var dsEl=document.getElementById('pv-dias-val');
+  var dsDtEl=document.getElementById('pv-dias-dt');
+  if(ds===null){dsEl.textContent='-';dsEl.className='pv-info-val nd';}
+  else if(ds<=2){dsEl.textContent=ds+'d';dsEl.className='pv-info-val grn';}
+  else if(ds<=6){dsEl.textContent=ds+'d';dsEl.className='pv-info-val amb';}
+  else{dsEl.textContent=ds+'d';dsEl.className='pv-info-val red';}
+  dsDtEl.textContent=dsDt?('Desde '+fD(dsDt)):'';
+
+  // Footer
+  document.getElementById('pv-cli2').textContent=d.cli||'-';
+  document.getElementById('pv-rem2').textContent=d.rem||'-';
+  document.getElementById('pv-cte2').textContent=d.cte||'-';
+
+  // ── Linha do tempo: cards de data ────────────────────────────────────
+  var DATAS=[
+    {lbl:'Agendamento',val:d.d1,tipo:'agend',show:!!d.d1},
+    {lbl:'Chegada Origem',val:d.d2,tipo:'real',show:true},
+    {lbl:'Carregamento',val:d.d3,tipo:'real',show:true},
+    {lbl:'Inicio Viagem',val:d.d4,tipo:'real',show:true},
+    {lbl:'Prev. Chegada',val:d.d5,tipo:'prev',show:!!d.d5},
+    {lbl:'Chegada Destino',val:d.d6,tipo:'real',show:true},
+    {lbl:'Agend. Entrega',val:d.d7,tipo:'agend',show:!!d.d7}
   ];
-  document.getElementById('pv-lista').innerHTML=bTL(DT,hj);
+  var gridHTML='';
+  DATAS.forEach(function(dt){
+    if(!dt.show)return;
+    var dtObj=pD(dt.val);
+    var cls='pv-date-card pending',dotCls='pv-date-card-dot dot-pending',valCls='pv-date-card-val nd';
+    var valTxt='-';
+    if(dt.tipo==='prev'){cls='pv-date-card pending';dotCls='pv-date-card-dot';dotCls='pv-date-card-dot';valCls='pv-date-card-val nd';}
+    if(dtObj){
+      valTxt=fD(dt.val);
+      if(dt.tipo==='agend'){cls='pv-date-card highlight';dotCls='pv-date-card-dot dot-highlight';valCls='pv-date-card-val';}
+      else if(dt.tipo==='prev'){cls='pv-date-card pending';dotCls='pv-date-card-dot dot-pending';valCls='pv-date-card-val';}
+      else if(dtObj<=hj){cls='pv-date-card done';dotCls='pv-date-card-dot dot-done';valCls='pv-date-card-val';}
+      else{cls='pv-date-card pending';dotCls='pv-date-card-dot dot-pending';valCls='pv-date-card-val';}
+    }
+    gridHTML+='<div class="'+cls+'">';
+    gridHTML+='<div class="'+dotCls+'"></div>';
+    gridHTML+='<div class="pv-date-card-lbl">'+dt.lbl+'</div>';
+    gridHTML+='<div class="'+valCls+'">'+valTxt+'</div>';
+    gridHTML+='</div>';
+  });
+  document.getElementById('pv-dates-grid').innerHTML=gridHTML;
+
+  // ── Indicadores calculados ───────────────────────────────────────────
+  var agc=calcDiasAgCarreg(d);
+  var agdias=calcDiasAgDescarga(d);
+  // Dias em viagem: d4 -> d6 (ou hoje)
+  var diasVia=null;
+  if(d.d4){var dv4=pD(d.d4),dv6=pD(d.d6)||hj;diasVia=Math.round((dv6-dv4)/86400000);if(diasVia<0)diasVia=0;}
+
+  var calcs=[];
+  if(agc!==null)calcs.push({lbl:'Dias Ag. Carreg.',val:agc,tipo:'agr'});
+  if(diasVia!==null)calcs.push({lbl:'Dias em Viagem',val:diasVia,tipo:'via'});
+  if(agdias!==null)calcs.push({lbl:'Dias Ag. Descarga',val:agdias,tipo:'agr'});
+
+  var calcGrid=document.getElementById('pv-calc-grid');
+  var calcTitle=document.getElementById('pv-calc-title');
+  if(calcs.length>0){
+    calcTitle.style.display='';
+    var ch='';
+    calcs.forEach(function(calc){
+      var cls,vcls,sub='';
+      if(calc.tipo==='agr'){
+        cls=calc.val<=0?'pv-calc-card grn':'pv-calc-card red';
+        vcls=calc.val<=0?'pv-calc-val grn':'pv-calc-val red';
+      }else{
+        cls=calc.val<=2?'pv-calc-card grn':calc.val<=6?'pv-calc-card amb':'pv-calc-card red';
+        vcls=calc.val<=2?'pv-calc-val grn':calc.val<=6?'pv-calc-val amb':'pv-calc-val red';
+      }
+      ch+='<div class="'+cls+'">';
+      ch+='<div class="pv-calc-lbl">'+calc.lbl+'</div>';
+      ch+='<div class="'+vcls+'">'+calc.val+'d</div>';
+      ch+='</div>';
+    });
+    calcGrid.innerHTML=ch;
+    calcGrid.style.display='';
+  }else{
+    calcTitle.style.display='none';
+    calcGrid.innerHTML='';calcGrid.style.display='none';
+  }
+
   document.getElementById('ov-via').classList.add('show');
   document.body.style.overflow='hidden';
 }
 
 function abrirMan(i){
   var m=_fM[i];if(!m)return;
-  var hj=new Date();hj.setHours(0,0,0,0);
+  var hj=hoje();
   var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
-
-  // Placa cavalo e placa manut
   document.getElementById('pm-cav').textContent=m.pcav||'-';
   document.getElementById('pm-pman').textContent=m.pman||'-';
   document.getElementById('pm-os').textContent=m.os||'-';
@@ -600,96 +788,35 @@ function abrirMan(i){
   document.getElementById('pm-fc').textContent=m.pcav||'-';
   document.getElementById('pm-fm').textContent=m.pman||'-';
   document.getElementById('pm-fos').textContent=m.os||'-';
-
-  // Calcular os 3 dias
-  var dag_ab=diffDias(dch, dab||hj);
-  var dag_in=diffDias(dab, din||hj);
-  var dm=diffDias(din||dab, dfin||hj);
-
-  // Montar os 3 boxes
+  var dag_ab=diffDias(dch,dab||hj);
+  var dag_in=diffDias(dab,din||hj);
+  var dm=diffDias(din||dab,dfin||hj);
   var grid='';
-
-  // BOX 1: Dias Ag Abertura OS
-  var bc1=boxClsMan(dag_ab);
-  var bv1=boxValClsMan(dag_ab);
-  grid+='<div class="'+bc1+'">';
-  grid+='<div class="pp-box-lbl">Dias Ag. Abertura OS</div>';
+  // BOX 1
+  var bc1=boxClsMan(dag_ab),bv1=boxValClsMan(dag_ab);
+  grid+='<div class="'+bc1+'"><div class="pm-box-lbl">Dias Ag. Abertura OS</div>';
   grid+='<div class="'+bv1+'">'+(dag_ab!==null?dag_ab+'d':'-')+'</div>';
-  if(m.justos){grid+='<div class="pp-box-just">'+esc(m.justos)+'</div>';}
-  grid+='<div class="pp-box-dts">'+fD(m.dtch)+' &rarr; '+fD(m.dtab)+'</div>';
-  grid+='</div>';
-
-  // BOX 2: Dias Ag Inicio Manut
-  var bc2=boxClsMan(dag_in);
-  var bv2=boxValClsMan(dag_in);
-  grid+='<div class="'+bc2+'">';
-  grid+='<div class="pp-box-lbl">Dias Ag. Inicio Manut.</div>';
+  if(m.justos){grid+='<div class="pm-box-just">'+esc(m.justos)+'</div>';}
+  grid+='<div class="pm-box-dts">'+fD(m.dtch)+' &rarr; '+fD(m.dtab)+'</div></div>';
+  // BOX 2
+  var bc2=boxClsMan(dag_in),bv2=boxValClsMan(dag_in);
+  grid+='<div class="'+bc2+'"><div class="pm-box-lbl">Dias Ag. Inicio Manut.</div>';
   grid+='<div class="'+bv2+'">'+(dag_in!==null?dag_in+'d':'-')+'</div>';
-  if(m.justman){grid+='<div class="pp-box-just">'+esc(m.justman)+'</div>';}
-  grid+='<div class="pp-box-dts">'+fD(m.dtab)+' &rarr; '+fD(m.dtin)+'</div>';
-  grid+='</div>';
-
-  // BOX 3: Dias em Manutencao
-  var bc3=boxClsMan(dm);
-  var bv3=boxValClsMan(dm);
-  grid+='<div class="'+bc3+'">';
-  grid+='<div class="pp-box-lbl">Dias em Manut.</div>';
+  if(m.justman){grid+='<div class="pm-box-just">'+esc(m.justman)+'</div>';}
+  grid+='<div class="pm-box-dts">'+fD(m.dtab)+' &rarr; '+fD(m.dtin)+'</div></div>';
+  // BOX 3
+  var bc3=boxClsMan(dm),bv3=boxValClsMan(dm);
+  grid+='<div class="'+bc3+'"><div class="pm-box-lbl">Dias em Manut.</div>';
   grid+='<div class="'+bv3+'">'+(dm!==null?dm+'d':'-')+'</div>';
-  grid+='<div class="pp-box-dts">'+fD(m.dtin||m.dtab)+' &rarr; '+(dfin?fD(m.dtfin):'hoje')+'</div>';
-  grid+='</div>';
-
+  grid+='<div class="pm-box-dts">'+fD(m.dtin||m.dtab)+' &rarr; '+(dfin?fD(m.dtfin):'hoje')+'</div></div>';
   document.getElementById('pm-grid3').innerHTML=grid;
   document.getElementById('ov-man').classList.add('show');
   document.body.style.overflow='hidden';
 }
 
-function bTL(dts,hj){
-  var h='';
-  dts.forEach(function(it,idx){
-    var dt=pD(it.val);
-    var cl=dt?((dt<=hj)?'ok':'pend'):'pend';
-    var tg='';
-    if(it.ag){
-      var dp=pD(it.ag);
-      if(dt&&dp){
-        var df=Math.round((dt-dp)/86400000);
-        if(df===0)tg='<span class="tag tag-ok">No prazo</span>';
-        else if(df>0){cl='atr';tg='<span class="tag tag-atr">+'+df+'d atraso</span>';}
-        else tg='<span class="tag tag-ok">'+Math.abs(df)+'d adiantado</span>';
-      }else if(!dt){
-        if(dp&&dp<hj){cl='atr';var da=Math.round((hj-dp)/86400000);tg='<span class="tag tag-atr">+'+da+'d sem data</span>';}
-        else tg='<span class="tag tag-pend">Aguardando</span>';
-      }
-    }
-    h+='<div class="pp-row '+cl+'">';
-    h+='<div class="pp-num">'+(idx+1)+'</div>';
-    h+='<span class="pp-row-lbl">'+it.lbl+'</span>';
-    h+='<span class="pp-row-val'+(dt?'':' nd')+'">'+(dt?fD(it.val):'-')+'</span>';
-    h+=tg+'</div>';
-  });
-  return h;
-}
-
 function fechar(id){document.getElementById(id).classList.remove('show');document.body.style.overflow='';}
 function fecharFora(ev,id){if(ev.target===document.getElementById(id))fechar(id);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');}});
-function ivB(iv){var v=(iv||'').toLowerCase().trim();if(v==='ida')return'<span class="iv-ida">Ida</span>';if(v==='volta')return'<span class="iv-volta">Volta</span>';return'<span class="iv-nd">-</span>';}
-function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';if(v==='vazio')return's-vaz';return's-out';}
-function pD(s){
-  if(!s)return null;
-  var d;
-  if(s.indexOf('/')>=0){
-    var p=s.split('/');
-    var dia=+p[0],mes=(+p[1])-1,ano=+p[2];
-    if(ano<100)ano=ano+2000;
-    d=new Date(ano,mes,dia);
-  }else{
-    d=new Date(s+'T00:00:00');
-  }
-  return isNaN(d.getTime())?null:d;
-}
-function fD(s){if(!s)return'-';var d=pD(s);if(!d)return esc(s);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 var seg=120;
 setInterval(function(){
   seg--;if(seg<=0){seg=120;buscar();}
