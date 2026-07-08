@@ -362,11 +362,23 @@ var TITS={
 };
 var DC={
   agc:{col:'d2',lbl:'Data Status'},
-  agi:{col:'d2',lbl:'Data Status'},
+  agi:{col:'d3',lbl:'Data Status'},
   via:{col:'d4',lbl:'Data Status'},
   agd:{col:'d6',lbl:'Data Status'},
-  tot:{col:'d1',lbl:'Data Status'}
+  tot:{col:'',lbl:'Data Status'}
 };
+
+// Retorna a data status correta conforme status do veiculo
+// Ignora: d1 (agendamento), d5 (previsao), d7 (agend.entrega)
+function getDataStatus(d){
+  var v=(d.st||'').toLowerCase();
+  if(v.indexOf('carregamento')>=0) return d.d2||'';
+  if(v.indexOf('nicio')>=0)        return d.d3||'';
+  if(v==='em viagem'||v==='viagem')return d.d4||'';
+  if(v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0) return d.d6||'';
+  // Para total/vazio: ultima data real preenchida (d8>d6>d4>d3>d2)
+  return d.d8||d.d6||d.d4||d.d3||d.d2||'';
+}
 
 function filtrarCard(k){
   _card=k;
@@ -435,7 +447,7 @@ function renderVia(k,q){
     r+='<td>'+esc(d.ori||'-')+'</td>';
     r+='<td>'+esc(d.dst||'-')+'</td>';
     r+='<td><span class="cte">'+esc(d.cte||'-')+'</span></td>';
-    r+='<td><span class="dc">'+fD(d[dc.col]||'')+'</span></td>';
+    r+='<td><span class="dc">'+fD(getDataStatus(d))+'</span></td>';
     r+='<td>'+dB(ds)+'</td>';
     r+='<td><span class="sp '+sC(d.st)+'">'+esc(d.st||'-')+'</span></td>';
     r+='</tr>';
@@ -462,7 +474,7 @@ function renderMan(q){
   }
   var hj=new Date();hj.setHours(0,0,0,0);
   var rows=_fM.map(function(m,i){
-    var di=pD(m.dtin),dl=pD(m.dtlib),dp=pD(m.prev);
+    var di=pD(m.dtin)||pD(m.dtab),dl=pD(m.dtlib),dp=pD(m.prev);
     var dm=null;
     if(di){var fim=dl?dl:hj;dm=Math.round((fim-di)/86400000);if(dm<0)dm=0;}
     var cl=dl?'dk dk-ok':(dp&&(hj-dp)>0?'dk dk-a':'dk dk-w');
@@ -491,12 +503,7 @@ function renderMan(q){
 }
 
 function calcDias(d){
-  var v=(d.st||'').toLowerCase(),r='';
-  if(v.indexOf('carregamento')>=0)r=d.d2||d.d1;
-  else if(v.indexOf('nicio')>=0)r=d.d3||d.d2;
-  else if(v==='em viagem')r=d.d4;
-  else if(v.indexOf('descarga')>=0)r=d.d6;
-  else r=d.d1;
+  var r=getDataStatus(d);
   if(!r)return null;
   var dt=pD(r);if(!dt)return null;
   var hj=new Date();hj.setHours(0,0,0,0);
@@ -557,7 +564,7 @@ function abrirMan(i){
   document.getElementById('pm-fc').textContent=m.pcav||'-';
   document.getElementById('pm-fm').textContent=m.pman||'-';
   document.getElementById('pm-fos').textContent=m.os||'-';
-  var di=pD(m.dtin),dl=pD(m.dtlib),dp=pD(m.prev);
+  var di=pD(m.dtin)||pD(m.dtab),dl=pD(m.dtlib),dp=pD(m.prev);
   var dm=null;
   if(di){var fim=dl?dl:hj;dm=Math.round((fim-di)/86400000);if(dm<0)dm=0;}
   var de=document.getElementById('pm-dtot');
