@@ -75,9 +75,6 @@ tbody tr:hover td{background:#FFF8F3}
 .s-agc{background:#FEF3C7;color:#92400E}.s-agi{background:#EEF2FF;color:#1D4ED8}
 .s-via{background:#DCFCE7;color:#166534}.s-agd{background:#F3E8FF;color:#6B21A8}
 .s-vaz{background:#F3F4F6;color:#6B7280}.s-out{background:#F0EFEC;color:#58564F}.s-man{background:#FEE2E2;color:#DC2626}
-.s-dentro{background:#DCFCE7;color:#166534;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
-.s-fora{background:#FEE2E2;color:#9F1239;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
-.s-agcheg{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
 .iv-ida{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#FEF9C3;color:#854D0E;border:1px solid #FDE68A}
 .iv-volta{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#E0F2FE;color:#075985;border:1px solid #BAE6FD}
 .iv-nd{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB}
@@ -86,76 +83,102 @@ tbody tr:hover td{background:#FFF8F3}
 .dc{font-size:11px;color:#1A1A18}
 .empty{text-align:center;padding:48px;color:#99968F;font-size:13px}
 .tfoot{font-size:10px;color:#99968F;padding:6px 14px;text-align:right;border-top:1px solid #DDD9D0;background:#F8F7F5;flex-shrink:0}
-/* ── POPUP GERAL ── */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A18;color:#fff;font-size:12px;font-weight:600;padding:9px 18px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99999}
+.toast.show{opacity:1}
+/* ── POPUP VIAGEM ── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(15,15,15,.6);z-index:9000;align-items:center;justify-content:center}
 .overlay.show{display:flex}
 .popup{background:#fff;border-radius:16px;box-shadow:0 32px 80px rgba(0,0,0,.22);width:600px;max-width:96vw;max-height:94vh;overflow-y:auto;position:relative}
-/* ── POPUP VIAGEM ── */
-.pv-header{border-radius:16px 16px 0 0;overflow:hidden}
-.pv-banner{padding:20px 22px 16px;display:flex;flex-direction:column;gap:10px}
-.pv-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pv-placa-tag{font-family:'Courier New',monospace;font-size:16px;font-weight:700;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);color:#fff;padding:5px 12px;border-radius:8px;letter-spacing:.06em}
-.pv-mot-blk{flex:1}
-.pv-mot-name{font-size:15px;font-weight:700;color:#fff}
-.pv-mot-tipo{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
-.pv-status-badge{font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-.pv-rota{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.15);border-radius:10px;padding:10px 14px}
+.pp-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.15);border:none;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;color:#fff;font-weight:700;line-height:28px;text-align:center;z-index:10}
+.pp-close:hover{background:rgba(0,0,0,.3)}
+
+/* Cabeçalho laranja suave fixo */
+.pv-header{background:linear-gradient(135deg,#E8521A 0%,#F97316 60%,#FB923C 100%);border-radius:16px 16px 0 0;padding:18px 20px 14px;position:relative}
+.pv-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.pv-placa-tag{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.06em;flex-shrink:0;margin-top:1px}
+.pv-info-blk{flex:1}
+.pv-mot-name{font-size:15px;font-weight:700;color:#fff;line-height:1.2}
+.pv-mot-sub{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+.pv-status-badge{font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
+
+/* Rota compacta */
+.pv-rota{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.12);border-radius:8px;padding:7px 12px;margin-bottom:10px}
 .pv-rota-loc{flex:1}
-.pv-rota-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
-.pv-rota-name{font-size:12px;font-weight:600;color:#fff}
-.pv-rota-arrow{color:rgba(255,255,255,.6);font-size:18px;font-weight:300}
+.pv-rota-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1px}
+.pv-rota-name{font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.pv-rota-arrow{color:rgba(255,255,255,.5);font-size:16px;padding:0 2px;flex-shrink:0}
 .pv-rota-right{text-align:right}
-.pv-meta-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 22px 14px}
-.pv-meta-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,.9)}
-.pp-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.2);border:none;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;color:#fff;font-weight:700;line-height:28px;text-align:center;z-index:10}
-.pp-close:hover{background:rgba(0,0,0,.35)}
-/* info section */
-.pv-body{padding:18px 22px 0}
-.pv-info-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.pv-info-item{flex:1;min-width:120px;background:#F8F7F5;border-radius:8px;padding:9px 12px;border:1px solid #EDE9E1}
-.pv-info-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
-.pv-info-val{font-size:12px;font-weight:600;color:#1A1A18}
-.pv-info-val.nd{color:#B0ADA6;font-weight:400;font-style:italic}
-.pv-info-val.grn{color:#166534}.pv-info-val.amb{color:#92400E}.pv-info-val.red{color:#DC2626}
-.pv-info-sub{font-size:10px;color:#99968F;margin-top:2px}
-/* datas grid */
-.pv-section-title{font-size:10px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.08em;margin:14px 22px 8px}
-.pv-dates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 22px}
-.pv-date-card{background:#F8F7F5;border-radius:10px;padding:10px 12px;border:1px solid #EDE9E1;position:relative;overflow:hidden}
-.pv-date-card.done{background:#F0FDF4;border-color:#BBF7D0}
-.pv-date-card.pending{background:#F8F7F5;border-color:#EDE9E1}
-.pv-date-card.overdue{background:#FFF1F2;border-color:#FECDD3}
-.pv-date-card.highlight{background:#EEF3FF;border-color:#BFDBFE}
-.pv-date-card-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
-.pv-date-card-val{font-size:14px;font-weight:700;color:#1A1A18}
-.pv-date-card-val.nd{font-size:11px;color:#B0ADA6;font-weight:400;font-style:italic}
-.pv-date-card-sub{font-size:10px;color:#99968F;margin-top:3px}
-.pv-date-card-dot{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%}
-.dot-done{background:#22C55E}.dot-pending{background:#D1D5DB}.dot-overdue{background:#EF4444}.dot-highlight{background:#3B82F6}
-/* dias calculados */
-.pv-calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 22px 18px}
-.pv-calc-card{border-radius:10px;padding:12px;text-align:center;border:1px solid}
-.pv-calc-card.grn{background:#F0FDF4;border-color:#86EFAC}
-.pv-calc-card.amb{background:#FFFBF0;border-color:#FDE68A}
-.pv-calc-card.red{background:#FFF1F2;border-color:#FECDD3}
-.pv-calc-card.nd{background:#F8F7F5;border-color:#EDE9E1}
-.pv-calc-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;color:#99968F}
+
+/* Infos no header (produto, sentido, cliente, cte, remessa) */
+.pv-header-meta{display:flex;gap:6px;flex-wrap:wrap}
+.pv-hm-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 9px;font-size:10px;color:rgba(255,255,255,.9);white-space:nowrap}
+.pv-hm-pill b{color:#fff}
+
+/* Body */
+.pv-body{padding:14px 18px 0}
+
+/* Info row: dias+data, Ag Status */
+.pv-info-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.pv-ibox{flex:1;min-width:100px;background:#F8F7F5;border-radius:8px;padding:9px 12px;border:1px solid #EDE9E1}
+.pv-ibox-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.pv-ibox-val{font-size:13px;font-weight:700;color:#1A1A18}
+.pv-ibox-val.nd{color:#B0ADA6;font-weight:400;font-style:italic;font-size:11px}
+.pv-ibox-val.grn{color:#166534}.pv-ibox-val.amb{color:#92400E}.pv-ibox-val.red{color:#DC2626}
+.pv-ibox-sub{font-size:10px;color:#99968F;margin-top:2px}
+
+/* ── PISTA DE CORRIDA ── */
+.pv-track-section{padding:0 18px 14px}
+.pv-track-title{font-size:10px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.pv-track-wrap{position:relative;padding:8px 0 6px}
+
+/* Estrada */
+.pv-road{height:8px;background:#D1D5DB;border-radius:4px;position:relative;margin:18px 0 8px}
+.pv-road-line{position:absolute;top:50%;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,#fff 0px,#fff 8px,transparent 8px,transparent 16px);transform:translateY(-50%)}
+.pv-road-start{position:absolute;left:-4px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#6B7280;border:2px solid #fff;z-index:2}
+.pv-road-end{position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#1A1A18;border:2px solid #fff;z-index:2}
+
+/* Carro na pista */
+.pv-car{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:16px;z-index:4;transition:left .4s ease;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+
+/* Marcadores de checkpoint na pista */
+.pv-checkpoint{position:absolute;top:50%;transform:translate(-50%,-50%);z-index:3}
+.pv-chk-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.chk-done{background:#22C55E}
+.chk-pend{background:#D1D5DB}
+.chk-agend{background:#3B82F6}
+
+/* Cards das datas abaixo da pista */
+.pv-track-cards{display:flex;gap:6px;margin-top:4px}
+.pv-tc{flex:1;border-radius:8px;padding:7px 9px;border:1px solid;min-width:0;position:relative}
+.pv-tc.done{background:#F0FDF4;border-color:#BBF7D0}
+.pv-tc.pend{background:#F8F7F5;border-color:#EDE9E1}
+.pv-tc.current{background:#FFF7ED;border-color:#FED7AA;box-shadow:0 0 0 2px #FB923C}
+.pv-tc.agend{background:#EFF6FF;border-color:#BFDBFE}
+.pv-tc-lbl{font-size:8px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-tc-val{font-size:11px;font-weight:700;color:#1A1A18;white-space:nowrap}
+.pv-tc-val.nd{color:#B0ADA6;font-weight:400;font-style:italic;font-size:10px}
+.pv-tc.done .pv-tc-lbl{color:#166534}
+.pv-tc.current .pv-tc-lbl{color:#C2410C}
+.pv-tc.agend .pv-tc-lbl{color:#1D4ED8}
+
+/* Indicadores calculados */
+.pv-calcs{display:flex;gap:8px;padding:0 18px 14px}
+.pv-calc{flex:1;border-radius:10px;padding:11px;text-align:center;border:1px solid}
+.pv-calc.grn{background:#F0FDF4;border-color:#86EFAC}
+.pv-calc.amb{background:#FFFBF0;border-color:#FDE68A}
+.pv-calc.red{background:#FFF1F2;border-color:#FECDD3}
+.pv-calc.nd{background:#F8F7F5;border-color:#EDE9E1}
+.pv-calc-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#99968F;margin-bottom:5px}
 .pv-calc-val{font-size:22px;font-weight:800;line-height:1}
 .pv-calc-val.grn{color:#166534}.pv-calc-val.amb{color:#92400E}.pv-calc-val.red{color:#DC2626}.pv-calc-val.nd{color:#B0ADA6;font-size:14px;font-weight:400}
-.pv-calc-sub{font-size:10px;color:#99968F;margin-top:4px}
-/* footer popup */
-.pp-foot{padding:12px 22px 16px;background:#F8F7F5;border-top:1px solid #EDE9E1;border-radius:0 0 16px 16px;display:flex;gap:14px;flex-wrap:wrap}
-.pp-ft-item{flex:1;min-width:80px}
-.pp-ft-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
-.pp-ft-val{font-size:12px;font-weight:600;color:#1A1A18}
-/* agendamento status badge inline */
+
+/* Ag status badges */
 .ag-dentro{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:#DCFCE7;color:#166534;white-space:nowrap}
 .ag-fora{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:#FEE2E2;color:#9F1239;white-space:nowrap}
 .ag-aguard{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:#FEF3C7;color:#92400E;white-space:nowrap}
+
 /* POPUP MANUTENÇÃO */
-.pp-strip{height:5px;border-radius:16px 16px 0 0}
-.pp-strip.s-man{background:linear-gradient(90deg,#EF4444,#DC2626)}
-.pp-strip.s-vaz,.pp-strip.s-out{background:linear-gradient(90deg,#D1D5DB,#9CA3AF)}
+.pp-strip{height:5px;border-radius:16px 16px 0 0;background:linear-gradient(90deg,#EF4444,#DC2626)}
 .pm-hero{padding:16px 20px 14px;border-bottom:1px solid #EDE9E1}
 .pm-row1{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
 .pm-placa-cav{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#F0EFEC;border:1px solid #C9C6BD;padding:4px 10px;border-radius:7px;letter-spacing:.05em}
@@ -177,8 +200,11 @@ tbody tr:hover td{background:#FFF8F3}
 .pm-serv-box{margin:0 20px 13px;background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
 .pm-serv-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
 .pm-serv-txt{font-size:12px;color:#1A1A18;line-height:1.5;word-break:break-word}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A18;color:#fff;font-size:12px;font-weight:600;padding:9px 18px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99999}
-.toast.show{opacity:1}
+.pp-foot{padding:12px 20px 14px;background:#F8F7F5;border-top:1px solid #EDE9E1;border-radius:0 0 16px 16px;display:flex;gap:14px;flex-wrap:wrap}
+.pp-ft-item{flex:1;min-width:80px}
+.pp-ft-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.pp-ft-val{font-size:12px;font-weight:600;color:#1A1A18}
+
 </style>
 </head>
 <body>
@@ -239,72 +265,81 @@ tbody tr:hover td{background:#FFF8F3}
 <div class="overlay" id="ov-via" onclick="fecharFora(event,'ov-via')">
   <div class="popup">
     <button class="pp-close" onclick="fechar('ov-via')">&#x2715;</button>
+
+    <!-- CABEÇALHO LARANJA FIXO -->
     <div class="pv-header">
-      <div class="pv-banner" id="pv-banner">
-        <div class="pv-top">
-          <span class="pv-placa-tag" id="pv-placa"></span>
-          <div class="pv-mot-blk">
-            <div class="pv-mot-name" id="pv-mot"></div>
-            <div class="pv-mot-tipo" id="pv-tipo"></div>
-          </div>
-          <span class="pv-status-badge" id="pv-st"></span>
+      <div class="pv-top">
+        <span class="pv-placa-tag" id="pv-placa"></span>
+        <div class="pv-info-blk">
+          <div class="pv-mot-name" id="pv-mot"></div>
+          <div class="pv-mot-sub" id="pv-tipo"></div>
         </div>
-        <div class="pv-rota">
-          <div class="pv-rota-loc">
-            <div class="pv-rota-label">Origem</div>
-            <div class="pv-rota-name" id="pv-ori"></div>
-          </div>
-          <div class="pv-rota-arrow">&#8594;</div>
-          <div class="pv-rota-loc pv-rota-right">
-            <div class="pv-rota-label">Destino</div>
-            <div class="pv-rota-name" id="pv-dst"></div>
-          </div>
+        <span class="pv-status-badge" id="pv-st"></span>
+      </div>
+      <div class="pv-rota">
+        <div class="pv-rota-loc">
+          <div class="pv-rota-lbl">Origem</div>
+          <div class="pv-rota-name" id="pv-ori"></div>
         </div>
-        <div class="pv-meta-strip">
-          <span class="pv-meta-pill" id="pv-prod-pill"></span>
-          <span class="pv-meta-pill" id="pv-iv-pill"></span>
-          <span class="pv-meta-pill" id="pv-ag-pill"></span>
+        <div class="pv-rota-arrow">&#8594;</div>
+        <div class="pv-rota-loc pv-rota-right">
+          <div class="pv-rota-lbl">Destino</div>
+          <div class="pv-rota-name" id="pv-dst"></div>
         </div>
       </div>
+      <!-- Pills: produto, sentido, cliente, remessa, CTE -->
+      <div class="pv-header-meta">
+        <span class="pv-hm-pill" id="pv-pill-prod"></span>
+        <span class="pv-hm-pill" id="pv-pill-iv"></span>
+        <span class="pv-hm-pill" id="pv-pill-cli"></span>
+        <span class="pv-hm-pill" id="pv-pill-rem"></span>
+        <span class="pv-hm-pill" id="pv-pill-cte"></span>
+      </div>
     </div>
+
+    <!-- BODY -->
     <div class="pv-body">
       <div class="pv-info-row">
-        <div class="pv-info-item">
-          <div class="pv-info-lbl">Cliente</div>
-          <div class="pv-info-val" id="pv-cli"></div>
+        <div class="pv-ibox">
+          <div class="pv-ibox-lbl">Dias no Status</div>
+          <div class="pv-ibox-val" id="pv-dias-val"></div>
+          <div class="pv-ibox-sub" id="pv-dias-dt"></div>
         </div>
-        <div class="pv-info-item">
-          <div class="pv-info-lbl">Dias no Status</div>
-          <div class="pv-info-val" id="pv-dias-val"></div>
-          <div class="pv-info-sub" id="pv-dias-dt"></div>
-        </div>
-        <div class="pv-info-item">
-          <div class="pv-info-lbl">ID CTE</div>
-          <div class="pv-info-val" style="color:#6B21A8" id="pv-cte"></div>
-        </div>
-        <div class="pv-info-item">
-          <div class="pv-info-lbl">Remessa</div>
-          <div class="pv-info-val" id="pv-rem"></div>
+        <div class="pv-ibox" id="pv-ag-box" style="display:none">
+          <div class="pv-ibox-lbl">Status Agendamento</div>
+          <div id="pv-ag-badge"></div>
         </div>
       </div>
     </div>
-    <div class="pv-section-title">Linha do Tempo</div>
-    <div class="pv-dates-grid" id="pv-dates-grid"></div>
-    <div class="pv-section-title" id="pv-calc-title" style="display:none">Indicadores Calculados</div>
-    <div class="pv-calc-grid" id="pv-calc-grid" style="padding-bottom:18px"></div>
-    <div class="pp-foot">
-      <div class="pp-ft-item"><div class="pp-ft-lbl">Cliente</div><div class="pp-ft-val" id="pv-cli2"></div></div>
-      <div class="pp-ft-item"><div class="pp-ft-lbl">Remessa</div><div class="pp-ft-val" id="pv-rem2"></div></div>
-      <div class="pp-ft-item"><div class="pp-ft-lbl">ID CTE</div><div class="pp-ft-val" style="color:#6B21A8" id="pv-cte2"></div></div>
+
+    <!-- PISTA DE CORRIDA -->
+    <div class="pv-track-section">
+      <div class="pv-track-title">Linha do Tempo</div>
+      <div class="pv-track-wrap">
+        <div class="pv-road" id="pv-road">
+          <div class="pv-road-line"></div>
+          <div class="pv-road-start"></div>
+          <div class="pv-road-end"></div>
+          <!-- checkpoints e carro injetados por JS -->
+        </div>
+      </div>
+      <div class="pv-track-cards" id="pv-track-cards"></div>
     </div>
+
+    <!-- INDICADORES CALCULADOS -->
+    <div id="pv-calcs-wrap" style="display:none">
+      <div class="pv-track-title" style="padding:0 18px;margin-bottom:8px">Indicadores</div>
+      <div class="pv-calcs" id="pv-calcs"></div>
+    </div>
+
   </div>
 </div>
 
 <!-- POPUP MANUTENÇÃO -->
 <div class="overlay" id="ov-man" onclick="fecharFora(event,'ov-man')">
   <div class="popup">
-    <div class="pp-strip s-man"></div>
-    <button class="pp-close" onclick="fechar('ov-man')">&#x2715;</button>
+    <div class="pp-strip"></div>
+    <button class="pp-close" onclick="fechar('ov-man')" style="top:16px">&#x2715;</button>
     <div class="pm-hero">
       <div class="pm-row1">
         <span class="pm-placa-cav" id="pm-cav"></span>
@@ -368,33 +403,13 @@ function buscar(){
     }).catch(function(){_tot=_D.length+_M.length;aCards(false,0);renderTab();setTs();});
   });
 }
-
-function pCSV(l){
-  var r=[],c='',q=false;
-  for(var i=0;i<l.length;i++){
-    var x=l[i];
-    if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c.trim());c='';}else{c+=x;}
-  }
-  r.push(c.trim());return r;
-}
-function setTs(){
-  var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('ts').textContent='Atualizado as '+h+' - Google Sheets';
-}
+function pCSV(l){var r=[],c='',q=false;for(var i=0;i<l.length;i++){var x=l[i];if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c.trim());c='';}else{c+=x;}}r.push(c.trim());return r;}
+function setTs(){var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});document.getElementById('ts').textContent='Atualizado as '+h+' - Google Sheets';}
 function pct(n){if(!_tot||_tot===0)return'0%';return Math.round((n/_tot)*100)+'%';}
-function mSt(s,k){
-  var v=(s||'').toLowerCase().trim();
-  if(k==='agc')return v.indexOf('carregamento')>=0;
-  if(k==='agi')return v.indexOf('nicio')>=0;
-  if(k==='via')return v==='em viagem'||v==='viagem';
-  if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;
-  if(k==='vaz')return v==='vazio';
-  return true;
-}
+function mSt(s,k){var v=(s||'').toLowerCase().trim();if(k==='agc')return v.indexOf('carregamento')>=0;if(k==='agi')return v.indexOf('nicio')>=0;if(k==='via')return v==='em viagem'||v==='viagem';if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;if(k==='vaz')return v==='vazio';return true;}
 function aCards(u,n){
   var tot=u?n:(_D.length+_M.length);_tot=tot;
-  document.getElementById('v-tot').textContent=tot;
-  document.getElementById('p-tot').textContent='100%';
+  document.getElementById('v-tot').textContent=tot;document.getElementById('p-tot').textContent='100%';
   var nagc=_D.filter(function(d){return mSt(d.st,'agc');}).length;
   var nagi=_D.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=_D.filter(function(d){return mSt(d.st,'via');}).length;
@@ -406,61 +421,32 @@ function aCards(u,n){
   document.getElementById('v-agd').textContent=nagd;document.getElementById('p-agd').textContent=pct(nagd);
   document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
 }
-
-// ── Helpers de data ──────────────────────────────────────────────────────
-function pD(s){
-  if(!s)return null;
-  var d;
-  if(s.indexOf('/')>=0){
-    var p=s.split('/');
-    var dia=+p[0],mes=(+p[1])-1,ano=+p[2];
-    if(ano<100)ano+=2000;
-    d=new Date(ano,mes,dia);
-  }else{d=new Date(s+'T00:00:00');}
-  return isNaN(d.getTime())?null:d;
-}
-function fD(s){
-  if(!s)return'-';var d=pD(s);if(!d)return esc(s);
-  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
-}
+function pD(s){if(!s)return null;var d;if(s.indexOf('/')>=0){var p=s.split('/');var dia=+p[0],mes=(+p[1])-1,ano=+p[2];if(ano<100)ano+=2000;d=new Date(ano,mes,dia);}else{d=new Date(s+'T00:00:00');}return isNaN(d.getTime())?null:d;}
+function fD(s){if(!s)return'-';var d=pD(s);if(!d)return esc(s);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}
 function hoje(){var h=new Date();h.setHours(0,0,0,0);return h;}
 function diffDias(d1,d2){if(!d1||!d2)return null;var df=Math.round((d2-d1)/86400000);return df<0?0:df;}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// ── Status Agendamento ───────────────────────────────────────────────────
-// d7=data agendamento entrega, d6=chegada destino
 function calcAgStatus(d){
-  if(!d.d7)return null; // sem agendamento, nao mostra
+  if(!d.d7)return null;
   var dag=pD(d.d7),dch=pD(d.d6);
-  if(!dch)return 'aguard'; // sem chegada ainda
-  // tem chegada: comparar com agendamento
-  // chegada > agendamento = Fora; <= = Dentro
-  if(dch>dag)return 'fora';
-  return 'dentro';
+  if(!dch)return 'aguard';
+  return dch>dag?'fora':'dentro';
 }
 function agStatusHTML(d){
   var st=calcAgStatus(d);
   if(!st)return '';
-  if(st==='aguard')return '<span class="ag-aguard">Ag. Chegada</span>';
-  if(st==='fora')return '<span class="ag-fora">Fora do Agendamento</span>';
-  return '<span class="ag-dentro">Dentro do Agendamento</span>';
+  if(st==='aguard')return'<span class="ag-aguard">Ag. Chegada</span>';
+  if(st==='fora')return'<span class="ag-fora">Fora do Agendamento</span>';
+  return'<span class="ag-dentro">Dentro do Agendamento</span>';
 }
-
-// ── Dias Ag Carregamento ─────────────────────────────────────────────────
-// d2=chegada origem, d7=agend entrega (doca), d3=data carregamento
-// Condicao: d2 preenchida. Diferenca: d3 (ou hoje) - d2, descontando os proprios dias (exclusivo em ambos)
 function calcDiasAgCarreg(d){
-  if(!d.d2)return null; // sem chegada origem
+  if(!d.d2)return null;
   var dori=pD(d.d2),dcarr=pD(d.d3),hj=hoje();
   var fim=dcarr||hj;
-  // exclusivo em ambos: (fim - dori) - 1 (nao conta dia chegada nem dia carregamento)
   var df=Math.round((fim-dori)/86400000);
   return df>1?df-1:0;
 }
-
-// ── Dias Ag Descarga ────────────────────────────────────────────────────
-// d6=chegada destino, d7=agend entrega, d8=data descarregamento
-// Condicao: d6 e d7 preenchidas. Diferenca: d8 (ou hoje) - d6
 function calcDiasAgDescarga(d){
   if(!d.d6||!d.d7)return null;
   var ddst=pD(d.d6),ddesc=pD(d.d8),hj=hoje();
@@ -468,8 +454,6 @@ function calcDiasAgDescarga(d){
   var df=Math.round((fim-ddst)/86400000);
   return df>1?df-1:0;
 }
-
-// ── Dias no Status ───────────────────────────────────────────────────────
 function getDataStatus(d){
   var v=(d.st||'').toLowerCase();
   if(v.indexOf('carregamento')>=0)return d.d2||'';
@@ -481,86 +465,21 @@ function getDataStatus(d){
 function calcDias(d){
   var r=getDataStatus(d);if(!r)return null;
   var dt=pD(r);if(!dt)return null;
-  var hj=hoje();
-  var df=Math.round((hj-dt)/86400000);
-  return df>0?df-1:0;
+  var hj=hoje();var df=Math.round((hj-dt)/86400000);return df>0?df-1:0;
 }
+function dB(n){if(n===null)return'<span class="dk-n">-</span>';if(n<=2)return'<span class="dk dk-ok">'+n+'d</span>';if(n<=6)return'<span class="dk dk-w">'+n+'d</span>';return'<span class="dk dk-a">'+n+'d</span>';}
+function dkMan(n){if(n===null)return'<span class="dk-n">-</span>';var cl=n<1?'dk-ok':(n<=2?'dk-w':'dk-a');return'<span class="dk '+cl+'">'+n+'d</span>';}
+function dkAgr(n){if(n===null)return'<span class="dk-n">-</span>';var cl=n<=0?'dk-ok':'dk-a';return'<span class="dk '+cl+'">'+n+'d</span>';}
+function boxClsMan(n){if(n===null)return'pm-box';if(n<1)return'pm-box grn';if(n<=2)return'pm-box amb';return'pm-box red';}
+function boxValClsMan(n){if(n===null)return'pm-box-val nd';if(n<1)return'pm-box-val grn';if(n<=2)return'pm-box-val amb';return'pm-box-val red';}
+function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';if(v==='vazio')return's-vaz';return's-out';}
+function ivB(iv){var v=(iv||'').toLowerCase().trim();if(v==='ida')return'<span class="iv-ida">Ida</span>';if(v==='volta')return'<span class="iv-volta">Volta</span>';return'<span class="iv-nd">-</span>';}
 
-// ── Badges ───────────────────────────────────────────────────────────────
-function dB(n){
-  if(n===null)return'<span class="dk-n">-</span>';
-  if(n<=2)return'<span class="dk dk-ok">'+n+'d</span>';
-  if(n<=6)return'<span class="dk dk-w">'+n+'d</span>';
-  return'<span class="dk dk-a">'+n+'d</span>';
-}
-function dkMan(n){
-  if(n===null)return'<span class="dk-n">-</span>';
-  var cl=n<1?'dk-ok':(n<=2?'dk-w':'dk-a');
-  return'<span class="dk '+cl+'">'+n+'d</span>';
-}
-// Dias Ag Carregamento/Descarga: 0=verde, >0=vermelho
-function dkAgr(n){
-  if(n===null)return'<span class="dk-n">-</span>';
-  var cl=n<=0?'dk-ok':'dk-a';
-  return'<span class="dk '+cl+'">'+n+'d</span>';
-}
-function boxClsMan(n){
-  if(n===null)return'pm-box';if(n<1)return'pm-box grn';if(n<=2)return'pm-box amb';return'pm-box red';
-}
-function boxValClsMan(n){
-  if(n===null)return'pm-box-val nd';if(n<1)return'pm-box-val grn';if(n<=2)return'pm-box-val amb';return'pm-box-val red';
-}
-function sC(s){
-  var v=(s||'').toLowerCase();
-  if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';
-  if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';
-  if(v==='vazio')return's-vaz';return's-out';
-}
-function ivB(iv){
-  var v=(iv||'').toLowerCase().trim();
-  if(v==='ida')return'<span class="iv-ida">Ida</span>';
-  if(v==='volta')return'<span class="iv-volta">Volta</span>';
-  return'<span class="iv-nd">-</span>';
-}
-
-var TITS={
-  tot:{t:'Todos os veiculos',b:'Total',bc:''},
-  agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},
-  agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},
-  via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},
-  agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},
-  man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'}
-};
-
-function filtrarCard(k){
-  _card=k;
-  ['tot','agc','agi','via','agd','man'].forEach(function(c){
-    document.getElementById('card-'+c).classList.toggle('active',c===k);
-  });
-  var m=k==='man';
-  document.getElementById('btn-vaz').style.display=m?'none':'';
-  document.getElementById('btn-iv').style.display=m?'none':'';
-  renderTab();
-}
-function toggleVaz(){
-  _vaz=!_vaz;var b=document.getElementById('btn-vaz');
-  b.classList.toggle('on',_vaz);b.textContent=_vaz?'Ocultar Vazio':'Mostrar Vazio';renderTab();
-}
-function toggleIV(){
-  if(_ivF==='ambos'){_ivF='ida';}else if(_ivF==='ida'){_ivF='volta';}else{_ivF='ambos';}
-  var b=document.getElementById('btn-iv');
-  if(_ivF==='ida'){b.textContent='Somente Ida';b.className='fbtn on';}
-  else if(_ivF==='volta'){b.textContent='Somente Volta';b.className='fbtn on';}
-  else{b.textContent='Ida e Volta';b.className='fbtn';}
-  renderTab();
-}
-function renderTab(){
-  var k=_card,tm=TITS[k];
-  document.getElementById('tit-l').textContent=tm.t;
-  var bg=document.getElementById('tit-b');bg.textContent=tm.b;bg.className='tbadge '+tm.bc;
-  var q=(document.getElementById('busca').value||'').toLowerCase();
-  if(k==='man'){renderMan(q);}else{renderVia(k,q);}
-}
+var TITS={tot:{t:'Todos os veiculos',b:'Total',bc:''},agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'}};
+function filtrarCard(k){_card=k;['tot','agc','agi','via','agd','man'].forEach(function(c){document.getElementById('card-'+c).classList.toggle('active',c===k);});var m=k==='man';document.getElementById('btn-vaz').style.display=m?'none':'';document.getElementById('btn-iv').style.display=m?'none':'';renderTab();}
+function toggleVaz(){_vaz=!_vaz;var b=document.getElementById('btn-vaz');b.classList.toggle('on',_vaz);b.textContent=_vaz?'Ocultar Vazio':'Mostrar Vazio';renderTab();}
+function toggleIV(){if(_ivF==='ambos'){_ivF='ida';}else if(_ivF==='ida'){_ivF='volta';}else{_ivF='ambos';}var b=document.getElementById('btn-iv');if(_ivF==='ida'){b.textContent='Somente Ida';b.className='fbtn on';}else if(_ivF==='volta'){b.textContent='Somente Volta';b.className='fbtn on';}else{b.textContent='Ida e Volta';b.className='fbtn';}renderTab();}
+function renderTab(){var k=_card,tm=TITS[k];document.getElementById('tit-l').textContent=tm.t;var bg=document.getElementById('tit-b');bg.textContent=tm.b;bg.className='tbadge '+tm.bc;var q=(document.getElementById('busca').value||'').toLowerCase();if(k==='man'){renderMan(q);}else{renderVia(k,q);}}
 
 function renderVia(k,q){
   _fV=_D.filter(function(d){
@@ -574,9 +493,7 @@ function renderVia(k,q){
   document.getElementById('rc').textContent=_fV.length+' registro'+(_fV.length!==1?'s':'');
   if(!_fV.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro encontrado.</div>';return;}
   var rows=_fV.map(function(d,i){
-    var ds=calcDias(d);
-    var agc=calcDiasAgCarreg(d);
-    var agd=calcDiasAgDescarga(d);
+    var ds=calcDias(d),agc=calcDiasAgCarreg(d),agd=calcDiasAgDescarga(d);
     var r='<tr onclick="abrirVia('+i+')">';
     r+='<td>'+esc(d.cli||'-')+'</td>';
     r+='<td>'+esc(d.rem||'-')+'</td>';
@@ -597,28 +514,17 @@ function renderVia(k,q){
     r+='</tr>';
     return r;
   }).join('');
-  document.getElementById('tc').innerHTML=
-    '<table><thead><tr>'
-    +'<th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th>'
-    +'<th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th>'
-    +'<th>Origem</th><th>Destino</th><th>ID CTE</th>'
-    +'<th>Data Status</th><th>Dias Status</th><th>Status</th>'
-    +'<th>St. Agendamento</th><th>Dias Ag. Carreg.</th><th>Dias Ag. Descarga</th>'
-    +'</tr></thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('tc').innerHTML='<table><thead><tr><th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th><th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th><th>Origem</th><th>Destino</th><th>ID CTE</th><th>Data Status</th><th>Dias Status</th><th>Status</th><th>St. Agendamento</th><th>Dias Ag. Carreg.</th><th>Dias Ag. Descarga</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 function renderMan(q){
-  _fM=_M.filter(function(m){
-    if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;return true;
-  });
+  _fM=_M.filter(function(m){if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;return true;});
   document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
   if(!_fM.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
   var hj=hoje();
   var rows=_fM.map(function(m,i){
     var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
-    var dag_ab=diffDias(dch,dab||hj);
-    var dag_in=diffDias(dab,din||hj);
-    var dm=diffDias(din||dab,dfin||hj);
+    var dag_ab=diffDias(dch,dab||hj),dag_in=diffDias(dab,din||hj),dm=diffDias(din||dab,dfin||hj);
     var r='<tr onclick="abrirMan('+i+')">';
     r+='<td><span class="placa">'+esc(m.pcav||'-')+'</span></td>';
     r+='<td><span class="placa-man">'+esc(m.pman||'-')+'</span></td>';
@@ -635,34 +541,15 @@ function renderMan(q){
     r+='</tr>';
     return r;
   }).join('');
-  document.getElementById('tc').innerHTML=
-    '<table style="min-width:1400px"><thead><tr>'
-    +'<th>Placa Cavalo</th><th>Placa Manut.</th><th>N. OS</th>'
-    +'<th>Dt. Chegada</th><th>Dt. Abertura OS</th><th>Servico</th>'
-    +'<th>Dt. Inicial</th><th>Prev. Liberacao</th><th>Dt. Finalizacao</th>'
-    +'<th>Dias Ag. Abertura</th><th>Dias Ag. Inicio</th><th>Dias em Manut.</th>'
-    +'</tr></thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('tc').innerHTML='<table style="min-width:1400px"><thead><tr><th>Placa Cavalo</th><th>Placa Manut.</th><th>N. OS</th><th>Dt. Chegada</th><th>Dt. Abertura OS</th><th>Servico</th><th>Dt. Inicial</th><th>Prev. Liberacao</th><th>Dt. Finalizacao</th><th>Dias Ag. Abertura</th><th>Dias Ag. Inicio</th><th>Dias em Manut.</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
-// ─── BANNER CORES POR STATUS ─────────────────────────────────────────────
-var BANNER={
-  's-agc':'linear-gradient(135deg,#92400E,#B45309)',
-  's-agi':'linear-gradient(135deg,#1E3A8A,#1D4ED8)',
-  's-via':'linear-gradient(135deg,#14532D,#166534)',
-  's-agd':'linear-gradient(135deg,#4C1D95,#6B21A8)',
-  's-vaz':'linear-gradient(135deg,#374151,#6B7280)',
-  's-out':'linear-gradient(135deg,#374151,#6B7280)'
-};
-
+// ── POPUP VIAGEM ─────────────────────────────────────────────────────────
 function abrirVia(i){
   var d=_fV[i];if(!d)return;
   var hj=hoje();
-  var sc=sC(d.st);
 
-  // Banner
-  var banner=document.getElementById('pv-banner');
-  banner.style.background=BANNER[sc]||BANNER['s-out'];
-
+  // Cabeçalho
   document.getElementById('pv-placa').textContent=d.placa;
   document.getElementById('pv-mot').textContent=d.mot||'-';
   document.getElementById('pv-tipo').textContent=d.tipo||'-';
@@ -670,74 +557,91 @@ function abrirVia(i){
   document.getElementById('pv-ori').textContent=d.ori||'-';
   document.getElementById('pv-dst').textContent=d.dst||'-';
 
-  // Pills no banner
-  document.getElementById('pv-prod-pill').textContent=d.prod?('Produto: '+d.prod):'Sem produto';
+  // Pills no header
   var ivtxt=(d.iv||'').toLowerCase()==='ida'?'Ida':(d.iv||'').toLowerCase()==='volta'?'Volta':'-';
-  document.getElementById('pv-iv-pill').textContent='Sentido: '+ivtxt;
-  var agSt=calcAgStatus(d);
-  var agPill=document.getElementById('pv-ag-pill');
-  if(agSt){
-    var agTxt=agSt==='aguard'?'Ag. Chegada':agSt==='fora'?'Fora do Agendamento':'Dentro do Agendamento';
-    agPill.textContent=agTxt;agPill.style.display='';
-  }else{agPill.style.display='none';}
-
-  // Info row
-  document.getElementById('pv-cli').textContent=d.cli||'-';
-  document.getElementById('pv-cte').textContent=d.cte||'-';
-  document.getElementById('pv-rem').textContent=d.rem||'-';
+  document.getElementById('pv-pill-prod').innerHTML='<b>Produto:</b> '+esc(d.prod||'-');
+  document.getElementById('pv-pill-iv').innerHTML='<b>Sentido:</b> '+ivtxt;
+  document.getElementById('pv-pill-cli').innerHTML='<b>Cliente:</b> '+esc(d.cli||'-');
+  document.getElementById('pv-pill-rem').innerHTML='<b>Remessa:</b> '+esc(d.rem||'-');
+  document.getElementById('pv-pill-cte').innerHTML='<b>CTE:</b> '+esc(d.cte||'-');
 
   // Dias no status
-  var ds=calcDias(d);
-  var dsDt=getDataStatus(d);
+  var ds=calcDias(d),dsDt=getDataStatus(d);
   var dsEl=document.getElementById('pv-dias-val');
-  var dsDtEl=document.getElementById('pv-dias-dt');
-  if(ds===null){dsEl.textContent='-';dsEl.className='pv-info-val nd';}
-  else if(ds<=2){dsEl.textContent=ds+'d';dsEl.className='pv-info-val grn';}
-  else if(ds<=6){dsEl.textContent=ds+'d';dsEl.className='pv-info-val amb';}
-  else{dsEl.textContent=ds+'d';dsEl.className='pv-info-val red';}
-  dsDtEl.textContent=dsDt?('Desde '+fD(dsDt)):'';
+  if(ds===null){dsEl.textContent='-';dsEl.className='pv-ibox-val nd';}
+  else if(ds<=2){dsEl.textContent=ds+'d';dsEl.className='pv-ibox-val grn';}
+  else if(ds<=6){dsEl.textContent=ds+'d';dsEl.className='pv-ibox-val amb';}
+  else{dsEl.textContent=ds+'d';dsEl.className='pv-ibox-val red';}
+  document.getElementById('pv-dias-dt').textContent=dsDt?('Desde '+fD(dsDt)):'';
 
-  // Footer
-  document.getElementById('pv-cli2').textContent=d.cli||'-';
-  document.getElementById('pv-rem2').textContent=d.rem||'-';
-  document.getElementById('pv-cte2').textContent=d.cte||'-';
+  // Status agendamento
+  var agSt=calcAgStatus(d);
+  var agBox=document.getElementById('pv-ag-box');
+  if(agSt){
+    agBox.style.display='';
+    document.getElementById('pv-ag-badge').innerHTML=agStatusHTML(d);
+  }else{agBox.style.display='none';}
 
-  // ── Linha do tempo: cards de data ────────────────────────────────────
-  var DATAS=[
-    {lbl:'Agendamento',val:d.d1,tipo:'agend',show:!!d.d1},
-    {lbl:'Chegada Origem',val:d.d2,tipo:'real',show:true},
-    {lbl:'Carregamento',val:d.d3,tipo:'real',show:true},
-    {lbl:'Inicio Viagem',val:d.d4,tipo:'real',show:true},
-    {lbl:'Prev. Chegada',val:d.d5,tipo:'prev',show:!!d.d5},
-    {lbl:'Chegada Destino',val:d.d6,tipo:'real',show:true},
-    {lbl:'Agend. Entrega',val:d.d7,tipo:'agend',show:!!d.d7}
-  ];
-  var gridHTML='';
-  DATAS.forEach(function(dt){
-    if(!dt.show)return;
-    var dtObj=pD(dt.val);
-    var cls='pv-date-card pending',dotCls='pv-date-card-dot dot-pending',valCls='pv-date-card-val nd';
-    var valTxt='-';
-    if(dt.tipo==='prev'){cls='pv-date-card pending';dotCls='pv-date-card-dot';dotCls='pv-date-card-dot';valCls='pv-date-card-val nd';}
-    if(dtObj){
-      valTxt=fD(dt.val);
-      if(dt.tipo==='agend'){cls='pv-date-card highlight';dotCls='pv-date-card-dot dot-highlight';valCls='pv-date-card-val';}
-      else if(dt.tipo==='prev'){cls='pv-date-card pending';dotCls='pv-date-card-dot dot-pending';valCls='pv-date-card-val';}
-      else if(dtObj<=hj){cls='pv-date-card done';dotCls='pv-date-card-dot dot-done';valCls='pv-date-card-val';}
-      else{cls='pv-date-card pending';dotCls='pv-date-card-dot dot-pending';valCls='pv-date-card-val';}
-    }
-    gridHTML+='<div class="'+cls+'">';
-    gridHTML+='<div class="'+dotCls+'"></div>';
-    gridHTML+='<div class="pv-date-card-lbl">'+dt.lbl+'</div>';
-    gridHTML+='<div class="'+valCls+'">'+valTxt+'</div>';
-    gridHTML+='</div>';
-  });
-  document.getElementById('pv-dates-grid').innerHTML=gridHTML;
+  // ── PISTA DE CORRIDA ─────────────────────────────────────────────────
+  // Datas da linha do tempo (apenas as que devem aparecer)
+  var etapas=[
+    {lbl:'Agendamento',   val:d.d1, tipo:'agend', show:!!d.d1},
+    {lbl:'Chegada Origem',val:d.d2, tipo:'real',  show:true},
+    {lbl:'Carregamento',  val:d.d3, tipo:'real',  show:true},
+    {lbl:'Inicio Viagem', val:d.d4, tipo:'real',  show:true},
+    {lbl:'Prev. Chegada', val:d.d5, tipo:'prev',  show:!!d.d5},
+    {lbl:'Chegada Destino',val:d.d6,tipo:'real',  show:true},
+    {lbl:'Agend. Entrega',val:d.d7, tipo:'agend', show:!!d.d7}
+  ].filter(function(e){return e.show;});
+
+  var n=etapas.length;
+  // Indice da ultima data preenchida (posicao do carro)
+  var carIdx=0;
+  for(var k=0;k<n;k++){if(pD(etapas[k].val))carIdx=k;}
+
+  // Montar checkpoints na estrada
+  var road=document.getElementById('pv-road');
+  // Remover checkpoints e carro anteriores
+  var olds=road.querySelectorAll('.pv-checkpoint,.pv-car');
+  for(var o=0;o<olds.length;o++)olds[o].parentNode.removeChild(olds[o]);
+
+  for(var k=0;k<n;k++){
+    var pct=n===1?50:(k/(n-1))*100;
+    var dt=pD(etapas[k].val);
+    var dotCls=dt?(etapas[k].tipo==='agend'?'chk-agend':'chk-done'):'chk-pend';
+    var chk=document.createElement('div');
+    chk.className='pv-checkpoint';
+    chk.style.left=pct+'%';
+    var dot=document.createElement('div');
+    dot.className='pv-chk-dot '+dotCls;
+    chk.appendChild(dot);
+    road.appendChild(chk);
+  }
+
+  // Carro na posicao da ultima data preenchida
+  var carPct=n===1?50:(carIdx/(n-1))*100;
+  var car=document.createElement('div');
+  car.className='pv-car';
+  car.style.left=carPct+'%';
+  car.textContent='🚛';
+  road.appendChild(car);
+
+  // Cards das etapas abaixo da pista
+  var cardsHTML='';
+  for(var k=0;k<n;k++){
+    var dt=pD(etapas[k].val);
+    var isCurrent=(k===carIdx);
+    var cls=isCurrent?'pv-tc current':(dt?(etapas[k].tipo==='agend'?'pv-tc agend':'pv-tc done'):'pv-tc pend');
+    cardsHTML+='<div class="'+cls+'">';
+    cardsHTML+='<div class="pv-tc-lbl">'+etapas[k].lbl+'</div>';
+    cardsHTML+='<div class="pv-tc-val'+(dt?'':' nd')+'">'+(dt?fD(etapas[k].val):'-')+'</div>';
+    cardsHTML+='</div>';
+  }
+  document.getElementById('pv-track-cards').innerHTML=cardsHTML;
 
   // ── Indicadores calculados ───────────────────────────────────────────
   var agc=calcDiasAgCarreg(d);
   var agdias=calcDiasAgDescarga(d);
-  // Dias em viagem: d4 -> d6 (ou hoje)
   var diasVia=null;
   if(d.d4){var dv4=pD(d.d4),dv6=pD(d.d6)||hj;diasVia=Math.round((dv6-dv4)/86400000);if(diasVia<0)diasVia=0;}
 
@@ -746,31 +650,18 @@ function abrirVia(i){
   if(diasVia!==null)calcs.push({lbl:'Dias em Viagem',val:diasVia,tipo:'via'});
   if(agdias!==null)calcs.push({lbl:'Dias Ag. Descarga',val:agdias,tipo:'agr'});
 
-  var calcGrid=document.getElementById('pv-calc-grid');
-  var calcTitle=document.getElementById('pv-calc-title');
+  var calcsWrap=document.getElementById('pv-calcs-wrap');
   if(calcs.length>0){
-    calcTitle.style.display='';
+    calcsWrap.style.display='';
     var ch='';
     calcs.forEach(function(calc){
-      var cls,vcls,sub='';
-      if(calc.tipo==='agr'){
-        cls=calc.val<=0?'pv-calc-card grn':'pv-calc-card red';
-        vcls=calc.val<=0?'pv-calc-val grn':'pv-calc-val red';
-      }else{
-        cls=calc.val<=2?'pv-calc-card grn':calc.val<=6?'pv-calc-card amb':'pv-calc-card red';
-        vcls=calc.val<=2?'pv-calc-val grn':calc.val<=6?'pv-calc-val amb':'pv-calc-val red';
-      }
-      ch+='<div class="'+cls+'">';
-      ch+='<div class="pv-calc-lbl">'+calc.lbl+'</div>';
-      ch+='<div class="'+vcls+'">'+calc.val+'d</div>';
-      ch+='</div>';
+      var cls,vcls;
+      if(calc.tipo==='agr'){cls=calc.val<=0?'pv-calc grn':'pv-calc red';vcls=calc.val<=0?'pv-calc-val grn':'pv-calc-val red';}
+      else{cls=calc.val<=2?'pv-calc grn':calc.val<=6?'pv-calc amb':'pv-calc red';vcls=calc.val<=2?'pv-calc-val grn':calc.val<=6?'pv-calc-val amb':'pv-calc-val red';}
+      ch+='<div class="'+cls+'"><div class="pv-calc-lbl">'+calc.lbl+'</div><div class="'+vcls+'">'+calc.val+'d</div></div>';
     });
-    calcGrid.innerHTML=ch;
-    calcGrid.style.display='';
-  }else{
-    calcTitle.style.display='none';
-    calcGrid.innerHTML='';calcGrid.style.display='none';
-  }
+    document.getElementById('pv-calcs').innerHTML=ch;
+  }else{calcsWrap.style.display='none';}
 
   document.getElementById('ov-via').classList.add('show');
   document.body.style.overflow='hidden';
@@ -788,26 +679,18 @@ function abrirMan(i){
   document.getElementById('pm-fc').textContent=m.pcav||'-';
   document.getElementById('pm-fm').textContent=m.pman||'-';
   document.getElementById('pm-fos').textContent=m.os||'-';
-  var dag_ab=diffDias(dch,dab||hj);
-  var dag_in=diffDias(dab,din||hj);
-  var dm=diffDias(din||dab,dfin||hj);
+  var dag_ab=diffDias(dch,dab||hj),dag_in=diffDias(dab,din||hj),dm=diffDias(din||dab,dfin||hj);
   var grid='';
-  // BOX 1
   var bc1=boxClsMan(dag_ab),bv1=boxValClsMan(dag_ab);
-  grid+='<div class="'+bc1+'"><div class="pm-box-lbl">Dias Ag. Abertura OS</div>';
-  grid+='<div class="'+bv1+'">'+(dag_ab!==null?dag_ab+'d':'-')+'</div>';
+  grid+='<div class="'+bc1+'"><div class="pm-box-lbl">Dias Ag. Abertura OS</div><div class="'+bv1+'">'+(dag_ab!==null?dag_ab+'d':'-')+'</div>';
   if(m.justos){grid+='<div class="pm-box-just">'+esc(m.justos)+'</div>';}
   grid+='<div class="pm-box-dts">'+fD(m.dtch)+' &rarr; '+fD(m.dtab)+'</div></div>';
-  // BOX 2
   var bc2=boxClsMan(dag_in),bv2=boxValClsMan(dag_in);
-  grid+='<div class="'+bc2+'"><div class="pm-box-lbl">Dias Ag. Inicio Manut.</div>';
-  grid+='<div class="'+bv2+'">'+(dag_in!==null?dag_in+'d':'-')+'</div>';
+  grid+='<div class="'+bc2+'"><div class="pm-box-lbl">Dias Ag. Inicio Manut.</div><div class="'+bv2+'">'+(dag_in!==null?dag_in+'d':'-')+'</div>';
   if(m.justman){grid+='<div class="pm-box-just">'+esc(m.justman)+'</div>';}
   grid+='<div class="pm-box-dts">'+fD(m.dtab)+' &rarr; '+fD(m.dtin)+'</div></div>';
-  // BOX 3
   var bc3=boxClsMan(dm),bv3=boxValClsMan(dm);
-  grid+='<div class="'+bc3+'"><div class="pm-box-lbl">Dias em Manut.</div>';
-  grid+='<div class="'+bv3+'">'+(dm!==null?dm+'d':'-')+'</div>';
+  grid+='<div class="'+bc3+'"><div class="pm-box-lbl">Dias em Manut.</div><div class="'+bv3+'">'+(dm!==null?dm+'d':'-')+'</div>';
   grid+='<div class="pm-box-dts">'+fD(m.dtin||m.dtab)+' &rarr; '+(dfin?fD(m.dtfin):'hoje')+'</div></div>';
   document.getElementById('pm-grid3').innerHTML=grid;
   document.getElementById('ov-man').classList.add('show');
@@ -818,11 +701,7 @@ function fechar(id){document.getElementById(id).classList.remove('show');documen
 function fecharFora(ev,id){if(ev.target===document.getElementById(id))fechar(id);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');}});
 var seg=120;
-setInterval(function(){
-  seg--;if(seg<=0){seg=120;buscar();}
-  var m=Math.floor(seg/60),s=seg%60;
-  document.getElementById('cd').textContent='Atualiza em '+m+':'+(s<10?'0':'')+s;
-},1000);
+setInterval(function(){seg--;if(seg<=0){seg=120;buscar();}var m=Math.floor(seg/60),s=seg%60;document.getElementById('cd').textContent='Atualiza em '+m+':'+(s<10?'0':'')+s;},1000);
 
 </script>
 </body>
