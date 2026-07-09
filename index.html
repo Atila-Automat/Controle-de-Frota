@@ -25,10 +25,14 @@ body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .bref{background:#fff;border:1px solid #DDD9D0;color:#58564F;font-size:12px;font-weight:600;padding:6px 13px;border-radius:6px;cursor:pointer;font-family:inherit}
 .bref:hover{background:#F0EFEC}
 .main{flex:1;padding:14px 24px 20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;min-height:0}
-.cards{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;flex-shrink:0}
-@media(max-width:1200px){.cards{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}}
-.card{background:#fff;border:1.5px solid #DDD9D0;border-top:4px solid #DDD9D0;border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;position:relative;user-select:none}
+.cards{display:grid;grid-template-columns:repeat(6,1fr) 2px repeat(2,1fr);gap:8px;flex-shrink:0;align-items:stretch}
+.cards-sep{background:linear-gradient(to bottom,transparent,#C9C6BD,transparent);border-radius:1px}
+.cards-group{display:contents}
+
+
+@media(max-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{background:#fff;border:1.5px solid #DDD9D0;border-top:4px solid #DDD9D0;border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;position:relative;user-select:none;min-width:0;overflow:hidden}
 .card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.08)}
 .card.active{box-shadow:0 4px 14px rgba(0,0,0,.1)}
 .card-lbl{font-size:10px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
@@ -224,37 +228,42 @@ tbody tr:hover td{background:#FFF8F3}
 </div>
 <div class="main">
   <div class="cards">
-    <div class="card c-tot active" id="card-tot" onclick="filtrarCard('tot')">
-      <div class="card-lbl">Total Veiculos</div><div class="card-val" id="v-tot">0</div>
-      <div class="card-pct" id="p-tot">100%</div><div class="card-sub">placas ativas</div><div class="card-mark"></div>
+    <div class="cards-group">
+      <div class="card c-tot active" id="card-tot" onclick="filtrarCard('tot')">
+        <div class="card-lbl">Total Veiculos</div><div class="card-val" id="v-tot">0</div>
+        <div class="card-pct" id="p-tot">100%</div><div class="card-sub">placas ativas</div><div class="card-mark"></div>
+      </div>
+      <div class="card c-agc" id="card-agc" onclick="filtrarCard('agc')">
+        <div class="card-lbl">Ag. Carregamento</div><div class="card-val" id="v-agc">0</div>
+        <div class="card-pct" id="p-agc">0%</div><div class="card-sub">aguardando carga</div><div class="card-mark"></div>
+      </div>
+      <div class="card c-agi" id="card-agi" onclick="filtrarCard('agi')">
+        <div class="card-lbl">Ag. Inicio Viagem</div><div class="card-val" id="v-agi">0</div>
+        <div class="card-pct" id="p-agi">0%</div><div class="card-sub">carregados, aguardando</div><div class="card-mark"></div>
+      </div>
+      <div class="card c-via" id="card-via" onclick="filtrarCard('via')">
+        <div class="card-lbl">Em Viagem</div><div class="card-val" id="v-via">0</div>
+        <div class="card-pct" id="p-via">0%</div><div class="card-sub">em transito</div><div class="card-mark"></div>
+      </div>
+      <div class="card c-agd" id="card-agd" onclick="filtrarCard('agd')">
+        <div class="card-lbl">Ag. Descarga</div><div class="card-val" id="v-agd">0</div>
+        <div class="card-pct" id="p-agd">0%</div><div class="card-sub">no destino</div><div class="card-mark"></div>
+      </div>
+      <div class="card c-vaz" id="card-vaz" onclick="filtrarCard('vaz')">
+        <div class="card-lbl">Vazios</div><div class="card-val" id="v-vaz">0</div>
+        <div class="card-pct" id="p-vaz">0%</div><div class="card-sub">sem carga atual</div><div class="card-mark"></div>
+      </div>
     </div>
-    <div class="card c-agc" id="card-agc" onclick="filtrarCard('agc')">
-      <div class="card-lbl">Ag. Carregamento</div><div class="card-val" id="v-agc">0</div>
-      <div class="card-pct" id="p-agc">0%</div><div class="card-sub">aguardando carga</div><div class="card-mark"></div>
-    </div>
-    <div class="card c-agi" id="card-agi" onclick="filtrarCard('agi')">
-      <div class="card-lbl">Ag. Inicio Viagem</div><div class="card-val" id="v-agi">0</div>
-      <div class="card-pct" id="p-agi">0%</div><div class="card-sub">carregados, aguardando</div><div class="card-mark"></div>
-    </div>
-    <div class="card c-via" id="card-via" onclick="filtrarCard('via')">
-      <div class="card-lbl">Em Viagem</div><div class="card-val" id="v-via">0</div>
-      <div class="card-pct" id="p-via">0%</div><div class="card-sub">em transito</div><div class="card-mark"></div>
-    </div>
-    <div class="card c-agd" id="card-agd" onclick="filtrarCard('agd')">
-      <div class="card-lbl">Ag. Descarga</div><div class="card-val" id="v-agd">0</div>
-      <div class="card-pct" id="p-agd">0%</div><div class="card-sub">no destino</div><div class="card-mark"></div>
-    </div>
-    <div class="card c-agm" id="card-agm" onclick="filtrarCard('agm')">
-      <div class="card-lbl">Ag. Descarga + Manut.</div><div class="card-val" id="v-agm">0</div>
-      <div class="card-pct" id="p-agm" style="visibility:hidden">-</div><div class="card-sub">desc + manut pendente</div><div class="card-mark"></div>
-    </div>
-    <div class="card c-man" id="card-man" onclick="filtrarCard('man')">
-      <div class="card-lbl">Manutencao</div><div class="card-val" id="v-man">0</div>
-      <div class="card-pct" id="p-man">0%</div><div class="card-sub">veiculos na oficina</div><div class="card-mark"></div>
-    </div>
-    <div class="card c-vaz" id="card-vaz" onclick="filtrarCard('vaz')">
-      <div class="card-lbl">Vazios</div><div class="card-val" id="v-vaz">0</div>
-      <div class="card-pct" id="p-vaz" style="visibility:hidden">-</div><div class="card-sub">sem carga atual</div><div class="card-mark"></div>
+    <div class="cards-sep"></div>
+    <div class="cards-group">
+      <div class="card c-man" id="card-man" onclick="filtrarCard('man')">
+        <div class="card-lbl">Manutencao</div><div class="card-val" id="v-man">0</div>
+        <div class="card-pct" id="p-man">0%</div><div class="card-sub">veiculos na oficina</div><div class="card-mark"></div>
+      </div>
+      <div class="card c-agm" id="card-agm" onclick="filtrarCard('agm')">
+        <div class="card-lbl">Ag. Desc + Manut.</div><div class="card-val" id="v-agm">0</div>
+        <div class="card-pct" id="p-agm" style="visibility:hidden">-</div><div class="card-sub">desc + manut pendente</div><div class="card-mark"></div>
+      </div>
     </div>
   </div>
   <div class="tw">
@@ -437,7 +446,7 @@ function aCards(u,n){
   document.getElementById('v-agd').textContent=nagd;document.getElementById('p-agd').textContent=pct(nagd);
   document.getElementById('v-agm').textContent=nagm;
   document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
-  document.getElementById('v-vaz').textContent=nvaz;
+  document.getElementById('v-vaz').textContent=nvaz;document.getElementById('p-vaz').textContent=pct(nvaz);
 }
 
 // Retorna ultima viagem de cada veiculo com status vazio que tem historico
