@@ -25,9 +25,9 @@ body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .bref{background:#fff;border:1px solid #DDD9D0;color:#58564F;font-size:12px;font-weight:600;padding:6px 13px;border-radius:6px;cursor:pointer;font-family:inherit}
 .bref:hover{background:#F0EFEC}
 .main{flex:1;padding:14px 24px 20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;min-height:0}
-.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;flex-shrink:0}
-@media(max-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:560px){.cards{grid-template-columns:repeat(2,1fr)}}
+.cards{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;flex-shrink:0}
+@media(max-width:1200px){.cards{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}}
 .card{background:#fff;border:1.5px solid #DDD9D0;border-top:4px solid #DDD9D0;border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;position:relative;user-select:none}
 .card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.08)}
 .card.active{box-shadow:0 4px 14px rgba(0,0,0,.1)}
@@ -43,6 +43,8 @@ body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .c-via{border-top-color:#166534}.c-via.active{background:#F0FDF4}.c-via.active .card-val{color:#166534}.c-via .card-mark{background:#166534}
 .c-agd{border-top-color:#6B21A8}.c-agd.active{background:#FAF5FF}.c-agd.active .card-val{color:#6B21A8}.c-agd .card-mark{background:#6B21A8}
 .c-man{border-top-color:#DC2626}.c-man.active{background:#FFF5F5}.c-man.active .card-val{color:#DC2626}.c-man .card-mark{background:#DC2626}
+.c-agm{border-top-color:#EA580C}.c-agm.active{background:#FFF7ED}.c-agm.active .card-val{color:#EA580C}.c-agm .card-mark{background:#EA580C}
+.c-vaz{border-top-color:#6B7280}.c-vaz.active{background:#F9FAFB}.c-vaz.active .card-val{color:#374151}.c-vaz .card-mark{background:#6B7280}
 .tw{background:#fff;border:1px solid #DDD9D0;border-radius:10px;display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
 .ttop{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid #DDD9D0;flex-wrap:wrap;background:#fff;flex-shrink:0}
 .tit{font-size:13px;font-weight:700;color:#1A1A18}
@@ -242,9 +244,17 @@ tbody tr:hover td{background:#FFF8F3}
       <div class="card-lbl">Ag. Descarga</div><div class="card-val" id="v-agd">0</div>
       <div class="card-pct" id="p-agd">0%</div><div class="card-sub">no destino</div><div class="card-mark"></div>
     </div>
+    <div class="card c-agm" id="card-agm" onclick="filtrarCard('agm')">
+      <div class="card-lbl">Ag. Descarga + Manut.</div><div class="card-val" id="v-agm">0</div>
+      <div class="card-pct" id="p-agm" style="visibility:hidden">-</div><div class="card-sub">desc + manut pendente</div><div class="card-mark"></div>
+    </div>
     <div class="card c-man" id="card-man" onclick="filtrarCard('man')">
       <div class="card-lbl">Manutencao</div><div class="card-val" id="v-man">0</div>
       <div class="card-pct" id="p-man">0%</div><div class="card-sub">veiculos na oficina</div><div class="card-mark"></div>
+    </div>
+    <div class="card c-vaz" id="card-vaz" onclick="filtrarCard('vaz')">
+      <div class="card-lbl">Vazios</div><div class="card-val" id="v-vaz">0</div>
+      <div class="card-pct" id="p-vaz" style="visibility:hidden">-</div><div class="card-sub">sem carga atual</div><div class="card-mark"></div>
     </div>
   </div>
   <div class="tw">
@@ -409,18 +419,48 @@ function pct(n){if(!_tot||_tot===0)return'0%';return Math.round((n/_tot)*100)+'%
 function mSt(s,k){var v=(s||'').toLowerCase().trim();if(k==='agc')return v.indexOf('carregamento')>=0;if(k==='agi')return v.indexOf('nicio')>=0;if(k==='via')return v==='em viagem'||v==='viagem';if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;if(k==='vaz')return v==='vazio';return true;}
 function aCards(u,n){
   var tot=u?n:(_D.length+_M.length);_tot=tot;
-  document.getElementById('v-tot').textContent=tot;document.getElementById('p-tot').textContent='100%';
+  document.getElementById('v-tot').textContent=tot;
+  document.getElementById('p-tot').textContent='100%';
   var nagc=_D.filter(function(d){return mSt(d.st,'agc');}).length;
   var nagi=_D.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=_D.filter(function(d){return mSt(d.st,'via');}).length;
   var nagd=_D.filter(function(d){return mSt(d.st,'agd');}).length;
   var nman=_M.filter(function(m){return !m.dtfin;}).length;
+  // Ag Descarga + Manut pendente (OS aberta sem dtin, placa em ag descarga)
+  var placasAgd=_D.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa;});
+  var nagm=_M.filter(function(m){return !m.dtfin&&!m.dtin&&placasAgd.indexOf(m.pcav)>=0;}).length;
+  // Vazios com historico
+  var nvaz=calcVazios().length;
   document.getElementById('v-agc').textContent=nagc;document.getElementById('p-agc').textContent=pct(nagc);
   document.getElementById('v-agi').textContent=nagi;document.getElementById('p-agi').textContent=pct(nagi);
   document.getElementById('v-via').textContent=nvia;document.getElementById('p-via').textContent=pct(nvia);
   document.getElementById('v-agd').textContent=nagd;document.getElementById('p-agd').textContent=pct(nagd);
+  document.getElementById('v-agm').textContent=nagm;
   document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
+  document.getElementById('v-vaz').textContent=nvaz;
 }
+
+// Retorna ultima viagem de cada veiculo com status vazio que tem historico
+function calcVazios(){
+  var porPlaca={};
+  _D.forEach(function(d){
+    if(!d.placa)return;
+    if(!porPlaca[d.placa])porPlaca[d.placa]=[];
+    porPlaca[d.placa].push(d);
+  });
+  var vazios=[];
+  Object.keys(porPlaca).forEach(function(placa){
+    var viagens=porPlaca[placa];
+    var ultima=viagens[viagens.length-1];
+    if(mSt(ultima.st,'vaz')){
+      var temHistorico=viagens.some(function(v){return !mSt(v.st,'vaz');});
+      if(temHistorico) vazios.push(ultima);
+    }
+  });
+  return vazios;
+}
+
+
 function pD(s){if(!s)return null;var d;if(s.indexOf('/')>=0){var p=s.split('/');var dia=+p[0],mes=(+p[1])-1,ano=+p[2];if(ano<100)ano+=2000;d=new Date(ano,mes,dia);}else{d=new Date(s+'T00:00:00');}return isNaN(d.getTime())?null:d;}
 function fD(s){if(!s)return'-';var d=pD(s);if(!d)return esc(s);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}
 function hoje(){var h=new Date();h.setHours(0,0,0,0);return h;}
@@ -428,20 +468,21 @@ function diffDias(d1,d2){if(!d1||!d2)return null;var df=Math.round((d2-d1)/86400
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function calcAgStatus(d){
-  if(!d.d7)return null;
+  // Só mostra status se tiver agendamento (d7) E chegada ao destino (d6)
+  if(!d.d7||!d.d6)return null;
   var dag=pD(d.d7),dch=pD(d.d6);
-  if(!dch)return 'aguard';
+  if(!dag||!dch)return null;
   return dch>dag?'fora':'dentro';
 }
 function agStatusHTML(d){
   var st=calcAgStatus(d);
   if(!st)return '';
-  if(st==='aguard')return'<span class="ag-aguard">Ag. Chegada</span>';
   if(st==='fora')return'<span class="ag-fora">Fora do Agendamento</span>';
   return'<span class="ag-dentro">Dentro do Agendamento</span>';
 }
 function calcDiasAgCarreg(d){
-  if(!d.d2)return null;
+  // Só calcula se tiver agendamento de doca (d1) E chegada na origem (d2)
+  if(!d.d1||!d.d2)return null;
   var dori=pD(d.d2),dcarr=pD(d.d3),hj=hoje();
   var fim=dcarr||hj;
   var df=Math.round((fim-dori)/86400000);
@@ -462,6 +503,39 @@ function getDataStatus(d){
   if(v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0)return d.d6||'';
   return d.d8||d.d6||d.d4||d.d3||d.d2||'';
 }
+function renderVaz(q){
+  var vazios=calcVazios();
+  _fV=vazios.filter(function(d){
+    if(q&&(d.cli+d.placa+d.mot+d.rem+d.prod+d.ori+d.dst+d.cte).toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  document.getElementById('rc').textContent=_fV.length+' registro'+(_fV.length!==1?'s':'');
+  if(!_fV.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum veiculo vazio com historico.</div>';return;}
+  var rows=_fV.map(function(d,i){
+    // Data status para vazio = data do descarregamento (d8)
+    var dtStatus=d.d8||'';
+    var ds=calcDias(d);
+    var r='<tr onclick="abrirVia('+i+')">';
+    r+='<td>'+esc(d.cli||'-')+'</td>';
+    r+='<td>'+esc(d.rem||'-')+'</td>';
+    r+='<td>'+ivB(d.iv)+'</td>';
+    r+='<td><span class="placa">'+esc(d.placa)+'</span></td>';
+    r+='<td>'+esc(d.tipo||'-')+'</td>';
+    r+='<td>'+esc(d.mot||'-')+'</td>';
+    r+='<td>'+esc(d.prod||'-')+'</td>';
+    r+='<td>'+esc(d.ori||'-')+'</td>';
+    r+='<td>'+esc(d.dst||'-')+'</td>';
+    r+='<td><span class="cte">'+esc(d.cte||'-')+'</span></td>';
+    r+='<td><span class="dc">'+fD(dtStatus)+'</span></td>';
+    r+='<td>'+dB(ds)+'</td>';
+    r+='<td><span class="sp s-vaz">Vazio</span></td>';
+    r+='<td></td><td></td><td></td>';
+    r+='</tr>';
+    return r;
+  }).join('');
+  document.getElementById('tc').innerHTML='<table><thead><tr><th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th><th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th><th>Origem</th><th>Destino</th><th>ID CTE</th><th>Data Status</th><th>Dias Status</th><th>Status</th><th>St. Agendamento</th><th>Dias Ag. Carreg.</th><th>Dias Ag. Descarga</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
 function calcDias(d){
   var r=getDataStatus(d);if(!r)return null;
   var dt=pD(r);if(!dt)return null;
@@ -475,11 +549,30 @@ function boxValClsMan(n){if(n===null)return'pm-box-val nd';if(n<1)return'pm-box-
 function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';if(v==='vazio')return's-vaz';return's-out';}
 function ivB(iv){var v=(iv||'').toLowerCase().trim();if(v==='ida')return'<span class="iv-ida">Ida</span>';if(v==='volta')return'<span class="iv-volta">Volta</span>';return'<span class="iv-nd">-</span>';}
 
-var TITS={tot:{t:'Todos os veiculos',b:'Total',bc:''},agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'}};
-function filtrarCard(k){_card=k;['tot','agc','agi','via','agd','man'].forEach(function(c){document.getElementById('card-'+c).classList.toggle('active',c===k);});var m=k==='man';document.getElementById('btn-vaz').style.display=m?'none':'';document.getElementById('btn-iv').style.display=m?'none':'';renderTab();}
+var TITS={tot:{t:'Todos os veiculos',b:'Total',bc:''},agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},agm:{t:'Ag. Descarga + Manutencao',b:'Ag. Desc + Manut.',bc:'c-agm'},man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'},vaz:{t:'Veiculos Vazios',b:'Vazios',bc:'c-vaz'}};
+function filtrarCard(k){
+  _card=k;
+  ['tot','agc','agi','via','agd','agm','man','vaz'].forEach(function(c){
+    document.getElementById('card-'+c).classList.toggle('active',c===k);
+  });
+  var isMan=k==='man'||k==='agm';
+  var isVaz=k==='vaz';
+  document.getElementById('btn-vaz').style.display=(isMan||isVaz)?'none':'';
+  document.getElementById('btn-iv').style.display=(isMan||isVaz)?'none':'';
+  renderTab();
+}
 function toggleVaz(){_vaz=!_vaz;var b=document.getElementById('btn-vaz');b.classList.toggle('on',_vaz);b.textContent=_vaz?'Ocultar Vazio':'Mostrar Vazio';renderTab();}
 function toggleIV(){if(_ivF==='ambos'){_ivF='ida';}else if(_ivF==='ida'){_ivF='volta';}else{_ivF='ambos';}var b=document.getElementById('btn-iv');if(_ivF==='ida'){b.textContent='Somente Ida';b.className='fbtn on';}else if(_ivF==='volta'){b.textContent='Somente Volta';b.className='fbtn on';}else{b.textContent='Ida e Volta';b.className='fbtn';}renderTab();}
-function renderTab(){var k=_card,tm=TITS[k];document.getElementById('tit-l').textContent=tm.t;var bg=document.getElementById('tit-b');bg.textContent=tm.b;bg.className='tbadge '+tm.bc;var q=(document.getElementById('busca').value||'').toLowerCase();if(k==='man'){renderMan(q);}else{renderVia(k,q);}}
+function renderTab(){
+  var k=_card,tm=TITS[k];
+  document.getElementById('tit-l').textContent=tm.t;
+  var bg=document.getElementById('tit-b');
+  bg.textContent=tm.b;bg.className='tbadge '+tm.bc;
+  var q=(document.getElementById('busca').value||'').toLowerCase();
+  if(k==='man'||k==='agm'){renderMan(q,k);}
+  else if(k==='vaz'){renderVaz(q);}
+  else{renderVia(k,q);}
+}
 
 function renderVia(k,q){
   _fV=_D.filter(function(d){
@@ -517,8 +610,17 @@ function renderVia(k,q){
   document.getElementById('tc').innerHTML='<table><thead><tr><th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th><th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th><th>Origem</th><th>Destino</th><th>ID CTE</th><th>Data Status</th><th>Dias Status</th><th>Status</th><th>St. Agendamento</th><th>Dias Ag. Carreg.</th><th>Dias Ag. Descarga</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
-function renderMan(q){
-  _fM=_M.filter(function(m){if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;return true;});
+function renderMan(q,filtro){
+  var placasAgd2=filtro==='agm'?_D.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa;}):{indexOf:function(){return -1}};
+  _fM=_M.filter(function(m){
+    if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;
+    if(filtro==='agm'){
+      // Apenas OS em aberto sem data inicial E placa em ag descarga
+      if(m.dtfin||m.dtin)return false;
+      if(placasAgd2.indexOf(m.pcav)<0)return false;
+    }
+    return true;
+  });
   document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
   if(!_fM.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
   var hj=hoje();
@@ -597,8 +699,11 @@ function abrirVia(i){
 
   var n=etapas.length;
   // Indice da ultima data preenchida (posicao do carro)
+  // Carro na ultima etapa REAL preenchida (ignora agendamento e previsao)
   var carIdx=0;
-  for(var k=0;k<n;k++){if(pD(etapas[k].val))carIdx=k;}
+  for(var k=0;k<n;k++){
+    if(pD(etapas[k].val) && etapas[k].tipo==='real') carIdx=k;
+  }
 
   // Montar checkpoints na estrada
   var road=document.getElementById('pv-road');
