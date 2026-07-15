@@ -451,6 +451,7 @@ function aCards(u,n){
 
 // Retorna ultima viagem de cada veiculo com status vazio que tem historico
 function calcVazios(){
+  // Agrupa viagens por placa e pega a ultima linha de cada placa
   var porPlaca={};
   _D.forEach(function(d){
     if(!d.placa)return;
@@ -461,10 +462,8 @@ function calcVazios(){
   Object.keys(porPlaca).forEach(function(placa){
     var viagens=porPlaca[placa];
     var ultima=viagens[viagens.length-1];
-    if(mSt(ultima.st,'vaz')){
-      var temHistorico=viagens.some(function(v){return !mSt(v.st,'vaz');});
-      if(temHistorico) vazios.push(ultima);
-    }
+    // Se a ultima atualizacao da placa for status vazio, entra na contagem
+    if(mSt(ultima.st,'vaz')) vazios.push(ultima);
   });
   return vazios;
 }
