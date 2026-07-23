@@ -449,9 +449,9 @@ function aCards(u,n){
   document.getElementById('v-vaz').textContent=nvaz;document.getElementById('p-vaz').textContent=pct(nvaz);
 }
 
-// Retorna ultima viagem de cada veiculo com status vazio que tem historico
+// Retorna a linha "vazio" de cada placa que NAO tem nenhuma outra linha com status ativo
 function calcVazios(){
-  // Agrupa viagens por placa e pega a ultima linha de cada placa
+  // Agrupa viagens por placa
   var porPlaca={};
   _D.forEach(function(d){
     if(!d.placa)return;
@@ -461,9 +461,17 @@ function calcVazios(){
   var vazios=[];
   Object.keys(porPlaca).forEach(function(placa){
     var viagens=porPlaca[placa];
-    var ultima=viagens[viagens.length-1];
-    // Se a ultima atualizacao da placa for status vazio, entra na contagem
-    if(mSt(ultima.st,'vaz')) vazios.push(ultima);
+    // Se QUALQUER linha da placa tiver status diferente de vazio, a placa NAO conta
+    // como vazia (ela ja aparece no card correspondente ao status ativo dela)
+    var temAtiva=viagens.some(function(d){return !mSt(d.st,'vaz');});
+    if(temAtiva)return;
+    // Todas as linhas da placa sao vazio: usa a de descarregamento mais recente (por data real, nao por ordem na planilha)
+    var ultima=viagens.reduce(function(melhor,d){
+      var dMelhor=pD(melhor.d8),dAtual=pD(d.d8);
+      if(dAtual&&(!dMelhor||dAtual>dMelhor))return d;
+      return melhor;
+    });
+    vazios.push(ultima);
   });
   return vazios;
 }
