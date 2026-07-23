@@ -450,7 +450,10 @@ function aCards(u,n){
 }
 
 // Retorna a linha "vazio" de cada placa que NAO tem nenhuma outra linha com status ativo
+// e que NAO esta em manutencao ativa (placa em manutencao tem prioridade sobre vazio)
 function calcVazios(){
+  // Placas com OS de manutencao em aberto (sem data de finalizacao)
+  var placasManut=_M.filter(function(m){return !m.dtfin;}).map(function(m){return (m.pcav||'').replace(/-/g,'');});
   // Agrupa viagens por placa
   var porPlaca={};
   _D.forEach(function(d){
@@ -460,6 +463,8 @@ function calcVazios(){
   });
   var vazios=[];
   Object.keys(porPlaca).forEach(function(placa){
+    // Placa em manutencao ativa: conta apenas no card de Manutencao, nunca em Vazios
+    if(placasManut.indexOf(placa)>=0)return;
     var viagens=porPlaca[placa];
     // Se QUALQUER linha da placa tiver status diferente de vazio, a placa NAO conta
     // como vazia (ela ja aparece no card correspondente ao status ativo dela)
