@@ -184,32 +184,31 @@ tbody tr:hover td{background:#FFF8F3}
 .ag-aguard{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;background:#FEF3C7;color:#92400E;white-space:nowrap}
 
 /* POPUP MANUTENÇÃO */
-.pp-strip{height:5px;border-radius:16px 16px 0 0;background:linear-gradient(90deg,#EF4444,#DC2626)}
-.pm-hero{padding:16px 20px 14px;border-bottom:1px solid #EDE9E1}
-.pm-row1{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
-.pm-placa-cav{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#F0EFEC;border:1px solid #C9C6BD;padding:4px 10px;border-radius:7px;letter-spacing:.05em}
-.pm-placa-man{font-family:'Courier New',monospace;font-size:15px;font-weight:700;background:#FEE2E2;border:1px solid #FECACA;padding:4px 10px;border-radius:7px;letter-spacing:.05em;color:#9F1239}
-.pm-os-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA}
-.pm-os-num{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:#DC2626}
-.pm-os-dt{font-size:11px;color:#99968F;margin-left:auto}
-.pm-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 20px}
-.pm-box{background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
+.popup.pm-popup{width:960px;max-width:97vw}
+.pp-strip{height:6px;border-radius:16px 16px 0 0;background:linear-gradient(90deg,#EF4444,#DC2626)}
+.pm-hero{padding:22px 26px 18px;border-bottom:1px solid #EDE9E1}
+.pm-row1{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.pm-placa-blk{display:flex;flex-direction:column;gap:5px}
+.pm-placa-cap{font-size:11px;font-weight:700;color:#6B6559;text-transform:uppercase;letter-spacing:.07em}
+.pm-placa-cav{font-family:'Courier New',monospace;font-size:19px;font-weight:700;background:#F0EFEC;border:1.5px solid #C9C6BD;padding:6px 14px;border-radius:8px;letter-spacing:.05em;color:#1A1A18}
+.pm-placa-man{font-family:'Courier New',monospace;font-size:19px;font-weight:700;background:#FEE2E2;border:1.5px solid #FECACA;padding:6px 14px;border-radius:8px;letter-spacing:.05em;color:#9F1239}
+.pm-os-row{display:flex;align-items:center;gap:10px;padding:11px 15px;background:#FEF2F2;border-radius:9px;border:1px solid #FECACA}
+.pm-os-num{font-family:'Courier New',monospace;font-size:17px;font-weight:700;color:#DC2626}
+.pm-os-dt{font-size:12px;font-weight:600;color:#7A4040;margin-left:auto}
+.pm-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px 26px}
+.pm-box{background:#F8F7F5;border-radius:10px;padding:14px 16px;border:1px solid #EDE9E1}
 .pm-box.red{background:#FEF2F2;border-color:#FECACA}
 .pm-box.grn{background:#F0FDF4;border-color:#BBF7D0}
 .pm-box.amb{background:#FFFBF0;border-color:#FDE68A}
-.pm-box-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.pm-box-val{font-size:20px;font-weight:700;color:#1A1A18;line-height:1;margin-bottom:3px}
-.pm-box-val.nd{color:#99968F;font-weight:400;font-size:11px}
+.pm-box-lbl{font-size:11px;font-weight:700;color:#4A463F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.pm-box-val{font-size:28px;font-weight:700;color:#1A1A18;line-height:1;margin-bottom:6px}
+.pm-box-val.nd{color:#6B6559;font-weight:600;font-size:13px}
 .pm-box-val.grn{color:#166534}.pm-box-val.amb{color:#92400E}.pm-box-val.red{color:#DC2626}
-.pm-box-just{font-size:11px;color:#58564F;margin-top:4px;line-height:1.4;word-break:break-word}
-.pm-box-dts{font-size:10px;color:#99968F;margin-top:3px}
-.pm-serv-box{margin:0 20px 13px;background:#F8F7F5;border-radius:8px;padding:10px 12px;border:1px solid #EDE9E1}
-.pm-serv-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.pm-serv-txt{font-size:12px;color:#1A1A18;line-height:1.5;word-break:break-word}
-.pp-foot{padding:12px 20px 14px;background:#F8F7F5;border-top:1px solid #EDE9E1;border-radius:0 0 16px 16px;display:flex;gap:14px;flex-wrap:wrap}
-.pp-ft-item{flex:1;min-width:80px}
-.pp-ft-lbl{font-size:9px;font-weight:700;color:#99968F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
-.pp-ft-val{font-size:12px;font-weight:600;color:#1A1A18}
+.pm-box-just{font-size:12.5px;font-weight:600;color:#3A3730;margin-top:6px;line-height:1.45;word-break:break-word;background:rgba(255,255,255,.6);border-radius:6px;padding:6px 8px}
+.pm-box-dts{font-size:11.5px;font-weight:600;color:#6B6559;margin-top:6px}
+.pm-serv-box{margin:0 26px 22px;background:#F8F7F5;border-radius:10px;padding:14px 16px;border:1px solid #EDE9E1}
+.pm-serv-lbl{font-size:11px;font-weight:700;color:#4A463F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.pm-serv-txt{font-size:14px;color:#1A1A18;line-height:1.6;word-break:break-word}
 
 </style>
 </head>
@@ -356,13 +355,19 @@ tbody tr:hover td{background:#FFF8F3}
 
 <!-- POPUP MANUTENÇÃO -->
 <div class="overlay" id="ov-man" onclick="fecharFora(event,'ov-man')">
-  <div class="popup">
+  <div class="popup pm-popup">
     <div class="pp-strip"></div>
     <button class="pp-close" onclick="fechar('ov-man')" style="top:16px">&#x2715;</button>
     <div class="pm-hero">
       <div class="pm-row1">
-        <span class="pm-placa-cav" id="pm-cav"></span>
-        <span class="pm-placa-man" id="pm-pman"></span>
+        <div class="pm-placa-blk">
+          <span class="pm-placa-cap">Placa Cavalo</span>
+          <span class="pm-placa-cav" id="pm-cav"></span>
+        </div>
+        <div class="pm-placa-blk" id="pm-pman-blk">
+          <span class="pm-placa-cap">Placa Manutencao</span>
+          <span class="pm-placa-man" id="pm-pman"></span>
+        </div>
         <div style="flex:1"></div>
         <span class="sp s-man">Manutencao</span>
       </div>
@@ -375,11 +380,6 @@ tbody tr:hover td{background:#FFF8F3}
     <div class="pm-serv-box">
       <div class="pm-serv-lbl">Servico</div>
       <div class="pm-serv-txt" id="pm-serv"></div>
-    </div>
-    <div class="pp-foot">
-      <div class="pp-ft-item"><div class="pp-ft-lbl">Placa Cavalo</div><div class="pp-ft-val" id="pm-fc"></div></div>
-      <div class="pp-ft-item"><div class="pp-ft-lbl">Placa Manut.</div><div class="pp-ft-val" id="pm-fm"></div></div>
-      <div class="pp-ft-item"><div class="pp-ft-lbl">N. OS</div><div class="pp-ft-val" id="pm-fos"></div></div>
     </div>
   </div>
 </div>
@@ -786,13 +786,12 @@ function abrirMan(i){
   var hj=hoje();
   var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
   document.getElementById('pm-cav').textContent=m.pcav||'-';
-  document.getElementById('pm-pman').textContent=m.pman||'-';
+  var pmanBlk=document.getElementById('pm-pman-blk');
+  if(m.pman && m.pman!==m.pcav){pmanBlk.style.display='';document.getElementById('pm-pman').textContent=m.pman;}
+  else{pmanBlk.style.display='none';}
   document.getElementById('pm-os').textContent=m.os||'-';
   document.getElementById('pm-os-dt').textContent=m.dtab?('Abertura: '+fD(m.dtab)):'';
   document.getElementById('pm-serv').textContent=m.serv||'-';
-  document.getElementById('pm-fc').textContent=m.pcav||'-';
-  document.getElementById('pm-fm').textContent=m.pman||'-';
-  document.getElementById('pm-fos').textContent=m.os||'-';
   var dag_ab=diffDias(dch,dab||hj),dag_in=diffDias(dab,din||hj),dm=diffDias(din||dab,dfin||hj);
   var grid='';
   var bc1=boxClsMan(dag_ab),bv1=boxValClsMan(dag_ab);
