@@ -677,11 +677,12 @@ function renderTab(){
 }
 
 function renderVia(k,q){
+  var buscando=k==='tot'&&!!q;
   _fV=_D.filter(function(d){
-    if(mSt(d.st,'vaz')&&!_vaz)return false;
+    if(!buscando&&mSt(d.st,'vaz')&&!_vaz)return false;
     if(k!=='tot'&&!mSt(d.st,k))return false;
-    if(_ivF==='ida'&&(d.iv||'').toLowerCase()!=='ida')return false;
-    if(_ivF==='volta'&&(d.iv||'').toLowerCase()!=='volta')return false;
+    if(!buscando&&_ivF==='ida'&&(d.iv||'').toLowerCase()!=='ida')return false;
+    if(!buscando&&_ivF==='volta'&&(d.iv||'').toLowerCase()!=='volta')return false;
     if(q&&(d.cli+d.placa+d.mot+d.rem+d.prod+d.ori+d.dst+d.cte).toLowerCase().indexOf(q)<0)return false;
     return true;
   });
