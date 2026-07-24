@@ -68,6 +68,10 @@ table{width:100%;border-collapse:collapse;min-width:1400px}
 thead tr{background:#F0EFEC}
 thead th{position:sticky;top:0;z-index:10;background:#F0EFEC}
 th{text-align:left;font-size:10px;font-weight:700;color:#1A1A18;text-transform:uppercase;letter-spacing:.05em;padding:9px 11px;border-bottom:1px solid #DDD9D0;white-space:nowrap}
+th.th-sort{cursor:pointer;user-select:none}
+th.th-sort:hover{background:#E5E1D8}
+th.th-sort .arw{display:inline-block;margin-left:3px;font-size:9px;color:#99968F}
+th.th-sort.on .arw{color:#E8521A}
 td{font-size:12px;padding:9px 11px;border-bottom:1px solid #E8E5DF;color:#1A1A18;vertical-align:middle;white-space:nowrap}
 td.wrap-serv{white-space:normal;min-width:180px;max-width:280px;word-break:break-word;line-height:1.4}
 tbody tr:last-child td{border-bottom:none}
@@ -387,6 +391,76 @@ tbody tr:hover td{background:#FFF8F3}
 <script>
 
 var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_tot=0;
+var _sort={via:{col:null,dir:1},vaz:{col:null,dir:1},man:{col:null,dir:1}};
+
+// ── Definicao de colunas ordenaveis (usadas nos cabecalhos das tabelas) ──
+var VIA_COLS=[
+  {key:'cli',lbl:'Cliente',type:'str',get:function(d){return d.cli||'';}},
+  {key:'rem',lbl:'Remessa',type:'str',get:function(d){return d.rem||'';}},
+  {key:'iv',lbl:'Ida/Volta',type:'str',get:function(d){return d.iv||'';}},
+  {key:'placa',lbl:'Placa',type:'str',get:function(d){return d.placa||'';}},
+  {key:'tipo',lbl:'Tipo Veiculo',type:'str',get:function(d){return d.tipo||'';}},
+  {key:'mot',lbl:'Motorista',type:'str',get:function(d){return d.mot||'';}},
+  {key:'prod',lbl:'Produto',type:'str',get:function(d){return d.prod||'';}},
+  {key:'ori',lbl:'Origem',type:'str',get:function(d){return d.ori||'';}},
+  {key:'dst',lbl:'Destino',type:'str',get:function(d){return d.dst||'';}},
+  {key:'cte',lbl:'ID CTE',type:'str',get:function(d){return d.cte||'';}},
+  {key:'dtstatus',lbl:'Data Status',type:'date',get:function(d){return pD(getDataStatus(d));}},
+  {key:'diasstatus',lbl:'Dias Status',type:'num',get:function(d){return calcDias(d);}},
+  {key:'status',lbl:'Status',type:'str',get:function(d){return d.st||'';}},
+  {key:'agstatus',lbl:'St. Agendamento',type:'str',get:function(d){return calcAgStatus(d)||'';}},
+  {key:'diasagcarreg',lbl:'Dias Ag. Carreg.',type:'num',get:function(d){return calcDiasAgCarreg(d);}},
+  {key:'diasagdesc',lbl:'Dias Ag. Descarga',type:'num',get:function(d){return calcDiasAgDescarga(d);}}
+];
+var MAN_COLS=[
+  {key:'pcav',lbl:'Placa Cavalo',type:'str',get:function(m){return m.pcav||'';}},
+  {key:'pman',lbl:'Placa Manut.',type:'str',get:function(m){return m.pman||'';}},
+  {key:'os',lbl:'N. OS',type:'str',get:function(m){return m.os||'';}},
+  {key:'dtch',lbl:'Dt. Chegada',type:'date',get:function(m){return pD(m.dtch);}},
+  {key:'dtab',lbl:'Dt. Abertura OS',type:'date',get:function(m){return pD(m.dtab);}},
+  {key:'serv',lbl:'Servico',type:'str',get:function(m){return m.serv||'';}},
+  {key:'dtin',lbl:'Dt. Inicial',type:'date',get:function(m){return pD(m.dtin);}},
+  {key:'prev',lbl:'Prev. Liberacao',type:'date',get:function(m){return pD(m.prev);}},
+  {key:'dtfin',lbl:'Dt. Finalizacao',type:'date',get:function(m){return pD(m.dtfin);}},
+  {key:'diasagab',lbl:'Dias Ag. Abertura',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtch),pD(m.dtab)||hj);}},
+  {key:'diasagini',lbl:'Dias Ag. Inicio',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtab),pD(m.dtin)||hj);}},
+  {key:'diasmanut',lbl:'Dias em Manut.',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtin)||pD(m.dtab),pD(m.dtfin)||hj);}}
+];
+
+function ordenarCol(tableKey,key){
+  var st=_sort[tableKey];
+  if(st.col===key){st.dir=-st.dir;}else{st.col=key;st.dir=1;}
+  renderTab();
+}
+function thSort(tableKey,cols){
+  var st=_sort[tableKey];
+  return cols.map(function(c){
+    var on=st.col===c.key;
+    var arw=on?(st.dir===1?'\u25B2':'\u25BC'):'\u21C5';
+    return '<th class="th-sort'+(on?' on':'')+'" onclick="ordenarCol(\''+tableKey+'\',\''+c.key+'\')">'+c.lbl+'<span class="arw">'+arw+'</span></th>';
+  }).join('');
+}
+function applySort(arr,cols,state){
+  if(!state.col)return arr;
+  var c=null;
+  for(var i=0;i<cols.length;i++){if(cols[i].key===state.col){c=cols[i];break;}}
+  if(!c)return arr;
+  var withIdx=arr.map(function(item,idx){return {item:item,idx:idx,val:c.get(item)};});
+  withIdx.sort(function(a,b){
+    var va=a.val,vb=b.val;
+    var na=(va===null||va===undefined||va==='');
+    var nb=(vb===null||vb===undefined||vb==='');
+    if(na&&nb)return a.idx-b.idx;
+    if(na)return 1;
+    if(nb)return -1;
+    if(c.type==='date'){va=va.getTime();vb=vb.getTime();}
+    else if(c.type==='str'){va=String(va).toLowerCase();vb=String(vb).toLowerCase();}
+    if(va<vb)return -1*state.dir;
+    if(va>vb)return 1*state.dir;
+    return a.idx-b.idx;
+  });
+  return withIdx.map(function(x){return x.item;});
+}
 window.onload=function(){buscar();};
 
 function buscar(){
@@ -434,7 +508,13 @@ function aCards(u,n){
   var nagi=_D.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=_D.filter(function(d){return mSt(d.st,'via');}).length;
   var nagd=_D.filter(function(d){return mSt(d.st,'agd');}).length;
-  var nman=_M.filter(function(m){return !m.dtfin;}).length;
+  // Manutencao: contagem UNICA por placa cavalo (nao duplica quando cavalo + carreta(s) estao ambos em OS aberta)
+  var placasManUnicas={};
+  _M.filter(function(m){return !m.dtfin;}).forEach(function(m){
+    var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+    if(p)placasManUnicas[p]=true;
+  });
+  var nman=Object.keys(placasManUnicas).length;
   // Ag Descarga + Manut pendente (OS aberta sem dtin, placa em ag descarga)
   var placasAgd=_D.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa;});
   var nagm=_M.filter(function(m){return !m.dtfin&&!m.dtin&&placasAgd.indexOf(m.pcav)>=0;}).length;
@@ -530,6 +610,7 @@ function renderVaz(q){
     if(q&&(d.cli+d.placa+d.mot+d.rem+d.prod+d.ori+d.dst+d.cte).toLowerCase().indexOf(q)<0)return false;
     return true;
   });
+  _fV=applySort(_fV,VIA_COLS,_sort.vaz);
   document.getElementById('rc').textContent=_fV.length+' registro'+(_fV.length!==1?'s':'');
   if(!_fV.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum veiculo vazio com historico.</div>';return;}
   var rows=_fV.map(function(d,i){
@@ -554,7 +635,7 @@ function renderVaz(q){
     r+='</tr>';
     return r;
   }).join('');
-  document.getElementById('tc').innerHTML='<table><thead><tr><th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th><th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th><th>Origem</th><th>Destino</th><th>ID CTE</th><th>Data Status</th><th>Dias Status</th><th>Status</th><th>St. Agendamento</th><th>Dias Ag. Carreg.</th><th>Dias Ag. Descarga</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('tc').innerHTML='<table><thead><tr>'+thSort('vaz',VIA_COLS)+'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 function calcDias(d){
@@ -604,6 +685,7 @@ function renderVia(k,q){
     if(q&&(d.cli+d.placa+d.mot+d.rem+d.prod+d.ori+d.dst+d.cte).toLowerCase().indexOf(q)<0)return false;
     return true;
   });
+  _fV=applySort(_fV,VIA_COLS,_sort.via);
   document.getElementById('rc').textContent=_fV.length+' registro'+(_fV.length!==1?'s':'');
   if(!_fV.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro encontrado.</div>';return;}
   var rows=_fV.map(function(d,i){
@@ -628,7 +710,7 @@ function renderVia(k,q){
     r+='</tr>';
     return r;
   }).join('');
-  document.getElementById('tc').innerHTML='<table><thead><tr><th>Cliente</th><th>Remessa</th><th>Ida/Volta</th><th>Placa</th><th>Tipo Veiculo</th><th>Motorista</th><th>Produto</th><th>Origem</th><th>Destino</th><th>ID CTE</th><th>Data Status</th><th>Dias Status</th><th>Status</th><th>St. Agendamento</th><th>Dias Ag. Carreg.</th><th>Dias Ag. Descarga</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('tc').innerHTML='<table><thead><tr>'+thSort('via',VIA_COLS)+'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 function renderMan(q,filtro){
@@ -642,6 +724,7 @@ function renderMan(q,filtro){
     }
     return true;
   });
+  _fM=applySort(_fM,MAN_COLS,_sort.man);
   document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
   if(!_fM.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
   var hj=hoje();
@@ -664,7 +747,7 @@ function renderMan(q,filtro){
     r+='</tr>';
     return r;
   }).join('');
-  document.getElementById('tc').innerHTML='<table style="min-width:1400px"><thead><tr><th>Placa Cavalo</th><th>Placa Manut.</th><th>N. OS</th><th>Dt. Chegada</th><th>Dt. Abertura OS</th><th>Servico</th><th>Dt. Inicial</th><th>Prev. Liberacao</th><th>Dt. Finalizacao</th><th>Dias Ag. Abertura</th><th>Dias Ag. Inicio</th><th>Dias em Manut.</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('tc').innerHTML='<table style="min-width:1400px"><thead><tr>'+thSort('man',MAN_COLS)+'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 // ── POPUP VIAGEM ─────────────────────────────────────────────────────────
