@@ -500,15 +500,27 @@ function pCSV(l){var r=[],c='',q=false;for(var i=0;i<l.length;i++){var x=l[i];if
 function setTs(){var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});document.getElementById('ts').textContent='Atualizado as '+h+' - Google Sheets';}
 function pct(n){if(!_tot||_tot===0)return'0%';return Math.round((n/_tot)*100)+'%';}
 function mSt(s,k){var v=(s||'').toLowerCase().trim();if(k==='agc')return v.indexOf('carregamento')>=0;if(k==='agi')return v.indexOf('nicio')>=0;if(k==='via')return v==='em viagem'||v==='viagem';if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;if(k==='vaz')return v==='vazio';return true;}
+// Para cada placa, retorna apenas a ultima linha incluida na planilha (ordem de insercao),
+// que representa o status atual do veiculo. Evita contar/listar linhas antigas duplicadas.
+function ultimaPorPlaca(lista){
+  var porPlaca={};
+  (lista||_D).forEach(function(d){
+    if(!d.placa)return;
+    porPlaca[d.placa]=d; // sobrescreve: a ultima ocorrencia na planilha vence
+  });
+  return Object.keys(porPlaca).map(function(p){return porPlaca[p];});
+}
 function aCards(u,n){
   var tot=u?n:(_D.length+_M.length);_tot=tot;
   document.getElementById('v-tot').textContent=tot;
   document.getElementById('p-tot').textContent='100%';
-  var nagc=_D.filter(function(d){return mSt(d.st,'agc');}).length;
-  var nagi=_D.filter(function(d){return mSt(d.st,'agi');}).length;
-  var nvia=_D.filter(function(d){return mSt(d.st,'via');}).length;
-  var nagd=_D.filter(function(d){return mSt(d.st,'agd');}).length;
+  var ultimos=ultimaPorPlaca();
+  var nagc=ultimos.filter(function(d){return mSt(d.st,'agc');}).length;
+  var nagi=ultimos.filter(function(d){return mSt(d.st,'agi');}).length;
+  var nvia=ultimos.filter(function(d){return mSt(d.st,'via');}).length;
+  var nagd=ultimos.filter(function(d){return mSt(d.st,'agd');}).length;
   // Manutencao: contagem UNICA por placa cavalo (nao duplica quando cavalo + carreta(s) estao ambos em OS aberta)
+  // Só conta OS que ainda NAO tem a Data Finalizacao preenchida
   var placasManUnicas={};
   _M.filter(function(m){return !m.dtfin;}).forEach(function(m){
     var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
@@ -516,7 +528,7 @@ function aCards(u,n){
   });
   var nman=Object.keys(placasManUnicas).length;
   // Ag Descarga + Manut pendente (OS aberta sem dtin, placa em ag descarga)
-  var placasAgd=_D.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa;});
+  var placasAgd=ultimos.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa;});
   var nagm=_M.filter(function(m){return !m.dtfin&&!m.dtin&&placasAgd.indexOf(m.pcav)>=0;}).length;
   // Vazios com historico
   var nvaz=calcVazios().length;
@@ -529,36 +541,15 @@ function aCards(u,n){
   document.getElementById('v-vaz').textContent=nvaz;document.getElementById('p-vaz').textContent=pct(nvaz);
 }
 
-// Retorna a linha "vazio" de cada placa que NAO tem nenhuma outra linha com status ativo
-// e que NAO esta em manutencao ativa (placa em manutencao tem prioridade sobre vazio)
+// Retorna a linha "vazio" de cada placa cuja ULTIMA informacao incluida na planilha
+// tem status Vazio, e que NAO esta em manutencao ativa (manutencao tem prioridade sobre vazio)
 function calcVazios(){
   // Placas com OS de manutencao em aberto (sem data de finalizacao)
   var placasManut=_M.filter(function(m){return !m.dtfin;}).map(function(m){return (m.pcav||'').replace(/-/g,'');});
-  // Agrupa viagens por placa
-  var porPlaca={};
-  _D.forEach(function(d){
-    if(!d.placa)return;
-    if(!porPlaca[d.placa])porPlaca[d.placa]=[];
-    porPlaca[d.placa].push(d);
+  return ultimaPorPlaca().filter(function(d){
+    if(placasManut.indexOf(d.placa)>=0)return false;
+    return mSt(d.st,'vaz');
   });
-  var vazios=[];
-  Object.keys(porPlaca).forEach(function(placa){
-    // Placa em manutencao ativa: conta apenas no card de Manutencao, nunca em Vazios
-    if(placasManut.indexOf(placa)>=0)return;
-    var viagens=porPlaca[placa];
-    // Se QUALQUER linha da placa tiver status diferente de vazio, a placa NAO conta
-    // como vazia (ela ja aparece no card correspondente ao status ativo dela)
-    var temAtiva=viagens.some(function(d){return !mSt(d.st,'vaz');});
-    if(temAtiva)return;
-    // Todas as linhas da placa sao vazio: usa a de descarregamento mais recente (por data real, nao por ordem na planilha)
-    var ultima=viagens.reduce(function(melhor,d){
-      var dMelhor=pD(melhor.d8),dAtual=pD(d.d8);
-      if(dAtual&&(!dMelhor||dAtual>dMelhor))return d;
-      return melhor;
-    });
-    vazios.push(ultima);
-  });
-  return vazios;
 }
 
 
@@ -678,7 +669,7 @@ function renderTab(){
 
 function renderVia(k,q){
   var buscando=k==='tot'&&!!q;
-  _fV=_D.filter(function(d){
+  _fV=ultimaPorPlaca().filter(function(d){
     if(!buscando&&mSt(d.st,'vaz')&&!_vaz)return false;
     if(k!=='tot'&&!mSt(d.st,k))return false;
     if(!buscando&&_ivF==='ida'&&(d.iv||'').toLowerCase()!=='ida')return false;
@@ -715,12 +706,14 @@ function renderVia(k,q){
 }
 
 function renderMan(q,filtro){
-  var placasAgd2=filtro==='agm'?_D.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa;}):{indexOf:function(){return -1}};
+  var placasAgd2=filtro==='agm'?ultimaPorPlaca().filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa;}):{indexOf:function(){return -1}};
   _fM=_M.filter(function(m){
+    // So conta/lista manutencao que ainda NAO tem a Data Finalizacao preenchida
+    if(m.dtfin)return false;
     if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;
     if(filtro==='agm'){
       // Apenas OS em aberto sem data inicial E placa em ag descarga
-      if(m.dtfin||m.dtin)return false;
+      if(m.dtin)return false;
       if(placasAgd2.indexOf(m.pcav)<0)return false;
     }
     return true;
