@@ -481,8 +481,8 @@ function buscar(){
     var lns=csv.trim().split('\n').slice(1);
     _M=lns.map(function(l){
       var c=pCSV(l);
-      return {pcav:c[0]||'',km:c[1]||'',pman:c[2]||'',os:c[3]||'',
-        dtch:c[4]||'',dtab:c[5]||'',justos:c[6]||'',serv:c[7]||'',
+      return {pcav:c[0]||'',pman:c[1]||'',dtch:c[2]||'',dtab:c[3]||'',
+        justos:c[4]||'',serv:c[5]||'',km:c[6]||'',os:c[7]||'',
         dtin:c[8]||'',prev:c[9]||'',dtfin:c[10]||'',justman:c[11]||''};
     }).filter(function(m){return m.pcav||m.os;});
   }).catch(function(){_M=[];}));
