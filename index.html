@@ -336,73 +336,101 @@ tbody tr:hover td{background:#FFF3E9}
 .pp-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.2);border:none;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;color:#fff;font-weight:700;line-height:30px;text-align:center;z-index:10;transition:background .15s}
 .pp-close:hover{background:rgba(255,255,255,.35)}
 
-.pv-header{background:linear-gradient(135deg,var(--brand) 0%,#F97316 60%,#FB923C 100%);border-radius:20px 20px 0 0;padding:20px 22px 16px;position:relative}
-.pv-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
-.pv-placa-tag{font-family:'Inter',monospace;font-size:15px;font-weight:700;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:var(--r-sm);letter-spacing:.05em;flex-shrink:0;margin-top:1px}
-.pv-info-blk{flex:1}
-.pv-mot-name{font-size:16px;font-weight:700;color:#fff;line-height:1.25}
-.pv-mot-sub{font-size:11.5px;color:rgba(255,255,255,.8);margin-top:3px;font-weight:500}
-.pv-status-badge{font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:var(--r-pill);background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
+.pv2-popup{--p2-bg:#F8FAFC;--p2-card:#FFFFFF;--p2-border:#E5E7EB;--p2-t1:#111827;--p2-t2:#6B7280;--p2-green:#22C55E;--p2-blue:#2563EB;--p2-orange:#F97316;--p2-red:#EF4444;
+  width:900px;background:var(--p2-bg);padding:0;overflow:hidden;display:flex;flex-direction:column;animation:pv2In .2s ease both}
+@keyframes pv2In{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.pv2-popup .pv2-scroll{overflow-y:auto;max-height:94vh}
 
-.pv-rota{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.14);border-radius:var(--r-sm);padding:9px 14px;margin-bottom:12px}
-.pv-rota-loc{flex:1}
-.pv-rota-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
-.pv-rota-name{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
-.pv-rota-arrow{color:rgba(255,255,255,.55);font-size:16px;padding:0 2px;flex-shrink:0}
-.pv-rota-right{text-align:right}
+/* 1 · Header */
+.pv2-header{background:var(--p2-card);padding:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid var(--p2-border)}
+.pv2-header-left{display:flex;align-items:center;gap:14px;min-width:0}
+.pv2-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0;letter-spacing:.02em}
+.pv2-header-info{min-width:0}
+.pv2-driver-name{font-size:20px;font-weight:700;color:var(--p2-t1);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:380px}
+.pv2-vehicle-line{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:13px;font-weight:600;color:var(--p2-t2)}
+.pv2-vehicle-line .pv2-placa{font-family:'Inter',monospace;font-weight:700;color:var(--p2-t1);background:#F3F4F6;padding:2px 8px;border-radius:6px;letter-spacing:.03em;font-size:12px}
+.pv2-dot{color:#D1D5DB}
+.pv2-header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pv2-status-badge{font-size:11px;font-weight:700;padding:6px 14px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.pv2-close{background:#F3F4F6;border:1px solid var(--p2-border);width:34px;height:34px;border-radius:50%;font-size:13px;cursor:pointer;color:var(--p2-t2);transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pv2-close:hover{background:var(--p2-red);border-color:var(--p2-red);color:#fff}
 
-.pv-header-meta{display:flex;gap:7px;flex-wrap:wrap}
-.pv-hm-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);border-radius:var(--r-pill);padding:4px 11px;font-size:10.5px;color:rgba(255,255,255,.92);white-space:nowrap;font-weight:500}
-.pv-hm-pill b{color:#fff;font-weight:700}
+/* Corpo: grid de 8px, 24px de respiro externo, 20px entre blocos */
+.pv2-body{padding:24px;display:flex;flex-direction:column;gap:20px}
+.pv2-card{background:var(--p2-card);border:1px solid var(--p2-border);border-radius:14px;padding:18px;transition:box-shadow .2s ease,transform .2s ease}
+.pv2-card:hover{box-shadow:0 6px 18px rgba(17,24,39,.06)}
 
-.pv-body{padding:16px 20px 0}
-.pv-info-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.pv-ibox{flex:1;min-width:100px;background:#F8F9FB;border-radius:var(--r-sm);padding:11px 14px;border:1px solid var(--border-soft)}
-.pv-ibox-lbl{font-size:9.5px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
-.pv-ibox-val{font-size:14px;font-weight:800;color:var(--text-1)}
-.pv-ibox-val.nd{color:var(--text-3);font-weight:400;font-style:italic;font-size:11px}
-.pv-ibox-val.grn{color:#166534}.pv-ibox-val.amb{color:#92400E}.pv-ibox-val.red{color:#DC2626}
-.pv-ibox-sub{font-size:10.5px;color:var(--text-2);margin-top:3px;font-weight:500}
+/* 2 · Resumo da viagem */
+.pv2-rota-row{display:flex;align-items:center;gap:16px}
+.pv2-rota-point{flex:1;min-width:0}
+.pv2-rota-point-end{text-align:right}
+.pv2-rota-lbl{font-size:12px;font-weight:600;color:var(--p2-t2);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.pv2-rota-point-end .pv2-rota-lbl{justify-content:flex-end}
+.pv2-rota-lbl i{font-size:11px;color:var(--p2-blue)}
+.pv2-rota-val{font-size:16px;font-weight:700;color:var(--p2-t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv2-rota-arrow{color:#D1D5DB;font-size:18px;flex-shrink:0}
+.pv2-pills-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px dashed var(--p2-border)}
+.pv2-pill{display:inline-flex;align-items:center;gap:4px;background:var(--p2-bg);border:1px solid var(--p2-border);border-radius:var(--r-pill);padding:5px 12px;font-size:13px;color:#374151;font-weight:500;white-space:nowrap}
+.pv2-pill b{color:var(--p2-t1);font-weight:700}
 
-.pv-track-section{padding:0 20px 16px}
-.pv-track-title{font-size:10.5px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
-.pv-track-wrap{position:relative;padding:8px 0 6px}
+/* 3 · Indicadores (4 cards iguais) */
+.pv2-indicators{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pv2-ind-card{background:var(--p2-card);border:1px solid var(--p2-border);border-radius:14px;padding:18px;text-align:center;transition:box-shadow .2s ease,transform .2s ease}
+.pv2-ind-card:hover{box-shadow:0 6px 18px rgba(17,24,39,.06);transform:translateY(-1px)}
+.pv2-ind-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:14px;background:#F3F4F6;color:#9CA3AF}
+.pv2-ind-value{font-size:24px;font-weight:700;color:var(--p2-t1);line-height:1;font-variant-numeric:tabular-nums}
+.pv2-ind-label{font-size:12px;font-weight:500;color:var(--p2-t2);margin-top:6px}
+.pv2-ind-card.grn .pv2-ind-icon{background:#DCFCE7;color:#16A34A}.pv2-ind-card.grn .pv2-ind-value{color:#16A34A}
+.pv2-ind-card.lar .pv2-ind-icon{background:#FFEDD5;color:var(--p2-orange)}.pv2-ind-card.lar .pv2-ind-value{color:var(--p2-orange)}
+.pv2-ind-card.red .pv2-ind-icon{background:#FEE2E2;color:var(--p2-red)}.pv2-ind-card.red .pv2-ind-value{color:var(--p2-red)}
+.pv2-ind-card.nd .pv2-ind-value{color:#9CA3AF;font-size:16px;font-weight:600}
 
-.pv-road{height:10px;background:#C9CDD4;border-radius:5px;position:relative;margin:26px 0 10px;box-shadow:inset 0 2px 4px rgba(0,0,0,.15)}
-.pv-road-line{position:absolute;top:50%;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.8) 0px,rgba(255,255,255,.8) 10px,transparent 10px,transparent 20px);transform:translateY(-50%)}
-.pv-road-start{position:absolute;left:-4px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:var(--st-vaz);border:2px solid #fff;z-index:2}
-.pv-road-end{position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:var(--text-1);border:2px solid #fff;z-index:2}
+/* 4 · Linha do tempo */
+.pv2-section-title{font-size:13px;font-weight:700;color:var(--p2-t1);margin-bottom:18px;display:flex;align-items:center;gap:6px}
+.pv2-section-title i{color:var(--p2-blue);font-size:12px}
+.pv2-timeline{display:flex;align-items:flex-start;position:relative;padding:2px 4px 0}
+.pv2-tl-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;cursor:pointer;min-width:0;padding:0 4px}
+.pv2-tl-line{position:absolute;top:19px;left:50%;width:100%;height:3px;background:var(--p2-border);z-index:0}
+.pv2-tl-step:last-child .pv2-tl-line{display:none}
+.pv2-tl-step.done .pv2-tl-line{background:var(--p2-green)}
+.pv2-tl-dot{width:38px;height:38px;border-radius:50%;background:#F3F4F6;border:3px solid var(--p2-border);display:flex;align-items:center;justify-content:center;font-size:14px;color:#9CA3AF;position:relative;z-index:1;transition:all .2s ease}
+.pv2-tl-step.done .pv2-tl-dot{background:#DCFCE7;border-color:var(--p2-green);color:#16A34A}
+.pv2-tl-step.current .pv2-tl-dot{background:#FFEDD5;border-color:var(--p2-orange);color:var(--p2-orange);animation:pv2Pulse 1.6s ease-in-out infinite}
+.pv2-tl-step.agend .pv2-tl-dot{background:#DBEAFE;border-color:var(--p2-blue);color:var(--p2-blue)}
+@keyframes pv2Pulse{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.35)}50%{box-shadow:0 0 0 7px rgba(249,115,22,0)}}
+.pv2-tl-text{margin-top:8px}
+.pv2-tl-lbl{font-size:11px;font-weight:600;color:var(--p2-t2);max-width:88px;line-height:1.25}
+.pv2-tl-step.done .pv2-tl-lbl,.pv2-tl-step.current .pv2-tl-lbl{color:var(--p2-t1)}
+.pv2-tl-date{font-size:11px;font-weight:500;color:#9CA3AF;margin-top:2px}
+.pv2-tl-step.done .pv2-tl-date,.pv2-tl-step.current .pv2-tl-date{color:#374151}
+.pv2-tl-tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--p2-t1);color:#fff;font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:all .15s ease;z-index:5}
+.pv2-tl-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--p2-t1)}
+.pv2-tl-step.tip-open .pv2-tl-tip{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.pv-car{position:absolute;top:50%;transform:translate(-50%,-80%);font-size:22px;z-index:4;transition:left .5s ease;line-height:1}
+/* 5 · Rodapé — resumo da situação */
+.pv2-footer{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;background:var(--p2-card);border:1px solid var(--p2-border);border-radius:14px;padding:18px}
+.pv2-footer-item{display:flex;flex-direction:column;gap:5px;min-width:0}
+.pv2-footer-lbl{font-size:12px;font-weight:600;color:var(--p2-t2);text-transform:uppercase;letter-spacing:.05em}
+.pv2-footer-val{font-size:14px;font-weight:700;color:var(--p2-t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.pv-checkpoint{position:absolute;top:50%;transform:translate(-50%,-50%);z-index:3}
-.pv-chk-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
-.chk-done{background:var(--st-via)}
-.chk-pend{background:#D1D5DB}
-.chk-agend{background:var(--st-agi)}
-
-.pv-track-cards{display:flex;gap:6px;margin-top:6px}
-.pv-tc{flex:1;border-radius:var(--r-sm);padding:7px 9px;border:1px solid;min-width:0;position:relative;overflow:hidden}
-.pv-tc.done{background:#F0FDF4;border-color:#BBF7D0}
-.pv-tc.pend{background:#F8F9FB;border-color:var(--border-soft)}
-.pv-tc.current{background:#FFF7ED;border-color:#FED7AA;box-shadow:0 0 0 2px #FB923C}
-.pv-tc.agend{background:#EFF6FF;border-color:#BFDBFE}
-.pv-tc-lbl{font-size:7.5px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pv-tc-val{font-size:10.5px;font-weight:700;color:var(--text-1);white-space:nowrap}
-.pv-tc-val.nd{color:var(--text-3);font-weight:400;font-style:italic;font-size:10px}
-.pv-tc.done .pv-tc-lbl{color:#166534}
-.pv-tc.current .pv-tc-lbl{color:#C2410C}
-.pv-tc.agend .pv-tc-lbl{color:#1D4ED8}
-
-.pv-calcs{display:flex;gap:10px;padding:0 20px 16px}
-.pv-calc{flex:1;border-radius:var(--r-md);padding:13px;text-align:center;border:1px solid}
-.pv-calc.grn{background:#F0FDF4;border-color:#86EFAC}
-.pv-calc.amb{background:#FFFBEB;border-color:#FDE68A}
-.pv-calc.red{background:#FEF2F2;border-color:#FECDD3}
-.pv-calc.nd{background:#F8F9FB;border-color:var(--border-soft)}
-.pv-calc-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-2);margin-bottom:6px}
-.pv-calc-val{font-size:23px;font-weight:800;line-height:1}
-.pv-calc-val.grn{color:#166534}.pv-calc-val.amb{color:#92400E}.pv-calc-val.red{color:#DC2626}.pv-calc-val.nd{color:var(--text-3);font-size:14px;font-weight:400}
+/* Responsivo: desktop ~900px / tablet 700px / mobile 100% (timeline vira vertical) */
+@media(max-width:940px){.pv2-popup{width:700px}}
+@media(max-width:760px){
+  .pv2-popup{width:100%;max-width:100vw;border-radius:14px}
+  .pv2-header{padding:18px}
+  .pv2-body{padding:18px;gap:16px}
+  .pv2-indicators{grid-template-columns:repeat(2,1fr)}
+  .pv2-footer{grid-template-columns:1fr}
+  .pv2-rota-row{flex-wrap:wrap}
+  .pv2-timeline{flex-direction:column;align-items:stretch;gap:4px}
+  .pv2-tl-step{flex-direction:row;align-items:flex-start;text-align:left;gap:14px;padding:8px 0}
+  .pv2-tl-line{top:38px;left:19px;width:3px;height:calc(100% + 4px)}
+  .pv2-tl-text{margin-top:0;padding-top:7px}
+  .pv2-tl-lbl,.pv2-tl-date{max-width:none}
+  .pv2-tl-tip{left:48px;bottom:auto;top:0;transform:translateX(0) translateY(-4px)}
+  .pv2-tl-tip::after{display:none}
+  .pv2-tl-step.tip-open .pv2-tl-tip{transform:translateX(0) translateY(0)}
+}
 
 .ag-dentro{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);background:#DCFCE7;color:#166534;white-space:nowrap}
 .ag-fora{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);background:#FEE2E2;color:#9F1239;white-space:nowrap}
@@ -531,75 +559,66 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
 
 <!-- POPUP VIAGEM -->
 <div class="overlay" id="ov-via" onclick="fecharFora(event,'ov-via')">
-  <div class="popup">
-    <button class="pp-close" onclick="fechar('ov-via')">&#x2715;</button>
+  <div class="popup pv2-popup">
+    <div class="pv2-scroll">
 
-    <!-- CABEÇALHO LARANJA FIXO -->
-    <div class="pv-header">
-      <div class="pv-top">
-        <span class="pv-placa-tag" id="pv-placa"></span>
-        <div class="pv-info-blk">
-          <div class="pv-mot-name" id="pv-mot"></div>
-          <div class="pv-mot-sub" id="pv-tipo"></div>
+      <!-- 1 · HEADER -->
+      <div class="pv2-header">
+        <div class="pv2-header-left">
+          <div class="pv2-avatar" id="pv-avatar"></div>
+          <div class="pv2-header-info">
+            <div class="pv2-driver-name" id="pv-mot"></div>
+            <div class="pv2-vehicle-line">
+              <span class="pv2-placa" id="pv-placa"></span>
+              <span class="pv2-dot">&bull;</span>
+              <span id="pv-tipo"></span>
+            </div>
+          </div>
         </div>
-        <span class="pv-status-badge" id="pv-st"></span>
-      </div>
-      <div class="pv-rota">
-        <div class="pv-rota-loc">
-          <div class="pv-rota-lbl">Origem</div>
-          <div class="pv-rota-name" id="pv-ori"></div>
-        </div>
-        <div class="pv-rota-arrow">&#8594;</div>
-        <div class="pv-rota-loc pv-rota-right">
-          <div class="pv-rota-lbl">Destino</div>
-          <div class="pv-rota-name" id="pv-dst"></div>
+        <div class="pv2-header-right">
+          <span class="pv2-status-badge" id="pv-st"></span>
+          <button class="pv2-close" onclick="fechar('ov-via')" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
-      <!-- Pills: produto, sentido, cliente, remessa, CTE -->
-      <div class="pv-header-meta">
-        <span class="pv-hm-pill" id="pv-pill-prod"></span>
-        <span class="pv-hm-pill" id="pv-pill-iv"></span>
-        <span class="pv-hm-pill" id="pv-pill-cli"></span>
-        <span class="pv-hm-pill" id="pv-pill-rem"></span>
-        <span class="pv-hm-pill" id="pv-pill-cte"></span>
+
+      <div class="pv2-body">
+
+        <!-- 2 · RESUMO DA VIAGEM -->
+        <div class="pv2-card">
+          <div class="pv2-rota-row">
+            <div class="pv2-rota-point">
+              <div class="pv2-rota-lbl"><i class="fa-solid fa-location-dot"></i>Origem</div>
+              <div class="pv2-rota-val" id="pv-ori"></div>
+            </div>
+            <div class="pv2-rota-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="pv2-rota-point pv2-rota-point-end">
+              <div class="pv2-rota-lbl"><i class="fa-solid fa-flag-checkered"></i>Destino</div>
+              <div class="pv2-rota-val" id="pv-dst"></div>
+            </div>
+          </div>
+          <div class="pv2-pills-row">
+            <span class="pv2-pill" id="pv-pill-prod"></span>
+            <span class="pv2-pill" id="pv-pill-cli"></span>
+            <span class="pv2-pill" id="pv-pill-cte"></span>
+            <span class="pv2-pill" id="pv-pill-rem"></span>
+            <span class="pv2-pill" id="pv-pill-iv"></span>
+          </div>
+        </div>
+
+        <!-- 3 · INDICADORES -->
+        <div class="pv2-indicators" id="pv-indicators"></div>
+
+        <!-- 4 · LINHA DO TEMPO -->
+        <div class="pv2-card">
+          <div class="pv2-section-title"><i class="fa-solid fa-timeline"></i>Linha do Tempo</div>
+          <div class="pv2-timeline" id="pv-timeline"></div>
+        </div>
+
+        <!-- 5 · RODAPÉ -->
+        <div class="pv2-footer" id="pv-footer"></div>
+
       </div>
     </div>
-
-    <!-- BODY -->
-    <div class="pv-body">
-      <div class="pv-info-row">
-        <div class="pv-ibox">
-          <div class="pv-ibox-lbl">Dias no Status</div>
-          <div class="pv-ibox-val" id="pv-dias-val"></div>
-          <div class="pv-ibox-sub" id="pv-dias-dt"></div>
-        </div>
-        <div class="pv-ibox" id="pv-ag-box" style="display:none">
-          <div class="pv-ibox-lbl">Status Agendamento</div>
-          <div id="pv-ag-badge"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PISTA DE CORRIDA -->
-    <div class="pv-track-section">
-      <div class="pv-track-title">Linha do Tempo</div>
-      <div class="pv-track-wrap">
-        <div class="pv-road" id="pv-road">
-          <div class="pv-road-line"></div>
-          <div class="pv-road-start"></div>
-          <div class="pv-road-end"></div>
-          <!-- checkpoints e carro injetados por JS -->
-        </div>
-      </div>
-      <div class="pv-track-cards" id="pv-track-cards"></div>
-    </div>
-
-    <!-- INDICADORES CALCULADOS -->
-    <div id="pv-calcs-wrap" style="display:none">
-      <div class="pv-track-title" style="padding:0 18px;margin-bottom:8px">Indicadores</div>
-      <div class="pv-calcs" id="pv-calcs"></div>
-    </div>
-
   </div>
 </div>
 
@@ -1020,45 +1039,73 @@ function renderMan(q,filtro){
 }
 
 // ── POPUP VIAGEM ─────────────────────────────────────────────────────────
+// Iniciais do motorista para o avatar do popup
+function pvInitials(nome){
+  if(!nome)return'?';
+  var p=nome.trim().split(/\s+/);
+  var a=p[0]?p[0][0]:'',b=p.length>1?p[p.length-1][0]:'';
+  return(a+b).toUpperCase()||'?';
+}
+// Cor da badge de status do header (paleta reduzida: verde/azul/laranja/cinza)
+function pvStatusColor(st){
+  var c=sC(st);
+  var m={
+    's-via':{bg:'#DCFCE7',fg:'#16A34A'},
+    's-agi':{bg:'#DBEAFE',fg:'#2563EB'},
+    's-agc':{bg:'#FFEDD5',fg:'#F97316'},
+    's-agd':{bg:'#FFEDD5',fg:'#F97316'},
+    's-vaz':{bg:'#F3F4F6',fg:'#6B7280'},
+    's-out':{bg:'#F3F4F6',fg:'#6B7280'}
+  };
+  return m[c]||m['s-out'];
+}
+// Ícone de cada etapa da linha do tempo
+function pvTlIcon(lbl,done){
+  var m={
+    'Agend. Doca':'fa-clipboard-check',
+    'Chegada Origem':'fa-industry',
+    'Carregamento':'fa-box',
+    'Inicio Viagem':'fa-truck-fast',
+    'Prev. Chegada':'fa-calendar-day',
+    'Chegada Destino':'fa-location-dot',
+    'Agend. Entrega':'fa-clipboard-check',
+    'Descarregamento':done?'fa-check-double':'fa-dolly'
+  };
+  return m[lbl]||'fa-circle';
+}
+// Abre/fecha o tooltip de uma etapa da timeline (fecha as demais)
+function pvToggleTip(el){
+  var open=el.classList.contains('tip-open');
+  var all=document.querySelectorAll('#pv-timeline .pv2-tl-step');
+  for(var i=0;i<all.length;i++)all[i].classList.remove('tip-open');
+  if(!open)el.classList.add('tip-open');
+}
+
 function abrirVia(i){
   var d=_fV[i];if(!d)return;
   var hj=hoje();
 
-  // Cabeçalho
-  document.getElementById('pv-placa').textContent=d.placa;
+  // ── 1 · HEADER ────────────────────────────────────────────────────────
+  document.getElementById('pv-avatar').textContent=pvInitials(d.mot);
   document.getElementById('pv-mot').textContent=d.mot||'-';
+  document.getElementById('pv-placa').textContent=d.placa||'-';
   document.getElementById('pv-tipo').textContent=d.tipo||'-';
-  document.getElementById('pv-st').textContent=d.st||'-';
+  var stEl=document.getElementById('pv-st');
+  stEl.textContent=d.st||'-';
+  var stCol=pvStatusColor(d.st);
+  stEl.style.background=stCol.bg;stEl.style.color=stCol.fg;
+
+  // ── 2 · RESUMO DA VIAGEM ─────────────────────────────────────────────
   document.getElementById('pv-ori').textContent=d.ori||'-';
   document.getElementById('pv-dst').textContent=d.dst||'-';
-
-  // Pills no header
   var ivtxt=(d.iv||'').toLowerCase()==='ida'?'Ida':(d.iv||'').toLowerCase()==='volta'?'Volta':'-';
   document.getElementById('pv-pill-prod').innerHTML='<b>Produto:</b> '+esc(d.prod||'-');
-  document.getElementById('pv-pill-iv').innerHTML='<b>Sentido:</b> '+ivtxt;
   document.getElementById('pv-pill-cli').innerHTML='<b>Cliente:</b> '+esc(d.cli||'-');
-  document.getElementById('pv-pill-rem').innerHTML='<b>Remessa:</b> '+esc(d.rem||'-');
   document.getElementById('pv-pill-cte').innerHTML='<b>CTE:</b> '+esc(d.cte||'-');
+  document.getElementById('pv-pill-rem').innerHTML='<b>Remessa:</b> '+esc(d.rem||'-');
+  document.getElementById('pv-pill-iv').innerHTML='<b>Sentido:</b> '+ivtxt;
 
-  // Dias no status
-  var ds=calcDias(d),dsDt=getDataStatus(d);
-  var dsEl=document.getElementById('pv-dias-val');
-  if(ds===null){dsEl.textContent='-';dsEl.className='pv-ibox-val nd';}
-  else if(ds<=2){dsEl.textContent=ds+'d';dsEl.className='pv-ibox-val grn';}
-  else if(ds<=6){dsEl.textContent=ds+'d';dsEl.className='pv-ibox-val amb';}
-  else{dsEl.textContent=ds+'d';dsEl.className='pv-ibox-val red';}
-  document.getElementById('pv-dias-dt').textContent=dsDt?('Desde '+fD(dsDt)):'';
-
-  // Status agendamento
-  var agSt=calcAgStatus(d);
-  var agBox=document.getElementById('pv-ag-box');
-  if(agSt){
-    agBox.style.display='';
-    document.getElementById('pv-ag-badge').innerHTML=agStatusHTML(d);
-  }else{agBox.style.display='none';}
-
-  // ── PISTA DE CORRIDA ─────────────────────────────────────────────────
-  // Datas da linha do tempo (apenas as que devem aparecer)
+  // ── Datas da linha do tempo (apenas as que devem aparecer) ──────────
   var etapas=[
     {lbl:'Agend. Doca',   val:d.d1, tipo:'agend', show:!!d.d1},
     {lbl:'Chegada Origem',val:d.d2, tipo:'real',  show:true},
@@ -1071,76 +1118,64 @@ function abrirVia(i){
   ].filter(function(e){return e.show;});
 
   var n=etapas.length;
-  // Indice da ultima data preenchida (posicao do carro)
-  // Carro na ultima etapa REAL preenchida (ignora agendamento e previsao)
+  // Carro/etapa atual = ultima etapa REAL preenchida (ignora agendamento e previsao)
   var carIdx=0;
   for(var k=0;k<n;k++){
     if(pD(etapas[k].val) && etapas[k].tipo==='real') carIdx=k;
   }
+  var tripDone=(carIdx===n-1)&&!!pD(etapas[n-1].val)&&etapas[n-1].lbl==='Descarregamento';
 
-  // Montar checkpoints na estrada
-  var road=document.getElementById('pv-road');
-  // Remover checkpoints e carro anteriores
-  var olds=road.querySelectorAll('.pv-checkpoint,.pv-car');
-  for(var o=0;o<olds.length;o++)olds[o].parentNode.removeChild(olds[o]);
-
-  for(var k=0;k<n;k++){
-    var pct=n===1?50:(k/(n-1))*100;
-    var dt=pD(etapas[k].val);
-    var dotCls=dt?(etapas[k].tipo==='agend'?'chk-agend':'chk-done'):'chk-pend';
-    var chk=document.createElement('div');
-    chk.className='pv-checkpoint';
-    chk.style.left=pct+'%';
-    var dot=document.createElement('div');
-    dot.className='pv-chk-dot '+dotCls;
-    chk.appendChild(dot);
-    road.appendChild(chk);
-  }
-
-  // Carro na posicao da ultima data preenchida
-  var carPct=n===1?50:(carIdx/(n-1))*100;
-  var car=document.createElement('div');
-  car.className='pv-car';
-  car.style.left=carPct+'%';
-  car.textContent='🚛';
-  road.appendChild(car);
-
-  // Cards das etapas abaixo da pista
-  var cardsHTML='';
-  for(var k=0;k<n;k++){
-    var dt=pD(etapas[k].val);
-    var isCurrent=(k===carIdx);
-    var cls=isCurrent?'pv-tc current':(dt?(etapas[k].tipo==='agend'?'pv-tc agend':'pv-tc done'):'pv-tc pend');
-    cardsHTML+='<div class="'+cls+'">';
-    cardsHTML+='<div class="pv-tc-lbl">'+etapas[k].lbl+'</div>';
-    cardsHTML+='<div class="pv-tc-val'+(dt?'':' nd')+'">'+(dt?fD(etapas[k].val):'-')+'</div>';
-    cardsHTML+='</div>';
-  }
-  document.getElementById('pv-track-cards').innerHTML=cardsHTML;
-
-  // ── Indicadores calculados ───────────────────────────────────────────
+  // ── 3 · INDICADORES (4 cards fixos) ─────────────────────────────────
+  var ds=calcDias(d);
   var agc=calcDiasAgCarreg(d);
   var agdias=calcDiasAgDescarga(d);
   var diasVia=null;
   if(d.d4){var dv4=pD(d.d4),dv6=pD(d.d6)||hj;diasVia=Math.round((dv6-dv4)/86400000);if(diasVia<0)diasVia=0;}
 
-  var calcs=[];
-  if(agc!==null)calcs.push({lbl:'Dias Ag. Carreg.',val:agc,tipo:'agr'});
-  if(diasVia!==null)calcs.push({lbl:'Dias em Viagem',val:diasVia,tipo:'via'});
-  if(agdias!==null)calcs.push({lbl:'Dias Ag. Descarga',val:agdias,tipo:'agr'});
+  function indCard(icon,label,val,tipoCalc){
+    var cls='nd',txt='-';
+    if(val!==null){
+      txt=val+'d';
+      if(tipoCalc==='agr')cls=val<=0?'grn':'red';
+      else cls=val<=2?'grn':(val<=6?'lar':'red');
+    }
+    return '<div class="pv2-ind-card '+cls+'"><div class="pv2-ind-icon"><i class="fa-solid '+icon+'"></i></div>'+
+           '<div class="pv2-ind-value">'+txt+'</div><div class="pv2-ind-label">'+label+'</div></div>';
+  }
+  document.getElementById('pv-indicators').innerHTML=
+    indCard('fa-hourglass-half','Dias no Status',ds,'via')+
+    indCard('fa-truck-fast','Dias em Viagem',diasVia,'via')+
+    indCard('fa-box','Dias de Carregamento',agc,'agr')+
+    indCard('fa-dolly','Dias de Descarga',agdias,'agr');
 
-  var calcsWrap=document.getElementById('pv-calcs-wrap');
-  if(calcs.length>0){
-    calcsWrap.style.display='';
-    var ch='';
-    calcs.forEach(function(calc){
-      var cls,vcls;
-      if(calc.tipo==='agr'){cls=calc.val<=0?'pv-calc grn':'pv-calc red';vcls=calc.val<=0?'pv-calc-val grn':'pv-calc-val red';}
-      else{cls=calc.val<=2?'pv-calc grn':calc.val<=6?'pv-calc amb':'pv-calc red';vcls=calc.val<=2?'pv-calc-val grn':calc.val<=6?'pv-calc-val amb':'pv-calc-val red';}
-      ch+='<div class="'+cls+'"><div class="pv-calc-lbl">'+calc.lbl+'</div><div class="'+vcls+'">'+calc.val+'d</div></div>';
-    });
-    document.getElementById('pv-calcs').innerHTML=ch;
-  }else{calcsWrap.style.display='none';}
+  // ── 4 · TIMELINE ─────────────────────────────────────────────────────
+  var tlHTML='';
+  for(var k=0;k<n;k++){
+    var dt=pD(etapas[k].val);
+    var isCurrent=(k===carIdx)&&!tripDone;
+    var cls=etapas[k].tipo!=='real'?'agend':(isCurrent?'current':(dt?'done':''));
+    var icon=pvTlIcon(etapas[k].lbl,dt&&k===n-1);
+    var dateTxt=dt?fD(etapas[k].val):'-';
+    tlHTML+='<div class="pv2-tl-step '+cls+'" onclick="pvToggleTip(this)">'+
+      '<div class="pv2-tl-line"></div>'+
+      '<div class="pv2-tl-dot"><i class="fa-solid '+icon+'"></i></div>'+
+      '<div class="pv2-tl-text"><div class="pv2-tl-lbl">'+esc(etapas[k].lbl)+'</div><div class="pv2-tl-date">'+dateTxt+'</div></div>'+
+      '<div class="pv2-tl-tip">'+esc(etapas[k].lbl)+': '+dateTxt+'</div>'+
+    '</div>';
+  }
+  document.getElementById('pv-timeline').innerHTML=tlHTML;
+
+  // ── 5 · RODAPÉ: status atual, próxima etapa, previsão ────────────────
+  var agSt=calcAgStatus(d);
+  var statusAtualHTML=agSt?agStatusHTML(d):'<span class="ag-aguard">Em andamento</span>';
+  var proxima=tripDone?null:(carIdx+1<n?etapas[carIdx+1]:null);
+  var proxLbl=tripDone?'Concluído':(proxima?proxima.lbl:'-');
+  var prevVal=proxima&&pD(proxima.val)?fD(proxima.val):'-';
+
+  document.getElementById('pv-footer').innerHTML=
+    '<div class="pv2-footer-item"><div class="pv2-footer-lbl">Status Atual</div><div class="pv2-footer-val">'+statusAtualHTML+'</div></div>'+
+    '<div class="pv2-footer-item"><div class="pv2-footer-lbl">Próxima Etapa</div><div class="pv2-footer-val">'+esc(proxLbl)+'</div></div>'+
+    '<div class="pv2-footer-item"><div class="pv2-footer-lbl">Previsão</div><div class="pv2-footer-val">'+prevVal+'</div></div>';
 
   document.getElementById('ov-via').classList.add('show');
   document.body.style.overflow='hidden';
