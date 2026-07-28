@@ -671,11 +671,11 @@ var VIA_COLS=[
   {key:'dst',lbl:'Destino',type:'str',get:function(d){return d.dst||'';}},
   {key:'cte',lbl:'ID CTE',type:'str',get:function(d){return d.cte||'';}},
   {key:'dtstatus',lbl:'Data Status',type:'date',get:function(d){return pD(getDataStatus(d));}},
-  {key:'diasstatus',lbl:'Dias Status',type:'num',get:function(d){return calcDias(d);}},
+  {key:'diasstatus',lbl:'Dias Status',type:'num',get:function(d){return calcDias(d);},tie:function(d){return pD(getDataStatus(d));}},
   {key:'status',lbl:'Status',type:'str',get:function(d){return d.st||'';}},
   {key:'agstatus',lbl:'St. Agendamento',type:'str',get:function(d){return calcAgStatus(d)||'';}},
-  {key:'diasagcarreg',lbl:'Dias Ag. Carreg.',type:'num',get:function(d){return calcDiasAgCarreg(d);}},
-  {key:'diasagdesc',lbl:'Dias Ag. Descarga',type:'num',get:function(d){return calcDiasAgDescarga(d);}}
+  {key:'diasagcarreg',lbl:'Dias Ag. Carreg.',type:'num',get:function(d){return calcDiasAgCarreg(d);},tie:function(d){return pD(d.d2);}},
+  {key:'diasagdesc',lbl:'Dias Ag. Descarga',type:'num',get:function(d){return calcDiasAgDescarga(d);},tie:function(d){return pD(d.d6);}}
 ];
 var MAN_COLS=[
   {key:'pcav',lbl:'Placa Cavalo',type:'str',get:function(m){return m.pcav||'';}},
@@ -710,7 +710,7 @@ function applySort(arr,cols,state){
   var c=null;
   for(var i=0;i<cols.length;i++){if(cols[i].key===state.col){c=cols[i];break;}}
   if(!c)return arr;
-  var withIdx=arr.map(function(item,idx){return {item:item,idx:idx,val:c.get(item)};});
+  var withIdx=arr.map(function(item,idx){return {item:item,idx:idx,val:c.get(item),tie:c.tie?c.tie(item):null};});
   withIdx.sort(function(a,b){
     var va=a.val,vb=b.val;
     var na=(va===null||va===undefined||va==='');
@@ -722,6 +722,10 @@ function applySort(arr,cols,state){
     else if(c.type==='str'){va=String(va).toLowerCase();vb=String(vb).toLowerCase();}
     if(va<vb)return -1*state.dir;
     if(va>vb)return 1*state.dir;
+    if(c.tie){
+      var ta=a.tie?a.tie.getTime():null,tb=b.tie?b.tie.getTime():null;
+      if(ta!==null&&tb!==null&&ta!==tb)return (ta<tb?-1:1)*state.dir;
+    }
     return a.idx-b.idx;
   });
   return withIdx.map(function(x){return x.item;});
@@ -838,7 +842,7 @@ function calcVazios(){
 
 
 function pD(s){if(!s)return null;var d;s=String(s).trim();if(s.indexOf('/')>=0){var partes=s.split(' ');var p=partes[0].split('/');var dia=+p[0],mes=(+p[1])-1,ano=+p[2];if(ano<100)ano+=2000;var h=0,mi=0,se=0;if(partes[1]){var tp=partes[1].split(':');h=+tp[0]||0;mi=+tp[1]||0;se=+tp[2]||0;}d=new Date(ano,mes,dia,h,mi,se);}else{var iso=s.replace(' ','T');if(iso.indexOf('T')<0)iso+='T00:00:00';d=new Date(iso);}return isNaN(d.getTime())?null:d;}
-function fD(s){if(!s)return'-';var d=pD(s);if(!d)return esc(s);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+function fD(s){if(!s)return'-';var d=pD(s);if(!d)return esc(s);var str=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});if(d.getHours()||d.getMinutes()){str+=' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}return str;}
 function hoje(){var h=new Date();h.setHours(0,0,0,0);return h;}
 function diffDias(d1,d2){if(!d1||!d2)return null;var df=Math.round((d2-d1)/86400000);return df<0?0:df;}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
