@@ -800,9 +800,10 @@ function buscar(){
     var lns=csv.trim().split('\n').slice(1);
     _M=lns.map(function(l){
       var c=pCSV(l);
-      return {pcav:c[0]||'',pman:c[1]||'',dtch:c[2]||'',dtab:c[3]||'',
-        justos:c[4]||'',serv:c[5]||'',km:c[6]||'',os:c[7]||'',
-        dtin:c[8]||'',prev:c[9]||'',dtfin:c[10]||'',justman:c[11]||''};
+      return {mot:c[0]||'',pcav:c[1]||'',pman:c[2]||'',tipo:c[3]||'',
+        dtch:c[4]||'',dtab:c[5]||'',dtin:c[6]||'',prev:c[7]||'',
+        justos:c[8]||'',serv:c[9]||'',justman:c[10]||'',km:c[11]||'',
+        os:c[12]||'',dtfin:c[13]||''};
     }).filter(function(m){return m.pcav||m.os;});
   }).catch(function(){_M=[];}));
   Promise.all(p).then(function(){
@@ -1111,7 +1112,7 @@ function renderMan(q,filtro){
   _fM=_M.filter(function(m){
     // So conta/lista manutencao que ainda NAO tem a Data Finalizacao preenchida
     if(m.dtfin)return false;
-    if(q&&(m.pcav+m.pman+m.os+m.serv).toLowerCase().indexOf(q)<0)return false;
+    if(q&&(m.pcav+m.pman+m.os+m.serv+m.mot).toLowerCase().indexOf(q)<0)return false;
     var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
     if(filtro==='agm'){
       // Placa cujo status atual e Ag Descarga
