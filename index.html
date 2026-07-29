@@ -127,6 +127,17 @@ body::before{
   box-shadow:var(--sh-sm);
 }
 .ldot{width:7px;height:7px;border-radius:50%;background:#22C55E;animation:bl 2s infinite;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+.locbtn{
+  display:flex;align-items:center;gap:6px;
+  background:#FFFBEB;color:#92400E;
+  font-size:.72rem;font-weight:700;padding:6px 13px 6px 10px;border-radius:var(--r-pill);
+  border:1px solid #FDE68A;text-transform:uppercase;letter-spacing:.04em;
+  box-shadow:var(--sh-sm);cursor:pointer;font-family:inherit;
+  transition:transform .12s ease,box-shadow .12s ease,background .12s ease;
+}
+.locbtn i{font-size:.72rem}
+.locbtn:hover{background:#FEF3C7;transform:translateY(-1px)}
+.locbtn:active{transform:translateY(0) scale(.97)}
 .cd{font-size:.76rem;color:var(--text-2);font-weight:600;display:flex;align-items:center;gap:6px}
 .cd i{color:var(--text-3);font-size:.72rem}
 .bref{
@@ -439,6 +450,26 @@ tbody tr:hover td{background:#FFF3E9}
 /* ── POPUP MANUTENÇÃO ─────────────────────────────────────────────── */
 .popup.pm-popup{width:960px;max-width:97vw}
 .pp-strip{height:6px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,var(--st-man),#DC2626)}
+
+/* ── POPUP LOCALIZAR PLACA ────────────────────────────────────────── */
+.popup.loc-popup{width:640px;max-width:95vw;padding:0 0 24px}
+.loc-strip{background:linear-gradient(90deg,#F59E0B,#D97706)}
+.loc-hero{display:flex;align-items:center;gap:14px;padding:22px 28px 4px}
+.loc-hero-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  background:#FFFBEB;color:#D97706;border:1px solid #FDE68A;
+  display:flex;align-items:center;justify-content:center;font-size:1.05rem;
+}
+.loc-hero-title{font-size:1.05rem;font-weight:700;color:var(--text-1)}
+.loc-hero-sub{font-size:.78rem;color:var(--text-2);font-weight:600;margin-top:2px}
+.loc-hint{padding:10px 28px 4px;font-size:.76rem;color:var(--text-3);line-height:1.5}
+.loc-grid{display:flex;flex-wrap:wrap;gap:9px;padding:16px 28px 4px}
+.loc-chip{
+  background:var(--surface-2,#F8FAFC);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:8px 14px;font-weight:700;font-size:.85rem;
+  color:var(--text-1);letter-spacing:.02em;
+}
+.loc-popup .empty{padding:36px 20px}
 .pm-hero{padding:24px 28px 20px;border-bottom:1px solid var(--border-soft)}
 .pm-row1{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:16px}
 .pm-placa-blk{display:flex;flex-direction:column;gap:6px}
@@ -491,6 +522,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
   </div>
   <div class="tr">
     <div class="live"><div class="ldot"></div>ao vivo</div>
+    <button class="locbtn" id="btn-locplaca" onclick="abrirLocalizarPlaca()" style="display:none"><i class="fa-solid fa-magnifying-glass-location"></i>Localizar Placa</button>
     <span class="cd"><i class="fa-regular fa-clock"></i><span id="cd">Atualiza em 5:00</span></span>
     <button class="bref" onclick="buscar()"><i class="fa-solid fa-arrow-rotate-right"></i>Atualizar</button>
   </div>
@@ -652,10 +684,28 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
     </div>
   </div>
 </div>
+
+<!-- POPUP LOCALIZAR PLACA -->
+<div class="overlay" id="ov-loc" onclick="fecharFora(event,'ov-loc')">
+  <div class="popup loc-popup">
+    <div class="pp-strip loc-strip"></div>
+    <button class="pp-close" onclick="fechar('ov-loc')" style="top:16px">&#x2715;</button>
+    <div class="loc-hero">
+      <span class="loc-hero-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+      <div>
+        <div class="loc-hero-title">Localizar Placa</div>
+        <div class="loc-hero-sub" id="loc-count">0 placas sem card</div>
+      </div>
+    </div>
+    <div class="loc-hint">Placas presentes no total de veiculos, mas nao associadas a nenhum dos cards (Ag. Carregamento, Ag. Inicio Viagem, Em Viagem, Ag. Descarga, Vazios, Manutencao).</div>
+    <div id="loc-body"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
 
-var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_tot=0;
+var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_tot=0,_F=[],_placasManUnicas={};
 var _sort={via:{col:null,dir:1},vaz:{col:null,dir:1},man:{col:null,dir:1}};
 
 // ── Definicao de colunas ordenaveis (usadas nos cabecalhos das tabelas) ──
@@ -757,12 +807,15 @@ function buscar(){
   }).catch(function(){_M=[];}));
   Promise.all(p).then(function(){
     fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=615595234&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
-      var n=csv.trim().split('\n').slice(1).filter(function(l){
-        var c=pCSV(l);return (c[1]||'').toLowerCase().trim()==='ativada';
-      }).length;
+      var lns=csv.trim().split('\n').slice(1);
+      _F=lns.map(function(l){
+        var c=pCSV(l);
+        return {placa:(c[0]||'').replace(/-/g,'').toUpperCase(),ativa:(c[1]||'').toLowerCase().trim()==='ativada'};
+      }).filter(function(f){return f.placa;});
+      var n=_F.filter(function(f){return f.ativa;}).length;
       _tot=n||(_D.length+_M.length);
       aCards(true,n);renderTab();setTs();
-    }).catch(function(){_tot=_D.length+_M.length;aCards(false,0);renderTab();setTs();});
+    }).catch(function(){_F=[];_tot=_D.length+_M.length;aCards(false,0);renderTab();setTs();});
   });
 }
 function pCSV(l){var r=[],c='',q=false;for(var i=0;i<l.length;i++){var x=l[i];if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c.trim());c='';}else{c+=x;}}r.push(c.trim());return r;}
@@ -814,6 +867,7 @@ function aCards(u,n){
     var emViagemAtiva=st&&(mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
     if(!emViagemAtiva)placasManUnicas[p]=true;
   });
+  _placasManUnicas=placasManUnicas;
   var nman=Object.keys(placasManUnicas).length;
   // Ag Descarga + Manutencao: placas cujo status atual e Ag Descarga E que tambem tem OS de
   // manutencao em aberto (contam nos dois cards ao mesmo tempo)
@@ -827,6 +881,61 @@ function aCards(u,n){
   document.getElementById('v-agm').textContent=nagm;
   document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
   document.getElementById('v-vaz').textContent=nvaz;document.getElementById('p-vaz').textContent=pct(nvaz);
+  atualizarBotaoLocalizar(nagc+nagi+nvia+nagd+nvaz+nman,tot);
+}
+
+// Compara a soma dos 6 cards (Ag.Carregamento + Ag.Inicio + Em Viagem + Ag.Descarga + Vazios + Manutencao)
+// com o Total de Veiculos. Mostra o botao "Localizar Placa" sempre que houver divergencia
+// (soma diferente do total), pois isso indica placas sem card ou placas duplicadas em cards.
+function atualizarBotaoLocalizar(soma,total){
+  var btn=document.getElementById('btn-locplaca');
+  if(!btn)return;
+  if(soma!==total){btn.style.display='';}
+  else{btn.style.display='none';}
+}
+
+// Retorna as placas que existem no total de veiculos da frota mas nao estao
+// associadas a nenhum dos 6 cards (Ag.Carregamento, Ag.Inicio, Em Viagem, Ag.Descarga, Vazios, Manutencao)
+function placasSemCard(){
+  var comCard={};
+  var ultimos=ultimaPorPlaca();
+  ultimos.forEach(function(d){
+    if(!d.placa)return;
+    if(mSt(d.st,'agc')||mSt(d.st,'agi')||mSt(d.st,'via')||mSt(d.st,'agd'))comCard[d.placa.toUpperCase()]=true;
+  });
+  calcVazios().forEach(function(d){if(d.placa)comCard[d.placa.toUpperCase()]=true;});
+  Object.keys(_placasManUnicas).forEach(function(p){comCard[p]=true;});
+  var todas=[];
+  if(_F&&_F.length){
+    todas=_F.filter(function(f){return f.ativa;}).map(function(f){return f.placa;});
+  }else{
+    var set={};
+    _D.forEach(function(d){if(d.placa)set[d.placa.toUpperCase()]=true;});
+    _M.forEach(function(m){var p=(m.pcav||'').replace(/-/g,'').toUpperCase();if(p)set[p]=true;});
+    todas=Object.keys(set);
+  }
+  var vistas={};
+  return todas.filter(function(p){
+    if(vistas[p])return false;
+    vistas[p]=true;
+    return !comCard[p];
+  });
+}
+
+function abrirLocalizarPlaca(){
+  var placas=placasSemCard();
+  var html;
+  if(!placas.length){
+    html='<div class="empty">Nenhuma placa pendente encontrada.</div>';
+  }else{
+    html='<div class="loc-grid">'+placas.map(function(p){
+      return '<div class="loc-chip">'+esc(p)+'</div>';
+    }).join('')+'</div>';
+  }
+  document.getElementById('loc-count').textContent=placas.length+' placa'+(placas.length!==1?'s':'')+' sem card';
+  document.getElementById('loc-body').innerHTML=html;
+  document.getElementById('ov-loc').classList.add('show');
+  document.body.style.overflow='hidden';
 }
 
 // Retorna a linha "vazio" de cada placa cuja ULTIMA informacao incluida na planilha
@@ -1216,7 +1325,7 @@ function abrirMan(i){
 
 function fechar(id){document.getElementById(id).classList.remove('show');document.body.style.overflow='';}
 function fecharFora(ev,id){if(ev.target===document.getElementById(id))fechar(id);}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');fechar('ov-loc');}});
 var seg=300;
 setInterval(function(){seg--;if(seg<=0){seg=300;buscar();}var m=Math.floor(seg/60),s=seg%60;document.getElementById('cd').textContent='Atualiza em '+m+':'+(s<10?'0':'')+s;},1000);
 
