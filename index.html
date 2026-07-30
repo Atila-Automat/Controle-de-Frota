@@ -835,16 +835,17 @@ function setTs(){var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',min
 function pct(n){if(!_tot||_tot===0)return'0%';return Math.round((n/_tot)*100)+'%';}
 function mSt(s,k){var v=(s||'').toLowerCase().trim();if(k==='evc')return v.indexOf('viagem para carregamento')>=0;if(k==='agc')return v.indexOf('carregamento')>=0&&v.indexOf('viagem')<0;if(k==='agi')return v.indexOf('nicio')>=0;if(k==='via')return v==='em viagem'||v==='viagem';if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;if(k==='vaz')return v==='vazio';return true;}
 // Para cada placa, retorna apenas a linha com a informacao mais recente, usando como
-// referencia a Data de Chegada na Origem (coluna L / d2) - nao a ordem em que as linhas
+// referencia a Data Inicio para Carregamento (coluna dvc) - nao a ordem em que as linhas
 // foram inseridas na planilha. Se nenhuma das linhas tiver essa data, mantem a ultima
-// linha inserida como fallback.
+// linha inserida como fallback. Como nao filtra por status, isso tambem cobre o caso de
+// linhas com status vazio: elas entram na disputa pela mesma data (dvc).
 function ultimaPorPlaca(lista){
   var porPlaca={};
   (lista||_D).forEach(function(d){
     if(!d.placa)return;
     var atual=porPlaca[d.placa];
     if(!atual){porPlaca[d.placa]=d;return;}
-    var dNovo=pD(d.d2),dAtual=pD(atual.d2);
+    var dNovo=pD(d.dvc),dAtual=pD(atual.dvc);
     if(dNovo&&dAtual){if(dNovo>=dAtual)porPlaca[d.placa]=d;}
     else if(dNovo&&!dAtual){porPlaca[d.placa]=d;}
     else if(!dNovo&&!dAtual){porPlaca[d.placa]=d;}
