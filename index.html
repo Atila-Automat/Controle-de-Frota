@@ -42,6 +42,7 @@
   --st-vaz:#64748B;   /* Vazio */
   --st-agi:#3B82F6;   /* Início de viagem */
   --st-agm:#F97316;   /* Descarga + manutenção (combinado) */
+  --st-evc:#14B8A6;   /* Em viagem para carregamento */
 
   /* Sombras discretas */
   --sh-sm:0 4px 12px rgba(0,0,0,.06);
@@ -158,7 +159,7 @@ body::before{
 }
 
 /* ── CARDS DE STATUS ───────────────────────────────────────────────── */
-.cards{display:grid;grid-template-columns:repeat(6,1fr) 2px repeat(2,1fr);gap:12px;flex-shrink:0;align-items:stretch}
+.cards{display:grid;grid-template-columns:repeat(7,1fr) 2px repeat(2,1fr);gap:12px;flex-shrink:0;align-items:stretch}
 .cards-sep{background:linear-gradient(to bottom,transparent,var(--border),transparent);border-radius:1px}
 .cards-group{display:contents}
 
@@ -197,6 +198,9 @@ body::before{
 
 .c-tot .card-icon{background:#F1F2F4;color:var(--brand-ink)}
 .c-tot.active{background:rgba(58,58,58,.04);border-color:var(--brand-ink)}.c-tot.active .card-val{color:var(--brand-ink)}.c-tot .card-mark{background:var(--brand-ink)}
+
+.c-evc .card-icon{background:#CCFBF1;color:var(--st-evc)}
+.c-evc.active{background:#F0FDFA;border-color:var(--st-evc)}.c-evc.active .card-val{color:#0F766E}.c-evc .card-mark{background:var(--st-evc)}
 
 .c-agc .card-icon{background:#FEF3C7;color:var(--st-agc)}
 .c-agc.active{background:#FFFBEB;border-color:var(--st-agc)}.c-agc.active .card-val{color:#B45309}.c-agc .card-mark{background:var(--st-agc)}
@@ -239,6 +243,7 @@ body::before{
   font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:var(--r-pill);
   background:var(--bg);color:var(--text-2);box-shadow:var(--sh-sm);
 }
+.tbadge.c-evc{background:var(--st-evc);color:#fff}
 .tbadge.c-agc{background:var(--st-agc);color:#fff}
 .tbadge.c-agi{background:var(--st-agi);color:#fff}
 .tbadge.c-via{background:var(--st-via);color:#fff}
@@ -318,6 +323,7 @@ tbody tr:hover td{background:#FFF3E9}
   box-shadow:0 2px 6px rgba(0,0,0,.10);
 }
 .sp i{font-size:.62rem}
+.s-evc{background:var(--st-evc)}
 .s-agc{background:var(--st-agc)}
 .s-agi{background:var(--st-agi)}
 .s-via{background:var(--st-via)}
@@ -534,6 +540,11 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
         <div class="card-top"><span class="card-icon"><i class="fa-solid fa-truck"></i></span><span class="card-pct" id="p-tot">100%</span></div>
         <div class="card-val" id="v-tot">0</div>
         <div class="card-lbl">Total Veiculos</div><div class="card-sub">placas ativas</div><div class="card-mark"></div>
+      </div>
+      <div class="card c-evc" id="card-evc" onclick="filtrarCard('evc')">
+        <div class="card-top"><span class="card-icon"><i class="fa-solid fa-route"></i></span><span class="card-pct" id="p-evc">0%</span></div>
+        <div class="card-val" id="v-evc">0</div>
+        <div class="card-lbl">Em Viagem p/ Carreg.</div><div class="card-sub">a caminho da origem</div><div class="card-mark"></div>
       </div>
       <div class="card c-agc" id="card-agc" onclick="filtrarCard('agc')">
         <div class="card-top"><span class="card-icon"><i class="fa-solid fa-box"></i></span><span class="card-pct" id="p-agc">0%</span></div>
@@ -792,8 +803,8 @@ function buscar(){
       return {cli:c[0]||'',rem:c[1]||'',iv:c[2]||'',
         placa:(c[3]||'').replace(/-/g,''),tipo:c[4]||'',mot:c[5]||'',
         prod:c[6]||'',ori:c[7]||'',dst:c[8]||'',cte:c[9]||'',
-        d1:c[10]||'',d2:c[11]||'',d3:c[12]||'',d4:c[13]||'',
-        d5:c[14]||'',d6:c[15]||'',d7:c[16]||'',d8:c[17]||'',st:c[18]||''};
+        d1:c[10]||'',d2:c[11]||'',dvc:c[12]||'',d3:c[13]||'',d4:c[14]||'',
+        d5:c[15]||'',d6:c[16]||'',d7:c[17]||'',d8:c[18]||'',st:c[19]||''};
     }).filter(function(d){return d.placa;});
   }).catch(function(){_D=[];}));
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
@@ -822,7 +833,7 @@ function buscar(){
 function pCSV(l){var r=[],c='',q=false;for(var i=0;i<l.length;i++){var x=l[i];if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c.trim());c='';}else{c+=x;}}r.push(c.trim());return r;}
 function setTs(){var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});document.getElementById('ts').textContent='Atualizado as '+h+' - Google Sheets';}
 function pct(n){if(!_tot||_tot===0)return'0%';return Math.round((n/_tot)*100)+'%';}
-function mSt(s,k){var v=(s||'').toLowerCase().trim();if(k==='agc')return v.indexOf('carregamento')>=0;if(k==='agi')return v.indexOf('nicio')>=0;if(k==='via')return v==='em viagem'||v==='viagem';if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;if(k==='vaz')return v==='vazio';return true;}
+function mSt(s,k){var v=(s||'').toLowerCase().trim();if(k==='evc')return v.indexOf('viagem para carregamento')>=0;if(k==='agc')return v.indexOf('carregamento')>=0&&v.indexOf('viagem')<0;if(k==='agi')return v.indexOf('nicio')>=0;if(k==='via')return v==='em viagem'||v==='viagem';if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;if(k==='vaz')return v==='vazio';return true;}
 // Para cada placa, retorna apenas a linha com a informacao mais recente, usando como
 // referencia a Data de Chegada na Origem (coluna L / d2) - nao a ordem em que as linhas
 // foram inseridas na planilha. Se nenhuma das linhas tiver essa data, mantem a ultima
@@ -846,6 +857,7 @@ function aCards(u,n){
   document.getElementById('v-tot').textContent=tot;
   document.getElementById('p-tot').textContent='100%';
   var ultimos=ultimaPorPlaca();
+  var nevc=ultimos.filter(function(d){return mSt(d.st,'evc');}).length;
   var nagc=ultimos.filter(function(d){return mSt(d.st,'agc');}).length;
   var nagi=ultimos.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=ultimos.filter(function(d){return mSt(d.st,'via');}).length;
@@ -865,7 +877,7 @@ function aCards(u,n){
   var placasManUnicas={};
   Object.keys(placasManAberta).forEach(function(p){
     var st=statusPorPlaca[p];
-    var emViagemAtiva=st&&(mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
+    var emViagemAtiva=st&&(mSt(st,'evc')||mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
     if(!emViagemAtiva)placasManUnicas[p]=true;
   });
   _placasManUnicas=placasManUnicas;
@@ -875,6 +887,7 @@ function aCards(u,n){
   var nagm=ultimos.filter(function(d){return mSt(d.st,'agd')&&placasManAberta[(d.placa||'').toUpperCase()];}).length;
   // Vazios com historico
   var nvaz=calcVazios().length;
+  document.getElementById('v-evc').textContent=nevc;document.getElementById('p-evc').textContent=pct(nevc);
   document.getElementById('v-agc').textContent=nagc;document.getElementById('p-agc').textContent=pct(nagc);
   document.getElementById('v-agi').textContent=nagi;document.getElementById('p-agi').textContent=pct(nagi);
   document.getElementById('v-via').textContent=nvia;document.getElementById('p-via').textContent=pct(nvia);
@@ -882,7 +895,7 @@ function aCards(u,n){
   document.getElementById('v-agm').textContent=nagm;
   document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
   document.getElementById('v-vaz').textContent=nvaz;document.getElementById('p-vaz').textContent=pct(nvaz);
-  atualizarBotaoLocalizar(nagc+nagi+nvia+nagd+nvaz+nman,tot);
+  atualizarBotaoLocalizar(nevc+nagc+nagi+nvia+nagd+nvaz+nman,tot);
 }
 
 // Compara a soma dos 6 cards (Ag.Carregamento + Ag.Inicio + Em Viagem + Ag.Descarga + Vazios + Manutencao)
@@ -902,7 +915,7 @@ function placasSemCard(){
   var ultimos=ultimaPorPlaca();
   ultimos.forEach(function(d){
     if(!d.placa)return;
-    if(mSt(d.st,'agc')||mSt(d.st,'agi')||mSt(d.st,'via')||mSt(d.st,'agd'))comCard[d.placa.toUpperCase()]=true;
+    if(mSt(d.st,'evc')||mSt(d.st,'agc')||mSt(d.st,'agi')||mSt(d.st,'via')||mSt(d.st,'agd'))comCard[d.placa.toUpperCase()]=true;
   });
   calcVazios().forEach(function(d){if(d.placa)comCard[d.placa.toUpperCase()]=true;});
   Object.keys(_placasManUnicas).forEach(function(p){comCard[p]=true;});
@@ -970,23 +983,33 @@ function agStatusHTML(d){
   if(st==='fora')return'<span class="ag-fora">Fora do Agendamento</span>';
   return'<span class="ag-dentro">Dentro do Agendamento</span>';
 }
+// Cliente "M Dias Branco" tem regra propria de contagem: nao conta nem o dia de chegada
+// nem o dia do evento seguinte (carregamento/descarga) - contagem exclusiva dos extremos.
+// Os demais clientes contam de forma inclusiva (os dois extremos entram na contagem).
+function isMDiasBranco(cli){
+  var v=(cli||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  return v==='M DIAS BRANCO';
+}
 function calcDiasAgCarreg(d){
   // Só calcula se tiver agendamento de doca (d1) E chegada na origem (d2)
   if(!d.d1||!d.d2)return null;
   var dori=pD(d.d2),dcarr=pD(d.d3),hj=hoje();
   var fim=dcarr||hj;
   var df=Math.round((fim-dori)/86400000);
-  return df>1?df-1:0;
+  if(isMDiasBranco(d.cli))return df>1?df-1:0;
+  return df>=0?df+1:0;
 }
 function calcDiasAgDescarga(d){
   if(!d.d6||!d.d7)return null;
   var ddst=pD(d.d6),ddesc=pD(d.d8),hj=hoje();
   var fim=ddesc||hj;
   var df=Math.round((fim-ddst)/86400000);
-  return df>1?df-1:0;
+  if(isMDiasBranco(d.cli))return df>1?df-1:0;
+  return df>=0?df+1:0;
 }
 function getDataStatus(d){
   var v=(d.st||'').toLowerCase();
+  if(v.indexOf('viagem para carregamento')>=0)return d.dvc||d.d2||'';
   if(v.indexOf('carregamento')>=0)return d.d2||'';
   if(v.indexOf('nicio')>=0)return d.d3||'';
   if(v==='em viagem'||v==='viagem')return d.d4||'';
@@ -1037,14 +1060,14 @@ function dkMan(n){if(n===null)return'<span class="dk-n">-</span>';var cl=n<1?'dk
 function dkAgr(n){if(n===null)return'<span class="dk-n">-</span>';var cl=n<=0?'dk-ok':'dk-a';return'<span class="dk '+cl+'">'+n+'d</span>';}
 function boxClsMan(n){if(n===null)return'pm-box';if(n<1)return'pm-box grn';if(n<=2)return'pm-box amb';return'pm-box red';}
 function boxValClsMan(n){if(n===null)return'pm-box-val nd';if(n<1)return'pm-box-val grn';if(n<=2)return'pm-box-val amb';return'pm-box-val red';}
-function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';if(v==='vazio')return's-vaz';return's-out';}
-function sIcon(cls){var m={'s-agc':'fa-box','s-agi':'fa-flag','s-via':'fa-truck-fast','s-agd':'fa-warehouse','s-vaz':'fa-box-open','s-man':'fa-screwdriver-wrench','s-out':'fa-circle-question'};return'<i class="fa-solid '+(m[cls]||'fa-circle')+'"></i>';}
+function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('viagem para carregamento')>=0)return's-evc';if(v.indexOf('carregamento')>=0)return's-agc';if(v.indexOf('nicio')>=0)return's-agi';if(v==='em viagem'||v==='viagem')return's-via';if(v.indexOf('descarga')>=0)return's-agd';if(v==='vazio')return's-vaz';return's-out';}
+function sIcon(cls){var m={'s-evc':'fa-route','s-agc':'fa-box','s-agi':'fa-flag','s-via':'fa-truck-fast','s-agd':'fa-warehouse','s-vaz':'fa-box-open','s-man':'fa-screwdriver-wrench','s-out':'fa-circle-question'};return'<i class="fa-solid '+(m[cls]||'fa-circle')+'"></i>';}
 function ivB(iv){var v=(iv||'').toLowerCase().trim();if(v==='ida')return'<span class="iv-ida"><i class="fa-solid fa-arrow-right"></i>Ida</span>';if(v==='volta')return'<span class="iv-volta"><i class="fa-solid fa-arrow-left"></i>Volta</span>';return'<span class="iv-nd">-</span>';}
 
-var TITS={tot:{t:'Todos os veiculos',b:'Total',bc:''},agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},agm:{t:'Ag. Descarga + Manutencao',b:'Ag. Desc + Manut.',bc:'c-agm'},man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'},vaz:{t:'Veiculos Vazios',b:'Vazios',bc:'c-vaz'}};
+var TITS={tot:{t:'Todos os veiculos',b:'Total',bc:''},evc:{t:'Em Viagem para Carregamento',b:'Em Viagem p/ Carreg.',bc:'c-evc'},agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},agm:{t:'Ag. Descarga + Manutencao',b:'Ag. Desc + Manut.',bc:'c-agm'},man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'},vaz:{t:'Veiculos Vazios',b:'Vazios',bc:'c-vaz'}};
 function filtrarCard(k){
   _card=k;
-  ['tot','agc','agi','via','agd','agm','man','vaz'].forEach(function(c){
+  ['tot','evc','agc','agi','via','agd','agm','man','vaz'].forEach(function(c){
     document.getElementById('card-'+c).classList.toggle('active',c===k);
   });
   var isMan=k==='man'||k==='agm';
@@ -1121,7 +1144,7 @@ function renderMan(q,filtro){
       // Card Manutencao: nao lista placa que esteja em algum status de viagem ativo
       // (essa placa aparece apenas no card do status dela)
       var st=statusPorPlaca[p];
-      var emViagemAtiva=st&&(mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
+      var emViagemAtiva=st&&(mSt(st,'evc')||mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
       if(emViagemAtiva)return false;
     }
     return true;
@@ -1166,6 +1189,7 @@ function pvStatusColor(st){
   var m={
     's-via':{bg:'#DCFCE7',fg:'#16A34A'},
     's-agi':{bg:'#DBEAFE',fg:'#2563EB'},
+    's-evc':{bg:'#CCFBF1',fg:'#0D9488'},
     's-agc':{bg:'#FFEDD5',fg:'#F97316'},
     's-agd':{bg:'#FFEDD5',fg:'#F97316'},
     's-vaz':{bg:'#F3F4F6',fg:'#6B7280'},
@@ -1178,6 +1202,7 @@ function pvTlIcon(lbl,done){
   var m={
     'Agend. Doca':'fa-clipboard-check',
     'Chegada Origem':'fa-industry',
+    'Viagem p/ Carregamento':'fa-route',
     'Carregamento':'fa-box',
     'Inicio Viagem':'fa-truck-fast',
     'Prev. Chegada':'fa-calendar-day',
@@ -1223,6 +1248,7 @@ function abrirVia(i){
   var etapas=[
     {lbl:'Agend. Doca',   val:d.d1, tipo:'agend', show:!!d.d1},
     {lbl:'Chegada Origem',val:d.d2, tipo:'real',  show:true},
+    {lbl:'Viagem p/ Carregamento',val:d.dvc, tipo:'real', show:!!d.dvc},
     {lbl:'Carregamento',  val:d.d3, tipo:'real',  show:true},
     {lbl:'Inicio Viagem', val:d.d4, tipo:'real',  show:true},
     {lbl:'Prev. Chegada', val:d.d5, tipo:'prev',  show:!!d.d5},
