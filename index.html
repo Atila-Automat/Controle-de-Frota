@@ -567,6 +567,7 @@ tbody tr:hover td{background:#FFF3E9}
   .side-panel{position:static!important;width:100%!important;max-width:100%!important;height:auto!important;box-shadow:none!important;animation:none!important;overflow:visible!important}
   .rm-header{position:static!important}
   .rm-header-actions,.rm-close{display:none!important}
+  .rm-filtros{display:none!important}
   .rm-mcard{padding:5px 10px}
   .rm-mcard-fields{font-size:.56rem!important;overflow:visible!important}
   .rm-mcard,.rm-card{break-inside:avoid}
@@ -574,6 +575,20 @@ tbody tr:hover td{background:#FFF3E9}
 
 .rm-body{padding:26px 30px 40px;display:flex;flex-direction:column;gap:22px}
 .rm-section-title{font-size:.82rem;font-weight:700;color:var(--text-1);display:flex;align-items:center;gap:7px;margin-bottom:14px}
+.rm-dcard-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.rm-filtros{display:flex;gap:8px;flex-wrap:wrap}
+.rm-filtro-chip{display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:.68rem;font-weight:700;padding:5px 12px 5px 10px;border-radius:var(--r-pill);border:1.5px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;transition:all .15s ease}
+.rm-filtro-chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rm-filtro-chip.man .dot{background:#EF4444}
+.rm-filtro-chip.inicio .dot{background:#3B82F6}
+.rm-filtro-chip.abertura .dot{background:#F59E0B}
+.rm-filtro-chip.active{color:#fff}
+.rm-filtro-chip.active .dot{background:#fff}
+.rm-filtro-chip.man.active{background:#EF4444;border-color:#EF4444}
+.rm-filtro-chip.inicio.active{background:#3B82F6;border-color:#3B82F6}
+.rm-filtro-chip.abertura.active{background:#F59E0B;border-color:#F59E0B}
+.rm-filtro-chip:not(.active){opacity:.6}
+.rm-filtro-chip:hover{opacity:1}
 .rm-section-title i{color:var(--st-man);font-size:.78rem}
 
 .rm-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
@@ -1508,6 +1523,58 @@ function abrirMan(i){
 function badgeDiasCls(n){if(n===null||n===undefined)return'';if(n<=3)return'grn';if(n<=7)return'amb';return'red';}
 var ESTAGIO_LBL={man:'Em Manutencao',inicio:'Aguardando Inicio',abertura:'Aguardando Abertura OS'};
 var ESTAGIO_COR={man:'#EF4444',inicio:'#3B82F6',abertura:'#F59E0B'};
+var RM_DATA=null;
+var RM_FILTRO={man:true,inicio:true,abertura:true};
+
+function filtroChip(key,lbl,cnt){
+  var on=RM_FILTRO[key];
+  return '<button type="button" id="rm-chip-'+key+'" class="rm-filtro-chip '+key+(on?' active':'')+'" onclick="toggleRmFiltro(\''+key+'\')"><span class="dot"></span>'+lbl+' ('+cnt+')</button>';
+}
+
+function toggleRmFiltro(key){
+  var novo=!RM_FILTRO[key];
+  // impede desmarcar o ultimo filtro ativo (sempre precisa sobrar pelo menos 1)
+  if(!novo&&!Object.keys(RM_FILTRO).some(function(k){return k!==key&&RM_FILTRO[k];}))return;
+  RM_FILTRO[key]=novo;
+  var chip=document.getElementById('rm-chip-'+key);
+  if(chip)chip.classList.toggle('active',novo);
+  atualizarDetalhamentoManut();
+}
+
+function cardsFiltrados(){
+  return (RM_DATA?RM_DATA.cards:[]).filter(function(it){return RM_FILTRO[it.estagio];});
+}
+
+function cardsListHtml(){
+  var lista=cardsFiltrados();
+  if(!lista.length)return'<div class="rm-empty">Nenhum veiculo para os filtros selecionados.</div>';
+  var h='<div class="rm-cards-grid">';
+  lista.forEach(function(it){
+    var m=it.m;
+    var estLbl=ESTAGIO_LBL[it.estagio],estCor=ESTAGIO_COR[it.estagio];
+    var diasCls=badgeDiasCls(it.dias)||'grn';
+    h+='<div class="rm-mcard">';
+    h+='<div class="rm-mcard-top">';
+    h+='<span class="rm-mcard-placa">'+esc(m.pcav||'-')+'</span>';
+    if(m.pman&&m.pman!==m.pcav)h+='<span class="rm-mcard-pman">'+esc(m.pman)+'</span>';
+    if(m.tipo)h+='<span class="rm-mcard-tipo">'+esc(m.tipo)+'</span>';
+    h+='<span class="rm-mcard-stage" style="background:'+estCor+'">'+estLbl+'</span>';
+    h+='<span class="rm-mcard-days rm-days-badge '+diasCls+'">'+(it.dias!==null?it.dias+'d':'-')+'</span>';
+    h+='</div>';
+    h+='<div class="rm-mcard-fields">'+mfieldsLine(m)+'</div>';
+    h+='<div class="rm-mcard-serv"><b>Servico</b>'+esc(m.serv||'Nao informado')+'</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+function atualizarDetalhamentoManut(){
+  var wrap=document.getElementById('rm-cards-container');
+  if(wrap)wrap.innerHTML=cardsListHtml();
+  var cnt=document.getElementById('rm-cards-count');
+  if(cnt)cnt.textContent=cardsFiltrados().length;
+}
 // Monta a linha unica (Motorista ... Peca Solicitada), omitindo campos vazios.
 // Dt. Finalizacao fica de fora: nesta lista so entram OS em aberto, entao
 // seria sempre "Em aberto" - o badge de estagio ja comunica isso.
@@ -1530,6 +1597,7 @@ function mfieldsLine(m){
 
 function abrirResumoManut(){
   var hj=hoje();
+  RM_FILTRO={man:true,inicio:true,abertura:true};
   // Manutencoes em aberto (sem Data Finalizacao)
   var ativas=_M.filter(function(m){return !m.dtfin;});
 
@@ -1616,6 +1684,7 @@ function abrirResumoManut(){
 }
 
 function renderResumoManut(d){
+  RM_DATA=d;
   document.getElementById('rm-sub').textContent=d.totalAtivas+' ordem(ns) de servico em aberto - atualizado agora';
 
   var h='';
@@ -1668,29 +1737,15 @@ function renderResumoManut(d){
   // mantendo a leitura "de planilha" (rotulo + valor) mas ocupando menos espaco.
   // Todas as colunas sao exibidas, exceto Justificativa da OS e Justificativa
   // de Manutencao (informacoes internas que nao vao para o print/imagem).
-  h+='<div class="rm-card"><div class="rm-section-title"><i class="fa-solid fa-list-check"></i>Detalhamento por Veiculo ('+d.cards.length+')</div>';
-  if(d.cards.length){
-    h+='<div class="rm-cards-grid">';
-    d.cards.forEach(function(it){
-      var m=it.m;
-      var estLbl=ESTAGIO_LBL[it.estagio],estCor=ESTAGIO_COR[it.estagio];
-      var diasCls=badgeDiasCls(it.dias)||'grn';
-      h+='<div class="rm-mcard">';
-      h+='<div class="rm-mcard-top">';
-      h+='<span class="rm-mcard-placa">'+esc(m.pcav||'-')+'</span>';
-      if(m.pman&&m.pman!==m.pcav)h+='<span class="rm-mcard-pman">'+esc(m.pman)+'</span>';
-      if(m.tipo)h+='<span class="rm-mcard-tipo">'+esc(m.tipo)+'</span>';
-      h+='<span class="rm-mcard-stage" style="background:'+estCor+'">'+estLbl+'</span>';
-      h+='<span class="rm-mcard-days rm-days-badge '+diasCls+'">'+(it.dias!==null?it.dias+'d':'-')+'</span>';
-      h+='</div>';
-      h+='<div class="rm-mcard-fields">'+mfieldsLine(m)+'</div>';
-      h+='<div class="rm-mcard-serv"><b>Servico</b>'+esc(m.serv||'Nao informado')+'</div>';
-      h+='</div>';
-    });
-    h+='</div>';
-  }else{
-    h+='<div class="rm-empty">Nenhum veiculo em manutencao no momento.</div>';
-  }
+  // Os chips permitem escolher quais estagios entram na lista/impressao/imagem.
+  h+='<div class="rm-card"><div class="rm-dcard-head">';
+  h+='<div class="rm-section-title" style="margin-bottom:0"><i class="fa-solid fa-list-check"></i>Detalhamento por Veiculo (<span id="rm-cards-count">'+d.cards.length+'</span>)</div>';
+  h+='<div class="rm-filtros">';
+  h+=filtroChip('man','Em Manutencao',d.fAtivaCount);
+  h+=filtroChip('inicio','Aguardando Inicio',d.fInicio);
+  h+=filtroChip('abertura','Aguardando Abertura OS',d.fAbertura);
+  h+='</div></div>';
+  h+='<div id="rm-cards-container">'+cardsListHtml()+'</div>';
   h+='</div>';
 
   document.getElementById('rm-body').innerHTML=h;
