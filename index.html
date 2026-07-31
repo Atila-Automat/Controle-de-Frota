@@ -575,8 +575,15 @@ tbody tr:hover td{background:#FFF3E9}
   .rm-print-label{display:block!important;font-size:.42rem!important;font-weight:800!important;color:#374151!important;text-transform:uppercase;letter-spacing:.02em;line-height:1!important;margin:0 0 2px!important}
   .rm-dcard-head{margin-bottom:2px!important}
   .rm-body{padding:0!important;gap:8px!important}
-  .rm-cards-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px 6px!important}
-  .rm-mcard{padding:2px 6px!important;gap:1px!important;border-radius:3px!important;border-width:1px!important;border-color:#EEF1F5!important;box-shadow:none!important;break-inside:avoid!important}
+  /* CSS Grid/Flex nao fragmenta entre paginas na impressao (fica "atomico" e
+     pula inteiro para a proxima folha, causando saltos e folhas em branco).
+     Por isso, na impressao, KPIs viram inline-block e a lista de cards vira
+     colunas CSS (column-count) - ambos sao fragmentaveis corretamente. */
+  .rm-kpis{display:block!important}
+  .rm-kpi{display:inline-block!important;width:23.3%!important;margin:0 2% 4px 0!important;vertical-align:top!important;box-sizing:border-box!important}
+  .rm-kpi:nth-child(4n){margin-right:0!important}
+  .rm-cards-grid{display:block!important;column-count:2!important;column-gap:8px!important}
+  .rm-mcard{padding:2px 6px!important;gap:1px!important;border-radius:3px!important;border-width:1px!important;border-color:#EEF1F5!important;box-shadow:none!important;break-inside:avoid!important;-webkit-column-break-inside:avoid!important}
   .rm-mcard-top{gap:3px!important}
   .rm-mcard-placa{font-size:.56rem!important;padding:1px 4px!important;border-radius:3px!important}
   .rm-mcard-pman{font-size:.44rem!important;padding:0 3px!important}
@@ -586,12 +593,16 @@ tbody tr:hover td{background:#FFF3E9}
   .rm-mcard-fields{font-size:.5rem!important;line-height:1.35!important;overflow:visible!important;white-space:normal!important}
   .rm-mcard-serv{font-size:.58rem!important;line-height:1.3!important;padding-top:2px!important;margin-top:0!important}
   .rm-mcard-serv b{font-size:.5rem!important;margin-right:3px!important}
+  .rm-tipo-footer{font-size:.5rem!important;margin-top:3px!important;padding-top:3px!important}
+  .rm-tipo-footer b{margin-right:2px!important}
 }
 
 .rm-body{padding:26px 30px 40px;display:flex;flex-direction:column;gap:22px}
 .rm-section-title{font-size:.82rem;font-weight:700;color:var(--text-1);display:flex;align-items:center;gap:7px;margin-bottom:14px}
 .rm-dcard-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
 .rm-print-label{display:none}
+.rm-tipo-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--border-soft);font-size:.74rem;color:var(--text-1);font-weight:500}
+.rm-tipo-footer b{color:var(--text-2);font-weight:700;margin-right:2px}
 .rm-filtros{display:flex;gap:8px;flex-wrap:wrap}
 .rm-filtro-chip{display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:.68rem;font-weight:700;padding:5px 12px 5px 10px;border-radius:var(--r-pill);border:1.5px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;transition:all .15s ease}
 .rm-filtro-chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -1594,6 +1605,23 @@ function printLabelText(){
   return ativos.length?ativos.join(' + '):'Nenhum estagio selecionado';
 }
 
+// Totais por tipo de equipamento (Conjuntos/Cavalo, Carretas - 1a e 2a somadas,
+// Dolly), calculados sobre os cards atualmente filtrados/visiveis.
+function tipoTotals(){
+  var tot={cavalo:0,carreta:0,dolly:0};
+  cardsFiltrados().forEach(function(it){
+    var t=(it.m.tipo||'').toLowerCase();
+    if(t.indexOf('dolly')>=0)tot.dolly++;
+    else if(t.indexOf('carreta')>=0)tot.carreta++;
+    else if(t.indexOf('cavalo')>=0)tot.cavalo++;
+  });
+  return tot;
+}
+function tipoFooterHtml(){
+  var t=tipoTotals();
+  return '<b>Conjuntos (Cavalo)</b> '+t.cavalo+' &middot; <b>Carretas</b> '+t.carreta+' &middot; <b>Dolly</b> '+t.dolly;
+}
+
 function atualizarDetalhamentoManut(){
   var wrap=document.getElementById('rm-cards-container');
   if(wrap)wrap.innerHTML=cardsListHtml();
@@ -1601,6 +1629,8 @@ function atualizarDetalhamentoManut(){
   if(cnt)cnt.textContent=cardsFiltrados().length;
   var lbl=document.getElementById('rm-print-label');
   if(lbl)lbl.textContent=printLabelText();
+  var rod=document.getElementById('rm-tipo-footer');
+  if(rod)rod.innerHTML=tipoFooterHtml();
 }
 // Monta a linha unica (Motorista ... Peca Solicitada), omitindo campos vazios.
 // Dt. Finalizacao fica de fora: nesta lista so entram OS em aberto, entao
@@ -1774,6 +1804,7 @@ function renderResumoManut(d){
   h+=filtroChip('abertura','Aguardando Abertura OS',d.fAbertura);
   h+='</div></div>';
   h+='<div id="rm-cards-container">'+cardsListHtml()+'</div>';
+  h+='<div class="rm-tipo-footer" id="rm-tipo-footer">'+tipoFooterHtml()+'</div>';
   h+='</div>';
 
   document.getElementById('rm-body').innerHTML=h;
