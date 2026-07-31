@@ -543,20 +543,19 @@ tbody tr:hover td{background:#FFF3E9}
 .rm-action-btn.dl{background:var(--st-man);border-color:var(--st-man)}
 .rm-action-btn.dl:hover{background:#DC2626}
 
-/* Cards de detalhamento por veiculo (estilo planilha, enxuto) */
-.rm-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
-.rm-mcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--sh-sm);display:flex;flex-direction:column;gap:10px;break-inside:avoid}
+/* Cards de detalhamento por veiculo (estilo planilha, enxuto, uma placa por linha) */
+.rm-cards-grid{display:flex;flex-direction:column;gap:6px}
+.rm-mcard{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 14px;box-shadow:var(--sh-sm);display:flex;flex-direction:column;gap:3px;break-inside:avoid}
 .rm-mcard-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.rm-mcard-placa{font-family:'Inter',monospace;font-weight:800;font-size:.9rem;color:var(--text-1);background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:7px;letter-spacing:.03em}
-.rm-mcard-pman{font-family:'Inter',monospace;font-weight:700;font-size:.74rem;color:#9F1239;background:#FEE2E2;border:1px solid #FECACA;padding:3px 8px;border-radius:7px}
-.rm-mcard-tipo{font-size:.66rem;font-weight:700;color:var(--text-2);background:var(--bg);border:1px solid var(--border-soft);padding:3px 9px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em}
-.rm-mcard-stage{font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em;color:#fff;white-space:nowrap}
+.rm-mcard-placa{font-family:'Inter',monospace;font-weight:800;font-size:.78rem;color:var(--text-1);background:var(--bg);border:1px solid var(--border);padding:2px 7px;border-radius:5px;letter-spacing:.02em}
+.rm-mcard-pman{font-family:'Inter',monospace;font-weight:700;font-size:.62rem;color:#9F1239;background:#FEE2E2;border:1px solid #FECACA;padding:1px 6px;border-radius:5px}
+.rm-mcard-tipo{font-size:.6rem;font-weight:700;color:var(--text-2);background:var(--bg);border:1px solid var(--border-soft);padding:1px 7px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em}
+.rm-mcard-stage{font-size:.57rem;font-weight:800;padding:2px 8px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em;color:#fff;white-space:nowrap}
 .rm-mcard-days{margin-left:auto;flex-shrink:0}
-.rm-mcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:9px 10px;padding-top:9px;border-top:1px dashed var(--border-soft)}
-.rm-mcell-lbl{font-size:.58rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
-.rm-mcell-val{font-size:.77rem;font-weight:700;color:var(--text-1);word-break:break-word;line-height:1.3}
-.rm-mcard-serv{margin-top:1px;padding-top:10px;border-top:1px dashed var(--border-soft);font-size:.78rem;color:var(--text-1);line-height:1.5;font-weight:500}
-.rm-mcard-serv b{display:block;font-size:.58rem;font-weight:800;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.rm-mcard-fields{font-size:.64rem;color:var(--text-1);line-height:1.5;white-space:nowrap;overflow-x:auto;padding-bottom:1px}
+.rm-mcard-fields b{color:var(--text-3);font-weight:700;margin-right:2px}
+.rm-mcard-serv{margin-top:1px;padding-top:5px;border-top:1px dashed var(--border-soft);font-size:.7rem;color:var(--text-1);line-height:1.4;font-weight:500}
+.rm-mcard-serv b{font-weight:800;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-right:5px;font-size:.6rem}
 
 /* Ao gerar a imagem, esconde os botoes de acao do cabecalho */
 .rm-capturing .rm-header-actions{visibility:hidden}
@@ -568,7 +567,8 @@ tbody tr:hover td{background:#FFF3E9}
   .side-panel{position:static!important;width:100%!important;max-width:100%!important;height:auto!important;box-shadow:none!important;animation:none!important;overflow:visible!important}
   .rm-header{position:static!important}
   .rm-header-actions,.rm-close{display:none!important}
-  .rm-cards-grid{grid-template-columns:repeat(2,1fr)!important}
+  .rm-mcard{padding:5px 10px}
+  .rm-mcard-fields{font-size:.56rem!important;overflow:visible!important}
   .rm-mcard,.rm-card{break-inside:avoid}
 }
 
@@ -1508,7 +1508,25 @@ function abrirMan(i){
 function badgeDiasCls(n){if(n===null||n===undefined)return'';if(n<=3)return'grn';if(n<=7)return'amb';return'red';}
 var ESTAGIO_LBL={man:'Em Manutencao',inicio:'Aguardando Inicio',abertura:'Aguardando Abertura OS'};
 var ESTAGIO_COR={man:'#EF4444',inicio:'#3B82F6',abertura:'#F59E0B'};
-function mcell(lbl,val){return'<div class="rm-mcell"><div class="rm-mcell-lbl">'+lbl+'</div><div class="rm-mcell-val">'+val+'</div></div>';}
+// Monta a linha unica (Motorista ... Peca Solicitada), omitindo campos vazios.
+// Dt. Finalizacao fica de fora: nesta lista so entram OS em aberto, entao
+// seria sempre "Em aberto" - o badge de estagio ja comunica isso.
+function mfieldsLine(m){
+  var f=[];
+  if(m.mot)f.push('<b>Mot</b>'+esc(m.mot));
+  if(m.os)f.push('<b>OS</b>'+esc(m.os));
+  if(m.km)f.push('<b>KM</b>'+esc(m.km));
+  if(m.dtch)f.push('<b>Cheg</b>'+fD(m.dtch));
+  if(m.dtab)f.push('<b>Abert</b>'+fD(m.dtab));
+  if(m.dtin)f.push('<b>Inicio</b>'+fD(m.dtin));
+  if(m.prev)f.push('<b>Prev</b>'+fD(m.prev));
+  if(m.pecasolic||m.dtpeca){
+    var t=esc(m.pecasolic||'Peca nao especificada');
+    if(m.dtpeca)t+=' ('+fD(m.dtpeca)+')';
+    f.push('<b>Peca</b>'+t);
+  }
+  return f.length?f.join(' &middot; '):'<span style="color:var(--text-3)">Sem dados adicionais</span>';
+}
 
 function abrirResumoManut(){
   var hj=hoje();
@@ -1665,18 +1683,7 @@ function renderResumoManut(d){
       h+='<span class="rm-mcard-stage" style="background:'+estCor+'">'+estLbl+'</span>';
       h+='<span class="rm-mcard-days rm-days-badge '+diasCls+'">'+(it.dias!==null?it.dias+'d':'-')+'</span>';
       h+='</div>';
-      h+='<div class="rm-mcard-grid">';
-      h+=mcell('Motorista',esc(m.mot||'-'));
-      h+=mcell('N. OS',esc(m.os||'-'));
-      h+=mcell('KM',esc(m.km||'-'));
-      h+=mcell('Dt. Chegada',fD(m.dtch));
-      h+=mcell('Dt. Abertura OS',fD(m.dtab));
-      h+=mcell('Dt. Inicial',fD(m.dtin));
-      h+=mcell('Prev. Liberacao',fD(m.prev));
-      h+=mcell('Dt. Solic. Peca',fD(m.dtpeca));
-      h+=mcell('Peca Solicitada',esc(m.pecasolic||'-'));
-      h+=mcell('Dt. Finalizacao',m.dtfin?fD(m.dtfin):'Em aberto');
-      h+='</div>';
+      h+='<div class="rm-mcard-fields">'+mfieldsLine(m)+'</div>';
       h+='<div class="rm-mcard-serv"><b>Servico</b>'+esc(m.serv||'Nao informado')+'</div>';
       h+='</div>';
     });
