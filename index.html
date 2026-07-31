@@ -500,6 +500,87 @@ tbody tr:hover td{background:#FFF3E9}
 .pm-serv-lbl{font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
 .pm-serv-txt{font-size:14px;color:var(--text-1);line-height:1.65;word-break:break-word;font-weight:500}
 
+/* ── BOTAO RESUMO (card Manutencao) ───────────────────────────────── */
+.c-man{padding-bottom:46px}
+.card-resumo-btn{
+  position:absolute;right:12px;bottom:12px;z-index:2;
+  display:flex;align-items:center;gap:5px;
+  font-family:'Inter',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+  padding:6px 11px;border-radius:var(--r-pill);
+  background:var(--st-man);color:#fff;border:none;cursor:pointer;
+  box-shadow:0 3px 8px rgba(239,68,68,.35);
+  transition:transform .14s ease,box-shadow .14s ease,background .14s ease;
+}
+.card-resumo-btn i{font-size:.62rem}
+.card-resumo-btn:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(239,68,68,.45);background:#DC2626}
+.card-resumo-btn:active{transform:translateY(0) scale(.96)}
+
+/* ── PAINEL LATERAL: RESUMO DE MANUTENCAO ─────────────────────────── */
+.side-overlay{justify-content:flex-end;align-items:stretch;padding:0}
+.side-panel{
+  width:70%;max-width:70%;height:100%;background:var(--bg);
+  box-shadow:-28px 0 60px rgba(0,0,0,.3);
+  overflow-y:auto;position:relative;display:flex;flex-direction:column;
+  animation:slideInRight .32s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes slideInRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@media(max-width:1100px){.side-panel{width:88%;max-width:88%}}
+@media(max-width:640px){.side-panel{width:100%;max-width:100%}}
+
+.rm-header{position:sticky;top:0;z-index:5;background:linear-gradient(120deg,#1F2937,#111827);padding:22px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.rm-header-left{display:flex;align-items:center;gap:14px;min-width:0}
+.rm-header-icon{width:46px;height:46px;border-radius:13px;flex-shrink:0;background:rgba(239,68,68,.16);color:#F87171;border:1px solid rgba(239,68,68,.3);display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+.rm-header-title{font-size:1.12rem;font-weight:700;color:#fff;letter-spacing:-.01em}
+.rm-header-sub{font-size:.76rem;color:#9CA3AF;font-weight:600;margin-top:2px}
+.rm-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);width:34px;height:34px;border-radius:50%;font-size:14px;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s;display:flex;align-items:center;justify-content:center}
+.rm-close:hover{background:rgba(255,255,255,.2)}
+
+.rm-body{padding:26px 30px 40px;display:flex;flex-direction:column;gap:22px}
+.rm-section-title{font-size:.82rem;font-weight:700;color:var(--text-1);display:flex;align-items:center;gap:7px;margin-bottom:14px}
+.rm-section-title i{color:var(--st-man);font-size:.78rem}
+
+.rm-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.rm-kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:17px 18px;box-shadow:var(--sh-sm)}
+.rm-kpi-top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.rm-kpi-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.rm-kpi-lbl{font-size:.66rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em;line-height:1.3}
+.rm-kpi-val{font-size:1.7rem;font-weight:800;color:var(--text-1);line-height:1;font-variant-numeric:tabular-nums}
+.rm-kpi-sub{font-size:.7rem;color:var(--text-2);font-weight:600;margin-top:6px}
+.rm-kpi.red .rm-kpi-icon{background:#FEE2E2;color:#DC2626}
+.rm-kpi.orange .rm-kpi-icon{background:#FFEDD5;color:#C2410C}
+.rm-kpi.blue .rm-kpi-icon{background:#DBEAFE;color:#1D4ED8}
+.rm-kpi.purple .rm-kpi-icon{background:#EDE9FE;color:#6D28D9}
+
+.rm-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--sh-sm)}
+.rm-funil-bar{display:flex;height:34px;border-radius:var(--r-sm);overflow:hidden;box-shadow:inset 0 0 0 1px var(--border-soft)}
+.rm-funil-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;font-weight:700;min-width:2%;transition:width .4s ease;white-space:nowrap;overflow:hidden}
+.rm-funil-legend{display:flex;gap:22px;margin-top:14px;flex-wrap:wrap}
+.rm-funil-item{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--text-2);font-weight:600}
+.rm-funil-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.rm-funil-item b{color:var(--text-1);font-weight:800}
+
+.rm-bars{display:flex;flex-direction:column;gap:12px}
+.rm-bar-row{display:grid;grid-template-columns:110px 1fr 34px;align-items:center;gap:12px}
+.rm-bar-lbl{font-size:.75rem;font-weight:600;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rm-bar-track{background:var(--bg);border-radius:var(--r-pill);height:14px;overflow:hidden;border:1px solid var(--border-soft)}
+.rm-bar-fill{height:100%;border-radius:var(--r-pill);transition:width .4s ease}
+.rm-bar-val{font-size:.78rem;font-weight:800;color:var(--text-1);text-align:right;font-variant-numeric:tabular-nums}
+
+.rm-cols2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.rm-cols2{grid-template-columns:1fr}.rm-kpis{grid-template-columns:repeat(2,1fr)}}
+
+.rm-table-wrap{max-height:340px;overflow-y:auto;border-radius:var(--r-sm);border:1px solid var(--border-soft)}
+.rm-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.rm-table thead th{position:sticky;top:0;background:var(--bg);color:var(--text-2);font-weight:700;text-transform:uppercase;font-size:.64rem;letter-spacing:.05em;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.rm-table tbody td{padding:9px 12px;border-bottom:1px solid var(--border-soft);color:var(--text-1);font-weight:500}
+.rm-table tbody tr:last-child td{border-bottom:none}
+.rm-table tbody tr:hover{background:var(--bg)}
+.rm-days-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-pill);font-size:.72rem;font-weight:800}
+.rm-days-badge.grn{background:#DCFCE7;color:#166534}
+.rm-days-badge.amb{background:#FFFBEB;color:#92400E}
+.rm-days-badge.red{background:#FEE2E2;color:#DC2626}
+.rm-empty{padding:26px;text-align:center;color:var(--text-3);font-size:.8rem;font-weight:600}
+
 /* ── RESPONSIVIDADE (telas grandes / TV) ──────────────────────────── */
 @media(min-width:1920px){
   .card-val{font-size:2.15rem}
@@ -578,6 +659,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
         <div class="card-top"><span class="card-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="card-pct" id="p-man">0%</span></div>
         <div class="card-val" id="v-man">0</div>
         <div class="card-lbl">Manutencao</div><div class="card-sub">veiculos na oficina</div><div class="card-mark"></div>
+        <button class="card-resumo-btn" onclick="event.stopPropagation();abrirResumoManut()" title="Ver resumo de manutencao"><i class="fa-solid fa-chart-pie"></i>Resumo</button>
       </div>
       <div class="card c-agm" id="card-agm" onclick="filtrarCard('agm')">
         <div class="card-top"><span class="card-icon"><i class="fa-solid fa-hourglass-half"></i></span><span class="card-pct" id="p-agm" style="visibility:hidden">-</span></div>
@@ -710,6 +792,23 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
     </div>
     <div class="loc-hint">Placas presentes no total de veiculos, mas nao associadas a nenhum dos cards (Ag. Carregamento, Ag. Inicio Viagem, Em Viagem, Ag. Descarga, Vazios, Manutencao).</div>
     <div id="loc-body"></div>
+  </div>
+</div>
+
+<!-- PAINEL LATERAL: RESUMO DE MANUTENCAO -->
+<div class="overlay side-overlay" id="ov-resumoman" onclick="fecharFora(event,'ov-resumoman')">
+  <div class="side-panel">
+    <div class="rm-header">
+      <div class="rm-header-left">
+        <span class="rm-header-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+        <div>
+          <div class="rm-header-title">Resumo de Manutencao</div>
+          <div class="rm-header-sub" id="rm-sub">Carregando...</div>
+        </div>
+      </div>
+      <button class="rm-close" onclick="fechar('ov-resumoman')" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="rm-body" id="rm-body"></div>
   </div>
 </div>
 
@@ -1351,9 +1450,154 @@ function abrirMan(i){
   document.body.style.overflow='hidden';
 }
 
+// ══════════════════════════════════════════════════════════════════
+// RESUMO DE MANUTENCAO (painel lateral)
+// ══════════════════════════════════════════════════════════════════
+function badgeDiasCls(n){if(n<=3)return'grn';if(n<=7)return'amb';return'red';}
+
+function abrirResumoManut(){
+  var hj=hoje();
+  // Manutencoes em aberto (sem Data Finalizacao)
+  var ativas=_M.filter(function(m){return !m.dtfin;});
+
+  // 1) Total de veiculos em manutencao: contagem das placas da coluna
+  //    "Placa Manutencao" (usa a placa cavalo como fallback quando a
+  //    placa de manutencao nao esta preenchida, pois nesse caso o
+  //    proprio cavalo e o veiculo em manutencao)
+  var qtdVeiculos=ativas.filter(function(m){return String(m.pman||m.pcav||'').trim();}).length;
+
+  // 2) Total de conjuntos (cavalo) em manutencao: placas UNICAS da
+  //    coluna Placa Cavalo, exigindo Data Inicio de Manutencao preenchida
+  var setCavalos={};
+  ativas.forEach(function(m){
+    if(!pD(m.dtin))return;
+    var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+    if(p)setCavalos[p]=true;
+  });
+  var qtdConjuntos=Object.keys(setCavalos).length;
+
+  // 3) Funil: Aguardando Abertura OS -> Aguardando Inicio -> Em Manutencao Ativa
+  var fAbertura=0,fInicio=0,fAtiva=[];
+  ativas.forEach(function(m){
+    var din=pD(m.dtin),dab=pD(m.dtab);
+    if(din)fAtiva.push(m);
+    else if(dab)fInicio++;
+    else fAbertura++;
+  });
+
+  // 4) Tempo em manutencao (somente quem ja iniciou - fAtiva)
+  var dias=fAtiva.map(function(m){return diffDias(pD(m.dtin),hj);}).filter(function(n){return n!==null;});
+  var somaDias=dias.reduce(function(a,b){return a+b;},0);
+  var mediaDias=dias.length?Math.round((somaDias/dias.length)*10)/10:0;
+  var maxDias=dias.length?Math.max.apply(null,dias):0;
+  var maxItem=null;
+  fAtiva.forEach(function(m){if(diffDias(pD(m.dtin),hj)===maxDias)maxItem=maxItem||m;});
+
+  // 5) Distribuicao por faixa de tempo (dentro de fAtiva)
+  var faixas=[
+    {lbl:'0-2 dias',min:0,max:2,cor:'#22C55E'},
+    {lbl:'3-5 dias',min:3,max:5,cor:'#F59E0B'},
+    {lbl:'6-10 dias',min:6,max:10,cor:'#F97316'},
+    {lbl:'11+ dias',min:11,max:Infinity,cor:'#EF4444'}
+  ];
+  faixas.forEach(function(f){f.qtd=dias.filter(function(dd){return dd>=f.min&&dd<=f.max;}).length;});
+  var maxFaixa=Math.max(1,Math.max.apply(null,faixas.map(function(f){return f.qtd;})));
+
+  // 6) Principais servicos (dentro das ativas)
+  var servCount={};
+  ativas.forEach(function(m){
+    var s=(m.serv||'').trim();
+    if(!s)return;
+    servCount[s]=(servCount[s]||0)+1;
+  });
+  var topServ=Object.keys(servCount).map(function(k){return{nome:k,qtd:servCount[k]};}).sort(function(a,b){return b.qtd-a.qtd;}).slice(0,6);
+  var maxServ=topServ.length?topServ[0].qtd:1;
+
+  // 7) Lista de veiculos em manutencao ativa, ordenada por dias desc
+  var lista=fAtiva.map(function(m){return{m:m,dias:diffDias(pD(m.dtin),hj)||0};}).sort(function(a,b){return b.dias-a.dias;});
+
+  renderResumoManut({
+    qtdVeiculos:qtdVeiculos,qtdConjuntos:qtdConjuntos,
+    fAbertura:fAbertura,fInicio:fInicio,fAtivaCount:fAtiva.length,totalAtivas:ativas.length,
+    mediaDias:mediaDias,maxDias:maxDias,maxItem:maxItem,
+    faixas:faixas,maxFaixa:maxFaixa,
+    topServ:topServ,maxServ:maxServ,
+    lista:lista
+  });
+
+  document.getElementById('ov-resumoman').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function renderResumoManut(d){
+  document.getElementById('rm-sub').textContent=d.totalAtivas+' ordem(ns) de servico em aberto - atualizado agora';
+
+  var h='';
+
+  h+='<div class="rm-kpis">';
+  h+='<div class="rm-kpi red"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-truck"></i></span><span class="rm-kpi-lbl">Total de Veiculos<br>em Manutencao</span></div><div class="rm-kpi-val">'+d.qtdVeiculos+'</div><div class="rm-kpi-sub">placas da coluna manutencao</div></div>';
+  h+='<div class="rm-kpi orange"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-truck-ramp-box"></i></span><span class="rm-kpi-lbl">Conjuntos (Cavalo)<br>em Manutencao</span></div><div class="rm-kpi-val">'+d.qtdConjuntos+'</div><div class="rm-kpi-sub">placas cavalo unicas, com inicio</div></div>';
+  h+='<div class="rm-kpi blue"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-hourglass-half"></i></span><span class="rm-kpi-lbl">Tempo Medio<br>em Manutencao</span></div><div class="rm-kpi-val">'+(d.fAtivaCount?d.mediaDias+'d':'-')+'</div><div class="rm-kpi-sub">'+d.fAtivaCount+' em manutencao ativa</div></div>';
+  h+='<div class="rm-kpi purple"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-triangle-exclamation"></i></span><span class="rm-kpi-lbl">Maior Tempo<br>em Manutencao</span></div><div class="rm-kpi-val">'+(d.maxItem?d.maxDias+'d':'-')+'</div><div class="rm-kpi-sub">'+(d.maxItem?esc(d.maxItem.pcav||'-'):'sem dados')+'</div></div>';
+  h+='</div>';
+
+  var tot=Math.max(1,d.totalAtivas);
+  var pAb=Math.round(d.fAbertura/tot*100),pIn=Math.round(d.fInicio/tot*100),pAt=Math.max(0,100-pAb-pIn);
+  h+='<div class="rm-card">';
+  h+='<div class="rm-section-title"><i class="fa-solid fa-diagram-project"></i>Funil da Manutencao</div>';
+  h+='<div class="rm-funil-bar">';
+  if(d.fAbertura)h+='<div class="rm-funil-seg" style="width:'+pAb+'%;background:#F59E0B">'+(pAb>=8?d.fAbertura:'')+'</div>';
+  if(d.fInicio)h+='<div class="rm-funil-seg" style="width:'+pIn+'%;background:#3B82F6">'+(pIn>=8?d.fInicio:'')+'</div>';
+  if(d.fAtivaCount)h+='<div class="rm-funil-seg" style="width:'+pAt+'%;background:#EF4444">'+(pAt>=8?d.fAtivaCount:'')+'</div>';
+  if(!d.totalAtivas)h+='<div class="rm-funil-seg" style="width:100%;background:#E5E7EB;color:#9CA3AF">Sem manutencoes em aberto</div>';
+  h+='</div>';
+  h+='<div class="rm-funil-legend">';
+  h+='<div class="rm-funil-item"><span class="rm-funil-dot" style="background:#F59E0B"></span>Aguardando Abertura OS <b>'+d.fAbertura+'</b></div>';
+  h+='<div class="rm-funil-item"><span class="rm-funil-dot" style="background:#3B82F6"></span>Aguardando Inicio <b>'+d.fInicio+'</b></div>';
+  h+='<div class="rm-funil-item"><span class="rm-funil-dot" style="background:#EF4444"></span>Em Manutencao Ativa <b>'+d.fAtivaCount+'</b></div>';
+  h+='</div></div>';
+
+  h+='<div class="rm-cols2">';
+  h+='<div class="rm-card"><div class="rm-section-title"><i class="fa-solid fa-chart-simple"></i>Tempo em Oficina (dias)</div><div class="rm-bars">';
+  d.faixas.forEach(function(f){
+    var w=Math.round(f.qtd/d.maxFaixa*100);
+    h+='<div class="rm-bar-row"><span class="rm-bar-lbl">'+f.lbl+'</span><div class="rm-bar-track"><div class="rm-bar-fill" style="width:'+w+'%;background:'+f.cor+'"></div></div><span class="rm-bar-val">'+f.qtd+'</span></div>';
+  });
+  h+='</div></div>';
+
+  h+='<div class="rm-card"><div class="rm-section-title"><i class="fa-solid fa-wrench"></i>Principais Servicos</div><div class="rm-bars">';
+  if(d.topServ.length){
+    d.topServ.forEach(function(s){
+      var w=Math.round(s.qtd/d.maxServ*100);
+      var nomeCurto=s.nome.length>18?s.nome.slice(0,18)+'...':s.nome;
+      h+='<div class="rm-bar-row"><span class="rm-bar-lbl" title="'+esc(s.nome)+'">'+esc(nomeCurto)+'</span><div class="rm-bar-track"><div class="rm-bar-fill" style="width:'+w+'%;background:var(--st-man)"></div></div><span class="rm-bar-val">'+s.qtd+'</span></div>';
+    });
+  }else{
+    h+='<div class="rm-empty">Sem servicos informados</div>';
+  }
+  h+='</div></div>';
+  h+='</div>';
+
+  h+='<div class="rm-card"><div class="rm-section-title"><i class="fa-solid fa-list-check"></i>Veiculos em Manutencao Ativa ('+d.lista.length+')</div>';
+  if(d.lista.length){
+    h+='<div class="rm-table-wrap"><table class="rm-table"><thead><tr><th>Placa Cavalo</th><th>Placa Manut.</th><th>N. OS</th><th>Servico</th><th>Dias</th></tr></thead><tbody>';
+    d.lista.forEach(function(it){
+      var m=it.m;
+      var cls=badgeDiasCls(it.dias);
+      h+='<tr><td><b>'+esc(m.pcav||'-')+'</b></td><td>'+esc(m.pman&&m.pman!==m.pcav?m.pman:'-')+'</td><td>'+esc(m.os||'-')+'</td><td>'+esc(m.serv||'-')+'</td><td><span class="rm-days-badge '+cls+'">'+it.dias+'d</span></td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }else{
+    h+='<div class="rm-empty">Nenhum veiculo em manutencao ativa no momento.</div>';
+  }
+  h+='</div>';
+
+  document.getElementById('rm-body').innerHTML=h;
+}
+
 function fechar(id){document.getElementById(id).classList.remove('show');document.body.style.overflow='';}
 function fecharFora(ev,id){if(ev.target===document.getElementById(id))fechar(id);}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');fechar('ov-loc');}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');fechar('ov-loc');fechar('ov-resumoman');}});
 var seg=300;
 setInterval(function(){seg--;if(seg<=0){seg=300;buscar();}var m=Math.floor(seg/60),s=seg%60;document.getElementById('cd').textContent='Atualiza em '+m+':'+(s<10?'0':'')+s;},1000);
 
