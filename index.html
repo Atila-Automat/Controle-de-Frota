@@ -561,6 +561,7 @@ tbody tr:hover td{background:#FFF3E9}
 .rm-capturing .rm-header-actions{visibility:hidden}
 
 @media print{
+  @page{margin:8mm}
   body *{visibility:hidden}
   #ov-resumoman,#ov-resumoman *{visibility:visible}
   #ov-resumoman{position:static!important;background:none!important;backdrop-filter:none!important;display:block!important;padding:0!important;z-index:1}
@@ -568,15 +569,17 @@ tbody tr:hover td{background:#FFF3E9}
   .rm-header{position:static!important}
   .rm-header-actions,.rm-close{display:none!important}
   .rm-filtros{display:none!important}
+  #rm-dcard-title{display:none!important}
+  .rm-print-label{display:block!important;font-size:.66rem!important;font-weight:800!important;color:#374151!important;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px!important}
   .rm-body{padding:0!important;gap:10px!important}
   .rm-cards-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px 8px!important}
   .rm-mcard{padding:3px 7px!important;gap:1px!important;border-radius:5px!important}
-  .rm-mcard-top{gap:4px!important}
-  .rm-mcard-placa{font-size:.66rem!important;padding:1px 5px!important}
-  .rm-mcard-pman{font-size:.52rem!important;padding:0 4px!important}
-  .rm-mcard-tipo{font-size:.5rem!important;padding:0 5px!important}
-  .rm-mcard-stage{font-size:.48rem!important;padding:1px 6px!important}
-  .rm-mcard-days{font-size:.58rem!important;padding:1px 6px!important}
+  .rm-mcard-top{gap:3px!important}
+  .rm-mcard-placa{font-size:.56rem!important;padding:1px 4px!important;border-radius:3px!important}
+  .rm-mcard-pman{font-size:.44rem!important;padding:0 3px!important}
+  .rm-mcard-tipo{font-size:.42rem!important;padding:0 4px!important}
+  .rm-mcard-stage{font-size:.4rem!important;padding:0 5px!important}
+  .rm-mcard-days{font-size:.48rem!important;padding:0 5px!important}
   .rm-mcard-fields{font-size:.5rem!important;line-height:1.35!important;overflow:visible!important;white-space:normal!important}
   .rm-mcard-serv{font-size:.58rem!important;line-height:1.3!important;padding-top:2px!important;margin-top:0!important}
   .rm-mcard-serv b{font-size:.5rem!important;margin-right:3px!important}
@@ -586,6 +589,7 @@ tbody tr:hover td{background:#FFF3E9}
 .rm-body{padding:26px 30px 40px;display:flex;flex-direction:column;gap:22px}
 .rm-section-title{font-size:.82rem;font-weight:700;color:var(--text-1);display:flex;align-items:center;gap:7px;margin-bottom:14px}
 .rm-dcard-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.rm-print-label{display:none}
 .rm-filtros{display:flex;gap:8px;flex-wrap:wrap}
 .rm-filtro-chip{display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:.68rem;font-weight:700;padding:5px 12px 5px 10px;border-radius:var(--r-pill);border:1.5px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;transition:all .15s ease}
 .rm-filtro-chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -1579,11 +1583,22 @@ function cardsListHtml(){
   return h;
 }
 
+// Texto compacto (usado so na impressao) com os estagios atualmente
+// incluidos, de acordo com os filtros ativos (Em Manutencao, Aguardando
+// Inicio, Aguardando Abertura OS - na ordem do funil).
+function printLabelText(){
+  var ordem=['man','inicio','abertura'];
+  var ativos=ordem.filter(function(k){return RM_FILTRO[k];}).map(function(k){return ESTAGIO_LBL[k];});
+  return ativos.length?ativos.join(' + '):'Nenhum estagio selecionado';
+}
+
 function atualizarDetalhamentoManut(){
   var wrap=document.getElementById('rm-cards-container');
   if(wrap)wrap.innerHTML=cardsListHtml();
   var cnt=document.getElementById('rm-cards-count');
   if(cnt)cnt.textContent=cardsFiltrados().length;
+  var lbl=document.getElementById('rm-print-label');
+  if(lbl)lbl.textContent=printLabelText();
 }
 // Monta a linha unica (Motorista ... Peca Solicitada), omitindo campos vazios.
 // Dt. Finalizacao fica de fora: nesta lista so entram OS em aberto, entao
@@ -1749,7 +1764,8 @@ function renderResumoManut(d){
   // de Manutencao (informacoes internas que nao vao para o print/imagem).
   // Os chips permitem escolher quais estagios entram na lista/impressao/imagem.
   h+='<div class="rm-card"><div class="rm-dcard-head">';
-  h+='<div class="rm-section-title" style="margin-bottom:0"><i class="fa-solid fa-list-check"></i>Detalhamento por Veiculo (<span id="rm-cards-count">'+d.cards.length+'</span>)</div>';
+  h+='<div class="rm-section-title" id="rm-dcard-title" style="margin-bottom:0"><i class="fa-solid fa-list-check"></i>Detalhamento por Veiculo (<span id="rm-cards-count">'+d.cards.length+'</span>)</div>';
+  h+='<div class="rm-print-label" id="rm-print-label">'+printLabelText()+'</div>';
   h+='<div class="rm-filtros">';
   h+=filtroChip('man','Em Manutencao',d.fAtivaCount);
   h+=filtroChip('inicio','Aguardando Inicio',d.fInicio);
