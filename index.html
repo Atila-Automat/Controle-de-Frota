@@ -571,6 +571,7 @@ tbody tr:hover td{background:#FFF3E9}
   .rm-header-actions,.rm-close{display:none!important}
   .rm-filtros{display:none!important}
   #rm-dcard-title{display:none!important}
+  #rm-detalhe-card{break-before:page!important;page-break-before:always!important}
   .rm-card{padding:4px 8px!important;border-radius:4px!important;box-shadow:none!important;break-inside:auto!important}
   .rm-print-label{display:block!important;font-size:.42rem!important;font-weight:800!important;color:#374151!important;text-transform:uppercase;letter-spacing:.02em;line-height:1!important;margin:0 0 2px!important}
   .rm-dcard-head{margin-bottom:2px!important}
@@ -1727,9 +1728,15 @@ function abrirResumoManut(){
     return (b.dias||0)-(a.dias||0);
   });
 
+  // 8) Ordens de servico "em aberto" para o subtitulo: so conta quem realmente
+  //    tem a Data de Abertura da OS preenchida (nao inclui quem ainda esta so
+  //    aguardando a abertura da OS, sem numero/data de OS ainda).
+  var qtdOrdensAbertas=ativas.filter(function(m){return pD(m.dtab);}).length;
+
   renderResumoManut({
     qtdVeiculos:qtdVeiculos,qtdConjuntos:qtdConjuntos,
     fAbertura:fAbertura,fInicio:fInicio,fAtivaCount:fAtiva.length,totalAtivas:ativas.length,
+    qtdOrdensAbertas:qtdOrdensAbertas,
     mediaDias:mediaDias,maxDias:maxDias,maxItem:maxItem,
     faixas:faixas,maxFaixa:maxFaixa,
     topServ:topServ,maxServ:maxServ,
@@ -1742,12 +1749,12 @@ function abrirResumoManut(){
 
 function renderResumoManut(d){
   RM_DATA=d;
-  document.getElementById('rm-sub').textContent=d.totalAtivas+' ordem(ns) de servico em aberto - atualizado agora';
+  document.getElementById('rm-sub').textContent=d.qtdOrdensAbertas+' ordem(ns) de servico em aberto - atualizado agora';
 
   var h='';
 
   h+='<div class="rm-kpis">';
-  h+='<div class="rm-kpi red"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-truck"></i></span><span class="rm-kpi-lbl">Total de Veiculos<br>em Manutencao</span></div><div class="rm-kpi-val">'+d.qtdVeiculos+'</div><div class="rm-kpi-sub">placas da coluna manutencao</div></div>';
+  h+='<div class="rm-kpi red"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-truck"></i></span><span class="rm-kpi-lbl">Total de Placa com<br>Manutencao</span></div><div class="rm-kpi-val">'+d.qtdVeiculos+'</div><div class="rm-kpi-sub">abertura + inicio + ativa</div></div>';
   h+='<div class="rm-kpi orange"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-truck-ramp-box"></i></span><span class="rm-kpi-lbl">Conjuntos (Cavalo)<br>em Manutencao</span></div><div class="rm-kpi-val">'+d.qtdConjuntos+'</div><div class="rm-kpi-sub">placas cavalo unicas, com inicio</div></div>';
   h+='<div class="rm-kpi blue"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-hourglass-half"></i></span><span class="rm-kpi-lbl">Tempo Medio<br>em Manutencao</span></div><div class="rm-kpi-val">'+(d.fAtivaCount?d.mediaDias+'d':'-')+'</div><div class="rm-kpi-sub">'+d.fAtivaCount+' em manutencao ativa</div></div>';
   h+='<div class="rm-kpi purple"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-triangle-exclamation"></i></span><span class="rm-kpi-lbl">Maior Tempo<br>em Manutencao</span></div><div class="rm-kpi-val">'+(d.maxItem?d.maxDias+'d':'-')+'</div><div class="rm-kpi-sub">'+(d.maxItem?esc(d.maxItem.pcav||'-'):'sem dados')+'</div></div>';
@@ -1795,7 +1802,7 @@ function renderResumoManut(d){
   // Todas as colunas sao exibidas, exceto Justificativa da OS e Justificativa
   // de Manutencao (informacoes internas que nao vao para o print/imagem).
   // Os chips permitem escolher quais estagios entram na lista/impressao/imagem.
-  h+='<div class="rm-card"><div class="rm-dcard-head">';
+  h+='<div class="rm-card" id="rm-detalhe-card"><div class="rm-dcard-head">';
   h+='<div class="rm-section-title" id="rm-dcard-title" style="margin-bottom:0"><i class="fa-solid fa-list-check"></i>Detalhamento por Veiculo (<span id="rm-cards-count">'+d.cards.length+'</span>)</div>';
   h+='<div class="rm-print-label" id="rm-print-label">'+printLabelText()+'</div>';
   h+='<div class="rm-filtros">';
