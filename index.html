@@ -352,6 +352,12 @@ tr.man-sub:hover td{background:#FFF3E9}
 .mstat-chip.on{background:color-mix(in srgb,var(--mc) 13%,#fff);border-color:color-mix(in srgb,var(--mc) 45%,#fff)}
 .mstat-chip.on::before{opacity:1}
 .mstat-chip:hover{border-color:var(--mc)}
+.mstat-chip-count{
+  display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;
+  padding:0 5px;border-radius:var(--r-pill);font-size:.64rem;font-weight:800;
+  background:rgba(0,0,0,.06);color:inherit;
+}
+.mstat-chip.on .mstat-chip-count{background:var(--mc);color:#fff}
 
 /* Badges de status (pílulas sólidas com ícone) */
 .sp{
@@ -939,6 +945,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
 
 var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_fMShow=[],_tot=0,_F=[],_placasManUnicas={},_manOpen={};
 var _manStatusF={chegada:true,abertura:true,inicio:true,ativa:true,fin:false};
+var _manStatusCounts={};
 var _sort={via:{col:null,dir:1},vaz:{col:null,dir:1},man:{col:null,dir:1}};
 
 // ── Definicao de colunas ordenaveis (usadas nos cabecalhos das tabelas) ──
@@ -1051,7 +1058,7 @@ function buscar(){
         prod:c[6]||'',ori:c[7]||'',dst:c[8]||'',cte:c[9]||'',
         d1:c[10]||'',dvc:c[11]||'',d2:c[12]||'',d3:c[13]||'',d4:c[14]||'',
         d5:c[15]||'',d6:c[16]||'',d7:c[17]||'',d8:c[18]||'',st:c[19]||''};
-    }).filter(function(d){return d.placa;});
+    }).filter(function(d){return placaValida(d.placa);});
   }).catch(function(){_D=[];}));
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
     var lns=parseCSV(csv);lns.shift();
@@ -1061,19 +1068,26 @@ function buscar(){
         prev:c[8]||'',justos:c[9]||'',serv:c[10]||'',
         dtpeca:c[11]||'',pecasolic:c[12]||'',justman:c[13]||'',km:c[14]||'',
         os:c[15]||'',dtfin:c[16]||''};
-    }).filter(function(m){return m.pcav||m.os;});
+    }).filter(function(m){return placaValida(m.pcav);});
   }).catch(function(){_M=[];}));
   Promise.all(p).then(function(){
     fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=615595234&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
       var lns=parseCSV(csv);lns.shift();
       _F=lns.map(function(c){
         return {placa:(c[0]||'').replace(/-/g,'').toUpperCase(),ativa:(c[1]||'').toLowerCase().trim()==='ativada'};
-      }).filter(function(f){return f.placa;});
+      }).filter(function(f){return placaValida(f.placa);});
       var n=_F.filter(function(f){return f.ativa;}).length;
       _tot=n||(_D.length+_M.length);
       aCards(true,n);renderTab();setTs();
     }).catch(function(){_F=[];_tot=_D.length+_M.length;aCards(false,0);renderTab();setTs();});
   });
+}
+// Valida se o texto tem formato de placa de veiculo brasileira (padrao antigo LLL0000 ou
+// Mercosul LLL0L00), pra descartar linhas de totalizacao/rodape da planilha que nao sao
+// placas de verdade (ex: "TT DE PLACAS:", "TT DE CONJUNTOS").
+function placaValida(p){
+  p=(p||'').toUpperCase().trim();
+  return /^[A-Z]{3}\d[A-Z0-9]\d{2}$/.test(p);
 }
 // Parser de CSV completo (nao apenas linha-a-linha): interpreta o texto inteiro respeitando
 // aspas, incluindo quebras de linha DENTRO de um campo entre aspas (ex: celula do Google Sheets
@@ -1367,22 +1381,27 @@ function renderTab(){
   document.getElementById('tit-l').textContent=tm.t;
   var bg=document.getElementById('tit-b');
   bg.innerHTML=(tm.bc?sIcon('s-'+tm.bc.slice(2)):'')+esc(tm.b);bg.className='tbadge '+tm.bc;
-  renderManStatusFiltros(k);
   var q=(document.getElementById('busca').value||'').toLowerCase();
   if(k==='man'||k==='agm'){renderMan(q,k);}
-  else if(k==='vaz'){renderVaz(q);}
-  else{renderVia(k,q);}
+  else{
+    var mfEl=document.getElementById('mstat-filtros');
+    if(mfEl){mfEl.style.display='none';mfEl.innerHTML='';}
+    if(k==='vaz'){renderVaz(q);}
+    else{renderVia(k,q);}
+  }
 }
 // Mostra os chips de filtro por Status (Ag. Chegada, Ag. Abertura OS, Ag. Inicio Manut.,
-// Em Manutencao, Manut. Finalizada) apenas quando a tabela exibida e a de manutencao.
-function renderManStatusFiltros(k){
+// Em Manutencao, Manut. Finalizada), cada um com o total de placas (cavalo) unicas naquele
+// estagio - calculado sobre a base ja filtrada por busca/card, mas ANTES do filtro dos
+// proprios chips (pra mostrar quantas placas cada estagio tem, independente de estar ligado).
+function renderManStatusFiltros(){
   var el=document.getElementById('mstat-filtros');
   if(!el)return;
-  if(k!=='man'&&k!=='agm'){el.style.display='none';el.innerHTML='';return;}
   el.style.display='flex';
   el.innerHTML=MAN_STATUS_DEF.map(function(s){
     var on=!!_manStatusF[s.key];
-    return '<button class="mstat-chip'+(on?' on':'')+'" style="--mc:'+s.color+'" onclick="toggleManStatusF(\''+s.key+'\')">'+esc(s.lbl)+'</button>';
+    var n=(_manStatusCounts&&_manStatusCounts[s.key])||0;
+    return '<button class="mstat-chip'+(on?' on':'')+'" style="--mc:'+s.color+'" onclick="toggleManStatusF(\''+s.key+'\')">'+esc(s.lbl)+'<span class="mstat-chip-count">'+n+'</span></button>';
   }).join('');
 }
 function toggleManStatusF(key){
@@ -1432,19 +1451,33 @@ function renderVia(k,q){
 function renderMan(q,filtro){
   var ultimos=ultimaPorPlaca();
   var placasAgd2=filtro==='agm'?ultimos.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa.toUpperCase();}):[];
-  _fM=_M.filter(function(m){
-    // So lista os estagios de status atualmente selecionados nos filtros (chips)
-    if(!_manStatusF[manStatus(m)])return false;
+  // Base: aplica busca e o criterio proprio do card (agm = so placas em Ag Descarga), mas
+  // AINDA SEM o filtro dos chips de status - serve tanto pra contar placas por status quanto
+  // como ponto de partida pra lista final.
+  var base=_M.filter(function(m){
     if(q&&(m.pcav+m.pman+m.os+m.serv+m.mot).toLowerCase().indexOf(q)<0)return false;
     if(filtro==='agm'){
       // Placa cujo status atual e Ag Descarga
       var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
       if(placasAgd2.indexOf(p)<0)return false;
     }
-    // Card Manutencao: lista TODAS as placas presentes na planilha de manutencao,
-    // independente do status que a placa tenha na planilha de Programacao.
     return true;
   });
+  // Total de placas cavalo UNICAS por estagio de status (sobre a base, antes do filtro dos
+  // chips), pra mostrar ao lado de cada chip quantos veiculos existem naquele estagio.
+  var setsPorStatus={};
+  MAN_STATUS_DEF.forEach(function(s){setsPorStatus[s.key]={};});
+  base.forEach(function(m){
+    var p=(m.pcav||'').toUpperCase().trim();
+    if(p)setsPorStatus[manStatus(m)][p]=true;
+  });
+  _manStatusCounts={};
+  MAN_STATUS_DEF.forEach(function(s){_manStatusCounts[s.key]=Object.keys(setsPorStatus[s.key]).length;});
+  renderManStatusFiltros();
+  // Card Manutencao: lista TODAS as placas presentes na planilha de manutencao,
+  // independente do status que a placa tenha na planilha de Programacao - so filtra pelos
+  // estagios de status atualmente selecionados nos chips.
+  _fM=base.filter(function(m){return _manStatusF[manStatus(m)];});
   _fM=applySort(_fM,MAN_COLS,_sort.man);
   if(!_fM.length){document.getElementById('rc').textContent='0 registros';document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
   // Agrupa por Placa Cavalo (preservando a ordem ja aplicada pela ordenacao). Dentro de cada
