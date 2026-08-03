@@ -1044,9 +1044,8 @@ function buscar(){
   document.getElementById('tc').innerHTML='<div class="empty">Buscando dados...</div>';
   var p=[];
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=0&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
-    var lns=csv.trim().split('\n').slice(1);
-    _D=lns.map(function(l){
-      var c=pCSV(l);
+    var lns=parseCSV(csv);lns.shift();
+    _D=lns.map(function(c){
       return {cli:c[0]||'',rem:c[1]||'',iv:c[2]||'',
         placa:(c[3]||'').replace(/-/g,''),tipo:c[4]||'',mot:c[5]||'',
         prod:c[6]||'',ori:c[7]||'',dst:c[8]||'',cte:c[9]||'',
@@ -1055,9 +1054,8 @@ function buscar(){
     }).filter(function(d){return d.placa;});
   }).catch(function(){_D=[];}));
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
-    var lns=csv.trim().split('\n').slice(1);
-    _M=lns.map(function(l){
-      var c=pCSV(l);
+    var lns=parseCSV(csv);lns.shift();
+    _M=lns.map(function(c){
       return {mot:c[0]||'',pcav:c[1]||'',pman:c[2]||'',tipo:c[3]||'',
         dtch:c[4]||'',dtab:c[5]||'',dtin:c[6]||'',diasmanut:c[7]||'',
         prev:c[8]||'',justos:c[9]||'',serv:c[10]||'',
@@ -1067,9 +1065,8 @@ function buscar(){
   }).catch(function(){_M=[];}));
   Promise.all(p).then(function(){
     fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=615595234&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
-      var lns=csv.trim().split('\n').slice(1);
-      _F=lns.map(function(l){
-        var c=pCSV(l);
+      var lns=parseCSV(csv);lns.shift();
+      _F=lns.map(function(c){
         return {placa:(c[0]||'').replace(/-/g,'').toUpperCase(),ativa:(c[1]||'').toLowerCase().trim()==='ativada'};
       }).filter(function(f){return f.placa;});
       var n=_F.filter(function(f){return f.ativa;}).length;
@@ -1078,7 +1075,34 @@ function buscar(){
     }).catch(function(){_F=[];_tot=_D.length+_M.length;aCards(false,0);renderTab();setTs();});
   });
 }
-function pCSV(l){var r=[],c='',q=false;for(var i=0;i<l.length;i++){var x=l[i];if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c.trim());c='';}else{c+=x;}}r.push(c.trim());return r;}
+// Parser de CSV completo (nao apenas linha-a-linha): interpreta o texto inteiro respeitando
+// aspas, incluindo quebras de linha DENTRO de um campo entre aspas (ex: celula do Google Sheets
+// com quebra de linha manual/Alt+Enter em "Servico" ou "Justificativa"). O metodo antigo
+// (dividir o CSV por '\n' e so depois interpretar aspas) quebrava uma linha logica em duas
+// sempre que um campo tinha quebra de linha, desalinhando essa e TODAS as linhas seguintes -
+// causando placas/datas trocadas entre registros. Retorna um array de linhas, cada uma um
+// array de campos (ja sem aspas envolventes e com aspas duplas "" convertidas em ").
+function parseCSV(text){
+  var rows=[],row=[],field='',q=false;
+  for(var i=0;i<text.length;i++){
+    var c=text[i];
+    if(q){
+      if(c==='"'){
+        if(text[i+1]==='"'){field+='"';i++;}
+        else{q=false;}
+      }else{field+=c;}
+    }else{
+      if(c==='"'){q=true;}
+      else if(c===','){row.push(field.trim());field='';}
+      else if(c==='\r'){/* ignora, tratado junto com \n */}
+      else if(c==='\n'){row.push(field.trim());rows.push(row);row=[];field='';}
+      else{field+=c;}
+    }
+  }
+  if(field.length||row.length){row.push(field.trim());rows.push(row);}
+  // remove linhas totalmente vazias (ex: linha em branco no final do arquivo)
+  return rows.filter(function(r){return r.length>1||r[0]!=='';});
+}
 function setTs(){var h=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});document.getElementById('ts').textContent='Atualizado as '+h+' - Google Sheets';}
 function pct(n){if(!_tot||_tot===0)return'0%';return Math.round((n/_tot)*100)+'%';}
 function mSt(s,k){var v=(s||'').toLowerCase().trim();if(k==='evc')return v.indexOf('viagem para carregamento')>=0;if(k==='agc')return v.indexOf('carregamento')>=0&&v.indexOf('viagem')<0;if(k==='agi')return v.indexOf('nicio')>=0;if(k==='via')return v==='em viagem'||v==='viagem';if(k==='agd')return v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0;if(k==='vaz')return v==='vazio';return true;}
