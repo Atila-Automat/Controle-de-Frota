@@ -316,6 +316,23 @@ tbody tr:hover td{background:#FFF3E9}
 .cte{font-family:'Inter',monospace;font-size:.74rem;color:var(--st-agd);font-weight:700}
 .os-num{font-family:'Inter',monospace;font-size:.74rem;font-weight:700;color:var(--st-man)}
 
+/* Agrupamento de manutencao (Placa Cavalo repetida) */
+tr.man-group td{background:#FEF2F2}
+tr.man-group:hover td{background:#FEE2E2}
+.man-expand-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;margin-right:8px;border:1px solid var(--st-man);
+  border-radius:5px;background:#fff;color:var(--st-man);font-size:.85rem;
+  font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;
+}
+.man-group-badge{
+  display:inline-block;margin-left:8px;background:var(--st-man);color:#fff;
+  font-size:.66rem;font-weight:700;padding:2px 7px;border-radius:var(--r-pill);
+}
+tr.man-sub td{background:#FFFBFA}
+tr.man-sub:hover td{background:#FFF3E9}
+.man-sub-arrow{color:var(--text-3);margin-right:6px;font-weight:700}
+
 /* Badges de status (pílulas sólidas com ícone) */
 .sp{
   display:inline-flex;align-items:center;gap:5px;
@@ -899,7 +916,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
 <div class="toast" id="toast"></div>
 <script>
 
-var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_tot=0,_F=[],_placasManUnicas={};
+var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_tot=0,_F=[],_placasManUnicas={},_manOpen={};
 var _sort={via:{col:null,dir:1},vaz:{col:null,dir:1},man:{col:null,dir:1}};
 
 // ── Definicao de colunas ordenaveis (usadas nos cabecalhos das tabelas) ──
@@ -922,20 +939,21 @@ var VIA_COLS=[
   {key:'diasagdesc',lbl:'Dias Ag. Descarga',type:'num',get:function(d){return calcDiasAgDescarga(d);},tie:function(d){return pD(d.d6);}}
 ];
 var MAN_COLS=[
+  {key:'mot',lbl:'Motorista',type:'str',get:function(m){return m.mot||'';}},
   {key:'pcav',lbl:'Placa Cavalo',type:'str',get:function(m){return m.pcav||'';}},
   {key:'pman',lbl:'Placa Manut.',type:'str',get:function(m){return m.pman||'';}},
-  {key:'os',lbl:'N. OS',type:'str',get:function(m){return m.os||'';}},
+  {key:'tipo',lbl:'Tipo',type:'str',get:function(m){return m.tipo||'';}},
   {key:'dtch',lbl:'Dt. Chegada',type:'date',get:function(m){return pD(m.dtch);}},
   {key:'dtab',lbl:'Dt. Abertura OS',type:'date',get:function(m){return pD(m.dtab);}},
-  {key:'serv',lbl:'Servico',type:'str',get:function(m){return m.serv||'';}},
   {key:'dtin',lbl:'Dt. Inicial',type:'date',get:function(m){return pD(m.dtin);}},
   {key:'prev',lbl:'Prev. Liberacao',type:'date',get:function(m){return pD(m.prev);}},
-  {key:'dtpeca',lbl:'Dt. Solic. Peca',type:'date',get:function(m){return pD(m.dtpeca);}},
-  {key:'pecasolic',lbl:'Peca Solicitada',type:'str',get:function(m){return m.pecasolic||'';}},
-  {key:'dtfin',lbl:'Dt. Finalizacao',type:'date',get:function(m){return pD(m.dtfin);}},
-  {key:'diasagab',lbl:'Dias Ag. Abertura',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtch),pD(m.dtab)||hj);}},
-  {key:'diasagini',lbl:'Dias Ag. Inicio',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtab),pD(m.dtin)||hj);}},
-  {key:'diasmanut',lbl:'Dias em Manut.',type:'num',get:function(m){return diasEmManut(m);}}
+  {key:'justos',lbl:'Justif. OS',type:'str',get:function(m){return m.justos||'';}},
+  {key:'serv',lbl:'Servico',type:'str',get:function(m){return m.serv||'';}},
+  {key:'km',lbl:'KM',type:'str',get:function(m){return m.km||'';}},
+  {key:'os',lbl:'N. OS',type:'str',get:function(m){return m.os||'';}},
+  {key:'diasagab',lbl:'Tempo Ag. Abertura OS',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtch),pD(m.dtab)||hj);}},
+  {key:'diasagini',lbl:'Tempo Ag. Inicio Manut.',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtab),pD(m.dtin)||hj);}},
+  {key:'diasmanut',lbl:'Tempo em Manut.',type:'num',get:function(m){return diasEmManut(m);}}
 ];
 
 function ordenarCol(tableKey,key){
@@ -1052,17 +1070,26 @@ function aCards(u,n){
   // Status atual (ultima informacao) por placa, para cruzar com a manutencao
   var statusPorPlaca={};
   ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
-  // Placas com OS de manutencao em aberto (sem Data Finalizacao)
-  var placasManAberta={};
-  _M.filter(function(m){return !m.dtfin;}).forEach(function(m){
+  // Placas com OS de manutencao em aberto (sem Data Finalizacao) E com a Data Inicio de
+  // Manutencao preenchida -> usado no card "Manutencao" (veiculo efetivamente em manutencao)
+  var placasManInicio={};
+  _M.filter(function(m){return !m.dtfin&&pD(m.dtin);}).forEach(function(m){
     var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
-    if(p)placasManAberta[p]=true;
+    if(p)placasManInicio[p]=true;
   });
-  // Manutencao: uma placa com OS aberta so conta neste card se o status ATUAL dela nao for
-  // nenhum dos 4 status de viagem ativos (Ag Carregamento, Ag Inicio, Em Viagem, Ag Descarga).
-  // Se estiver em algum desses status, ela continua sendo contada apenas no card daquele status.
+  // Placas com OS de manutencao em aberto (sem Data Finalizacao) E com a Data de Chegada
+  // preenchida -> usado no card "Ag. Descarga + Manutencao"
+  var placasManChegada={};
+  _M.filter(function(m){return !m.dtfin&&pD(m.dtch);}).forEach(function(m){
+    var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+    if(p)placasManChegada[p]=true;
+  });
+  // Manutencao: uma placa com Data Inicio de Manutencao preenchida so conta neste card se o
+  // status ATUAL dela nao for nenhum dos 4 status de viagem ativos (Ag Carregamento, Ag Inicio,
+  // Em Viagem, Ag Descarga). Se estiver em algum desses status, ela continua sendo contada
+  // apenas no card daquele status.
   var placasManUnicas={};
-  Object.keys(placasManAberta).forEach(function(p){
+  Object.keys(placasManInicio).forEach(function(p){
     var st=statusPorPlaca[p];
     var emViagemAtiva=st&&(mSt(st,'evc')||mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
     if(!emViagemAtiva)placasManUnicas[p]=true;
@@ -1070,8 +1097,8 @@ function aCards(u,n){
   _placasManUnicas=placasManUnicas;
   var nman=Object.keys(placasManUnicas).length;
   // Ag Descarga + Manutencao: placas cujo status atual e Ag Descarga E que tambem tem OS de
-  // manutencao em aberto (contam nos dois cards ao mesmo tempo)
-  var nagm=ultimos.filter(function(d){return mSt(d.st,'agd')&&placasManAberta[(d.placa||'').toUpperCase()];}).length;
+  // manutencao em aberto com Data de Chegada preenchida (contam nos dois cards ao mesmo tempo)
+  var nagm=ultimos.filter(function(d){return mSt(d.st,'agd')&&placasManChegada[(d.placa||'').toUpperCase()];}).length;
   // Vazios com historico
   var nvaz=calcVazios().length;
   document.getElementById('v-evc').textContent=nevc;document.getElementById('p-evc').textContent=pct(nevc);
@@ -1347,27 +1374,92 @@ function renderMan(q,filtro){
   _fM=applySort(_fM,MAN_COLS,_sort.man);
   document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
   if(!_fM.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
+  // Agrupa por Placa Cavalo (preservando a ordem ja aplicada pela ordenacao) - quando uma
+  // placa cavalo se repete (mais de um item de manutencao associado), mostra uma linha-resumo
+  // com botao "+" para expandir os itens individuais.
+  var grupos=[],gi={};
+  _fM.forEach(function(m){
+    var p=(m.pcav||'(sem placa)').toUpperCase().trim()||'(sem placa)';
+    if(!(p in gi)){gi[p]=grupos.length;grupos.push({placa:p,itens:[]});}
+    grupos[gi[p]].itens.push(m);
+  });
+  var rows='';
+  grupos.forEach(function(g){
+    if(g.itens.length===1){
+      rows+=manRowHtml(g.itens[0],_fM.indexOf(g.itens[0]),false);
+    }else{
+      var aberto=!!_manOpen[g.placa];
+      rows+=manGroupHeaderHtml(g,aberto);
+      if(aberto){
+        g.itens.forEach(function(m){rows+=manRowHtml(m,_fM.indexOf(m),true);});
+      }
+    }
+  });
+  document.getElementById('tc').innerHTML='<table style="min-width:1500px"><thead><tr>'+thSort('man',MAN_COLS)+'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+// Renderiza o conteudo de uma celula da tabela de Manutencao para uma coluna especifica de MAN_COLS
+function manCellHtml(key,m){
   var hj=hoje();
-  var rows=_fM.map(function(m,i){
-    var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
-    var dag_ab=diffDias(dch,dab||hj),dag_in=diffDias(dab,din||hj),dm=diasEmManut(m);
-    var r='<tr onclick="abrirMan('+i+')">';
-    r+='<td><span class="placa"><i class="fa-solid fa-truck"></i>'+esc(m.pcav||'-')+'</span></td>';
-    r+='<td><span class="placa-man"><i class="fa-solid fa-triangle-exclamation"></i>'+esc(m.pman||'-')+'</span></td>';
-    r+='<td><span class="os-num">'+esc(m.os||'-')+'</span></td>';
-    r+='<td><span class="dc">'+fD(m.dtch)+'</span></td>';
-    r+='<td><span class="dc">'+fD(m.dtab)+'</span></td>';
-    r+='<td class="wrap-serv">'+esc(m.serv||'-')+'</td>';
-    r+='<td><span class="dc">'+fD(m.dtin)+'</span></td>';
-    r+='<td><span class="dc">'+fD(m.prev)+'</span></td>';
-    r+='<td>'+(dfin?'<span class="dc">'+fD(m.dtfin)+'</span>':'<span class="dk-n">Em aberto</span>')+'</td>';
-    r+='<td>'+dkMan(dag_ab)+'</td>';
-    r+='<td>'+dkMan(dag_in)+'</td>';
-    r+='<td>'+dkMan(dm)+'</td>';
-    r+='</tr>';
-    return r;
-  }).join('');
-  document.getElementById('tc').innerHTML='<table style="min-width:1400px"><thead><tr>'+thSort('man',MAN_COLS)+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  switch(key){
+    case 'mot':return esc(m.mot||'-');
+    case 'pcav':return '<span class="placa"><i class="fa-solid fa-truck"></i>'+esc(m.pcav||'-')+'</span>';
+    case 'pman':return '<span class="placa-man"><i class="fa-solid fa-wrench"></i>'+esc(m.pman||'-')+'</span>';
+    case 'tipo':return esc(m.tipo||'-');
+    case 'dtch':return '<span class="dc">'+fD(m.dtch)+'</span>';
+    case 'dtab':return '<span class="dc">'+fD(m.dtab)+'</span>';
+    case 'dtin':return '<span class="dc">'+fD(m.dtin)+'</span>';
+    case 'prev':return '<span class="dc">'+fD(m.prev)+'</span>';
+    case 'justos':return '<span class="wrap-serv">'+esc(m.justos||'-')+'</span>';
+    case 'serv':return '<span class="wrap-serv">'+esc(m.serv||'-')+'</span>';
+    case 'km':return esc(m.km||'-');
+    case 'os':return '<span class="os-num">'+esc(m.os||'-')+'</span>';
+    case 'diasagab':return dkMan(diffDias(pD(m.dtch),pD(m.dtab)||hj));
+    case 'diasagini':return dkMan(diffDias(pD(m.dtab),pD(m.dtin)||hj));
+    case 'diasmanut':return dkMan(diasEmManut(m));
+  }
+  return '-';
+}
+// Linha normal (item unico ou item dentro de um grupo expandido)
+function manRowHtml(m,i,sub){
+  var r='<tr class="'+(sub?'man-sub':'')+'" onclick="abrirMan('+i+')">';
+  MAN_COLS.forEach(function(c){
+    var content=manCellHtml(c.key,m);
+    if(sub&&c.key==='pcav')content='<span class="man-sub-arrow">&#8618;</span>'+content;
+    r+='<td>'+content+'</td>';
+  });
+  r+='</tr>';
+  return r;
+}
+// Agrega o valor de uma coluna para a linha-resumo de um grupo (Placa Cavalo repetida)
+function manAggVal(col,itens){
+  if(col.type==='num'){
+    var vals=itens.map(function(m){return col.get(m);}).filter(function(v){return v!==null&&v!==undefined&&!isNaN(v);});
+    return vals.length?dkMan(Math.max.apply(null,vals)):'<span class="dk-n">-</span>';
+  }
+  if(col.type==='date')return '<span class="dc">-</span>';
+  var set={};
+  itens.forEach(function(m){var v=col.get(m);if(v)set[v]=true;});
+  var keys=Object.keys(set);
+  if(!keys.length)return '<span class="dk-n">-</span>';
+  if(keys.length===1)return esc(keys[0]);
+  return '<span class="dk-n">'+keys.length+' valores</span>';
+}
+// Linha-resumo do grupo, com botao de expandir/recolher e contagem de itens
+function manGroupHeaderHtml(g,aberto){
+  var r='<tr class="man-group" onclick="toggleManGroup(\''+g.placa.replace(/'/g,"\\'")+'\')">';
+  MAN_COLS.forEach(function(c,ci){
+    if(ci===1){
+      r+='<td><button class="man-expand-btn" title="'+(aberto?'Recolher':'Expandir')+'">'+(aberto?'&#8722;':'&#43;')+'</button><span class="placa"><i class="fa-solid fa-truck"></i>'+esc(g.placa)+'</span><span class="man-group-badge">'+g.itens.length+'</span></td>';
+    }else{
+      r+='<td>'+manAggVal(c,g.itens)+'</td>';
+    }
+  });
+  r+='</tr>';
+  return r;
+}
+function toggleManGroup(placa){
+  _manOpen[placa]=!_manOpen[placa];
+  renderTab();
 }
 
 // ── POPUP VIAGEM ─────────────────────────────────────────────────────────
