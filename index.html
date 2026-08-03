@@ -334,6 +334,25 @@ tr.man-sub td{background:#FFFBFA}
 tr.man-sub:hover td{background:#FFF3E9}
 .man-sub-arrow{color:var(--text-3);margin-right:6px;font-weight:700}
 
+.mstat-badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:700;
+  padding:4px 10px;border-radius:var(--r-pill);white-space:nowrap;
+  background:#F1F5F9;color:var(--mc);border:1px solid #E2E8F0;
+  background:color-mix(in srgb,var(--mc) 14%,#fff);
+  border-color:color-mix(in srgb,var(--mc) 35%,#fff);
+}
+.mstat-filtros{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mstat-chip{
+  display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:700;
+  padding:6px 12px;border-radius:var(--r-pill);cursor:pointer;white-space:nowrap;
+  background:#fff;color:var(--text-2);border:1.5px solid var(--border);transition:all .12s;
+}
+.mstat-chip::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--mc);opacity:.45}
+.mstat-chip.on{color:var(--mc);border-color:var(--mc)}
+.mstat-chip.on{background:color-mix(in srgb,var(--mc) 13%,#fff);border-color:color-mix(in srgb,var(--mc) 45%,#fff)}
+.mstat-chip.on::before{opacity:1}
+.mstat-chip:hover{border-color:var(--mc)}
+
 /* Badges de status (pílulas sólidas com ícone) */
 .sp{
   display:inline-flex;align-items:center;gap:5px;
@@ -771,6 +790,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
       <span class="tit"><i class="fa-solid fa-list-ul" style="color:var(--text-3);font-size:.8rem"></i><span id="tit-l">Todos os veiculos</span></span>
       <span class="tbadge" id="tit-b">Total</span>
       <div class="sb"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="busca" placeholder="Buscar placa, motorista, cliente, CTE..." oninput="renderTab()"></div>
+      <div class="mstat-filtros" id="mstat-filtros" style="display:none"></div>
       <button class="vbtn" id="btn-vaz" onclick="toggleVaz()">Mostrar Vazio</button>
       <button class="fbtn" id="btn-iv" onclick="toggleIV()">Ida e Volta</button>
       <span class="rc" id="rc"></span>
@@ -918,6 +938,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
 <script>
 
 var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_fMShow=[],_tot=0,_F=[],_placasManUnicas={},_manOpen={};
+var _manStatusF={chegada:true,abertura:true,inicio:true,ativa:true,fin:false};
 var _sort={via:{col:null,dir:1},vaz:{col:null,dir:1},man:{col:null,dir:1}};
 
 // ── Definicao de colunas ordenaveis (usadas nos cabecalhos das tabelas) ──
@@ -939,10 +960,32 @@ var VIA_COLS=[
   {key:'diasagcarreg',lbl:'Dias Ag. Carreg.',type:'num',get:function(d){return calcDiasAgCarreg(d);},tie:function(d){return pD(d.d2);}},
   {key:'diasagdesc',lbl:'Dias Ag. Descarga',type:'num',get:function(d){return calcDiasAgDescarga(d);},tie:function(d){return pD(d.d6);}}
 ];
+// Estagios do status de manutencao, na ordem de progresso do fluxo:
+// chegada (placa em manutencao sem data de chegada) -> abertura (chegou, sem OS aberta) ->
+// inicio (OS aberta, sem inicio da manutencao) -> ativa (iniciada, sem finalizacao) ->
+// fin (iniciada e finalizada)
+var MAN_STATUS_DEF=[
+  {key:'chegada',lbl:'Ag. Chegada',color:'#94A3B8'},
+  {key:'abertura',lbl:'Ag. Abertura OS',color:'#F59E0B'},
+  {key:'inicio',lbl:'Ag. Inicio Manut.',color:'#3B82F6'},
+  {key:'ativa',lbl:'Em Manutencao',color:'#EF4444'},
+  {key:'fin',lbl:'Manut. Finalizada',color:'#22C55E'}
+];
+var MAN_STATUS_MAP={};
+MAN_STATUS_DEF.forEach(function(s){MAN_STATUS_MAP[s.key]=s;});
+function manStatus(m){
+  var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
+  if(din&&dfin)return'fin';
+  if(din)return'ativa';
+  if(dab)return'inicio';
+  if(dch)return'abertura';
+  return'chegada';
+}
 var MAN_COLS=[
   {key:'mot',lbl:'Motorista',type:'str',get:function(m){return m.mot||'';}},
   {key:'pcav',lbl:'Placa Cavalo',type:'str',get:function(m){return m.pcav||'';}},
   {key:'pman',lbl:'Placa Manut.',type:'str',get:function(m){return m.pman||'';}},
+  {key:'status',lbl:'Status',type:'str',get:function(m){return MAN_STATUS_MAP[manStatus(m)].lbl;}},
   {key:'tipo',lbl:'Tipo',type:'str',get:function(m){return m.tipo||'';}},
   {key:'dtch',lbl:'Dt. Chegada',type:'date',get:function(m){return pD(m.dtch);}},
   {key:'dtab',lbl:'Dt. Abertura OS',type:'date',get:function(m){return pD(m.dtab);}},
@@ -1184,13 +1227,14 @@ function fD(s){if(!s)return'-';var d=pD(s);if(!d)return esc(s);var str=d.toLocal
 function hoje(){var h=new Date();h.setHours(0,0,0,0);return h;}
 function diffDias(d1,d2){if(!d1||!d2)return null;var df=Math.round((d2-d1)/86400000);return df<0?0:df;}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-// Dias em manutencao: usa o valor ja calculado na planilha (coluna "Dias em Manutencao")
-// quando disponivel e numerico; caso contrario, calcula localmente como fallback.
+// Dias em manutencao: calculado sempre a partir da Data Inicial e da Data Finalizacao (nao usa
+// mais o valor bruto da planilha "Dias em Manutencao", pois quando a Data Inicial esta em
+// branco o Google Sheets trata a celula vazia como a data-epoca (30/12/1899) e a formula da
+// planilha retorna um numero de dias enorme e sem sentido, ex: 46237d).
 function diasEmManut(m){
-  var v=parseInt(String(m.diasmanut||'').replace(/[^\d-]/g,''),10);
-  if(!isNaN(v))return v;
-  var hj=hoje();
-  return diffDias(pD(m.dtin)||pD(m.dtab),pD(m.dtfin)||hj);
+  var din=pD(m.dtin);
+  if(!din)return null;
+  return diffDias(din,pD(m.dtfin)||hoje());
 }
 
 function calcAgStatus(d){
@@ -1306,11 +1350,29 @@ function renderTab(){
   document.getElementById('tit-l').textContent=tm.t;
   var bg=document.getElementById('tit-b');
   bg.innerHTML=(tm.bc?sIcon('s-'+tm.bc.slice(2)):'')+esc(tm.b);bg.className='tbadge '+tm.bc;
+  renderManStatusFiltros(k);
   var q=(document.getElementById('busca').value||'').toLowerCase();
   if(k==='man'||k==='agm'){renderMan(q,k);}
   else if(k==='vaz'){renderVaz(q);}
   else{renderVia(k,q);}
 }
+// Mostra os chips de filtro por Status (Ag. Chegada, Ag. Abertura OS, Ag. Inicio Manut.,
+// Em Manutencao, Manut. Finalizada) apenas quando a tabela exibida e a de manutencao.
+function renderManStatusFiltros(k){
+  var el=document.getElementById('mstat-filtros');
+  if(!el)return;
+  if(k!=='man'&&k!=='agm'){el.style.display='none';el.innerHTML='';return;}
+  el.style.display='flex';
+  el.innerHTML=MAN_STATUS_DEF.map(function(s){
+    var on=!!_manStatusF[s.key];
+    return '<button class="mstat-chip'+(on?' on':'')+'" style="--mc:'+s.color+'" onclick="toggleManStatusF(\''+s.key+'\')">'+esc(s.lbl)+'</button>';
+  }).join('');
+}
+function toggleManStatusF(key){
+  _manStatusF[key]=!_manStatusF[key];
+  renderTab();
+}
+
 
 function renderVia(k,q){
   var buscando=k==='tot'&&!!q;
@@ -1356,8 +1418,8 @@ function renderMan(q,filtro){
   ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
   var placasAgd2=filtro==='agm'?ultimos.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa.toUpperCase();}):[];
   _fM=_M.filter(function(m){
-    // So conta/lista manutencao que ainda NAO tem a Data Finalizacao preenchida
-    if(m.dtfin)return false;
+    // So lista os estagios de status atualmente selecionados nos filtros (chips)
+    if(!_manStatusF[manStatus(m)])return false;
     if(q&&(m.pcav+m.pman+m.os+m.serv+m.mot).toLowerCase().indexOf(q)<0)return false;
     var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
     if(filtro==='agm'){
@@ -1433,6 +1495,10 @@ function manCellHtml(key,m){
     case 'mot':return esc(m.mot||'-');
     case 'pcav':return '<span class="placa"><i class="fa-solid fa-truck"></i>'+esc(m.pcav||'-')+'</span>';
     case 'pman':return '<span class="placa-man"><i class="fa-solid fa-wrench"></i>'+esc(m.pman||'-')+'</span>';
+    case 'status':{
+      var sd=MAN_STATUS_MAP[manStatus(m)];
+      return '<span class="mstat-badge" style="--mc:'+sd.color+'">'+esc(sd.lbl)+'</span>';
+    }
     case 'tipo':return esc(m.tipo||'-');
     case 'dtch':return '<span class="dc">'+fD(m.dtch)+'</span>';
     case 'dtab':return '<span class="dc">'+fD(m.dtab)+'</span>';
