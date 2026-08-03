@@ -243,6 +243,7 @@ body::before{
   display:inline-flex;align-items:center;gap:5px;
   font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:var(--r-pill);
   background:var(--bg);color:var(--text-2);box-shadow:var(--sh-sm);
+  white-space:nowrap;flex-shrink:0;
 }
 .tbadge.c-evc{background:var(--st-evc);color:#fff}
 .tbadge.c-agc{background:var(--st-agc);color:#fff}
@@ -519,7 +520,7 @@ tr.man-sub:hover td{background:#FFF3E9}
 .pm-serv-txt{font-size:14px;color:var(--text-1);line-height:1.65;word-break:break-word;font-weight:500}
 
 /* ── BOTAO RESUMO (card Manutencao) ───────────────────────────────── */
-.c-man{padding-bottom:46px}
+.card.c-man{padding-bottom:46px}
 .card-resumo-btn{
   position:absolute;right:12px;bottom:12px;z-index:2;
   display:flex;align-items:center;gap:5px;
@@ -916,7 +917,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
 <div class="toast" id="toast"></div>
 <script>
 
-var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_tot=0,_F=[],_placasManUnicas={},_manOpen={};
+var _D=[],_M=[],_card='tot',_vaz=false,_ivF='ambos',_fV=[],_fM=[],_fMShow=[],_tot=0,_F=[],_placasManUnicas={},_manOpen={};
 var _sort={via:{col:null,dir:1},vaz:{col:null,dir:1},man:{col:null,dir:1}};
 
 // ── Definicao de colunas ordenaveis (usadas nos cabecalhos das tabelas) ──
@@ -1372,30 +1373,58 @@ function renderMan(q,filtro){
     return true;
   });
   _fM=applySort(_fM,MAN_COLS,_sort.man);
-  document.getElementById('rc').textContent=_fM.length+' registro'+(_fM.length!==1?'s':'');
-  if(!_fM.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
-  // Agrupa por Placa Cavalo (preservando a ordem ja aplicada pela ordenacao) - quando uma
-  // placa cavalo se repete (mais de um item de manutencao associado), mostra uma linha-resumo
-  // com botao "+" para expandir os itens individuais.
+  if(!_fM.length){document.getElementById('rc').textContent='0 registros';document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
+  // Agrupa por Placa Cavalo (preservando a ordem ja aplicada pela ordenacao). Dentro de cada
+  // grupo, registros que tem a MESMA Placa Manutencao sao o mesmo item (normalmente linhas
+  // duplicadas/incompletas na planilha) e sao mesclados em uma unica linha, usando o primeiro
+  // valor nao vazio de cada campo. So sobra um botao "+" para expandir quando a placa cavalo
+  // tiver de fato mais de um item DISTINTO (Placas de Manutencao diferentes).
   var grupos=[],gi={};
   _fM.forEach(function(m){
     var p=(m.pcav||'(sem placa)').toUpperCase().trim()||'(sem placa)';
     if(!(p in gi)){gi[p]=grupos.length;grupos.push({placa:p,itens:[]});}
     grupos[gi[p]].itens.push(m);
   });
+  grupos.forEach(function(g){
+    var porPman={},ordem=[];
+    g.itens.forEach(function(m){
+      var pk=(m.pman||m.pcav||'').toUpperCase().trim()||'(sem placa manut)';
+      if(!(pk in porPman)){porPman[pk]=[];ordem.push(pk);}
+      porPman[pk].push(m);
+    });
+    g.itens=ordem.map(function(pk){var arr=porPman[pk];return arr.length>1?mergeManItems(arr):arr[0];});
+  });
   var rows='';
+  _fMShow=[];
+  var totalItens=0;
+  grupos.forEach(function(g){totalItens+=g.itens.length;});
+  document.getElementById('rc').textContent=totalItens+' registro'+(totalItens!==1?'s':'');
   grupos.forEach(function(g){
     if(g.itens.length===1){
-      rows+=manRowHtml(g.itens[0],_fM.indexOf(g.itens[0]),false);
+      var idx=_fMShow.push(g.itens[0])-1;
+      rows+=manRowHtml(g.itens[0],idx,false);
     }else{
       var aberto=!!_manOpen[g.placa];
       rows+=manGroupHeaderHtml(g,aberto);
       if(aberto){
-        g.itens.forEach(function(m){rows+=manRowHtml(m,_fM.indexOf(m),true);});
+        g.itens.forEach(function(m){var idx2=_fMShow.push(m)-1;rows+=manRowHtml(m,idx2,true);});
       }
     }
   });
   document.getElementById('tc').innerHTML='<table style="min-width:1500px"><thead><tr>'+thSort('man',MAN_COLS)+'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+// Mescla varios registros duplicados (mesma Placa Cavalo + mesma Placa Manutencao) em um so,
+// usando para cada campo o primeiro valor nao vazio encontrado entre os registros.
+function mergeManItems(itens){
+  var keys=['mot','pcav','pman','tipo','dtch','dtab','dtin','diasmanut','prev','justos','serv','dtpeca','pecasolic','justman','km','os','dtfin'];
+  var out={};
+  keys.forEach(function(k){
+    out[k]='';
+    for(var i=0;i<itens.length;i++){
+      if(itens[i][k]){out[k]=itens[i][k];break;}
+    }
+  });
+  return out;
 }
 // Renderiza o conteudo de uma celula da tabela de Manutencao para uma coluna especifica de MAN_COLS
 function manCellHtml(key,m){
@@ -1609,7 +1638,7 @@ function abrirVia(i){
 }
 
 function abrirMan(i){
-  var m=_fM[i];if(!m)return;
+  var m=_fMShow[i];if(!m)return;
   var hj=hoje();
   var dch=pD(m.dtch),dab=pD(m.dtab),din=pD(m.dtin),dfin=pD(m.dtfin);
   document.getElementById('pm-cav').textContent=m.pcav||'-';
