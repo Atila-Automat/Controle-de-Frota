@@ -1111,9 +1111,6 @@ function aCards(u,n){
   var nagi=ultimos.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=ultimos.filter(function(d){return mSt(d.st,'via');}).length;
   var nagd=ultimos.filter(function(d){return mSt(d.st,'agd');}).length;
-  // Status atual (ultima informacao) por placa, para cruzar com a manutencao
-  var statusPorPlaca={};
-  ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
   // Placas com OS de manutencao em aberto (sem Data Finalizacao) E com a Data Inicio de
   // Manutencao preenchida -> usado no card "Manutencao" (veiculo efetivamente em manutencao)
   var placasManInicio={};
@@ -1128,18 +1125,11 @@ function aCards(u,n){
     var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
     if(p)placasManChegada[p]=true;
   });
-  // Manutencao: uma placa com Data Inicio de Manutencao preenchida so conta neste card se o
-  // status ATUAL dela nao for nenhum dos 4 status de viagem ativos (Ag Carregamento, Ag Inicio,
-  // Em Viagem, Ag Descarga). Se estiver em algum desses status, ela continua sendo contada
-  // apenas no card daquele status.
-  var placasManUnicas={};
-  Object.keys(placasManInicio).forEach(function(p){
-    var st=statusPorPlaca[p];
-    var emViagemAtiva=st&&(mSt(st,'evc')||mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
-    if(!emViagemAtiva)placasManUnicas[p]=true;
-  });
-  _placasManUnicas=placasManUnicas;
-  var nman=Object.keys(placasManUnicas).length;
+  // Card Manutencao: mostra TODAS as placas cavalo com OS aberta e Data Inicio de Manutencao
+  // preenchida, independente do status que a placa tenha na planilha de Programacao (ela pode
+  // aparecer tanto no card de Manutencao quanto no card do status de viagem ao mesmo tempo).
+  _placasManUnicas=placasManInicio;
+  var nman=Object.keys(placasManInicio).length;
   // Ag Descarga + Manutencao: placas cujo status atual e Ag Descarga E que tambem tem OS de
   // manutencao em aberto com Data de Chegada preenchida (contam nos dois cards ao mesmo tempo)
   var nagm=ultimos.filter(function(d){return mSt(d.st,'agd')&&placasManChegada[(d.placa||'').toUpperCase()];}).length;
@@ -1153,16 +1143,19 @@ function aCards(u,n){
   document.getElementById('v-agm').textContent=nagm;
   document.getElementById('v-man').textContent=nman;document.getElementById('p-man').textContent=pct(nman);
   document.getElementById('v-vaz').textContent=nvaz;document.getElementById('p-vaz').textContent=pct(nvaz);
-  atualizarBotaoLocalizar(nevc+nagc+nagi+nvia+nagd+nvaz+nman,tot);
+  // Como a placa cavalo em manutencao agora pode aparecer simultaneamente no card de
+  // Manutencao E no card do seu status de viagem (sobreposicao proposital), a soma dos cards
+  // deixou de ser um jeito confiavel de detectar placa sem card. Em vez disso, usa a contagem
+  // real de placas que nao aparecem em NENHUM card.
+  atualizarBotaoLocalizar(placasSemCard().length);
 }
 
-// Compara a soma dos 6 cards (Ag.Carregamento + Ag.Inicio + Em Viagem + Ag.Descarga + Vazios + Manutencao)
-// com o Total de Veiculos. Mostra o botao "Localizar Placa" sempre que houver divergencia
-// (soma diferente do total), pois isso indica placas sem card ou placas duplicadas em cards.
-function atualizarBotaoLocalizar(soma,total){
+// Mostra o botao "Localizar Placa" sempre que houver placas ativas da frota que nao estao
+// associadas a nenhum card (Ag.Carregamento, Ag.Inicio, Em Viagem, Ag.Descarga, Vazios, Manutencao).
+function atualizarBotaoLocalizar(qtdSemCard){
   var btn=document.getElementById('btn-locplaca');
   if(!btn)return;
-  if(soma!==total){btn.style.display='';}
+  if(qtdSemCard>0){btn.style.display='';}
   else{btn.style.display='none';}
 }
 
@@ -1414,24 +1407,18 @@ function renderVia(k,q){
 
 function renderMan(q,filtro){
   var ultimos=ultimaPorPlaca();
-  var statusPorPlaca={};
-  ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
   var placasAgd2=filtro==='agm'?ultimos.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa.toUpperCase();}):[];
   _fM=_M.filter(function(m){
     // So lista os estagios de status atualmente selecionados nos filtros (chips)
     if(!_manStatusF[manStatus(m)])return false;
     if(q&&(m.pcav+m.pman+m.os+m.serv+m.mot).toLowerCase().indexOf(q)<0)return false;
-    var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
     if(filtro==='agm'){
       // Placa cujo status atual e Ag Descarga
+      var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
       if(placasAgd2.indexOf(p)<0)return false;
-    }else{
-      // Card Manutencao: nao lista placa que esteja em algum status de viagem ativo
-      // (essa placa aparece apenas no card do status dela)
-      var st=statusPorPlaca[p];
-      var emViagemAtiva=st&&(mSt(st,'evc')||mSt(st,'agc')||mSt(st,'agi')||mSt(st,'via')||mSt(st,'agd'));
-      if(emViagemAtiva)return false;
     }
+    // Card Manutencao: lista TODAS as placas presentes na planilha de manutencao,
+    // independente do status que a placa tenha na planilha de Programacao.
     return true;
   });
   _fM=applySort(_fM,MAN_COLS,_sort.man);
