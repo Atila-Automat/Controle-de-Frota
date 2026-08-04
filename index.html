@@ -1150,11 +1150,17 @@ function aCards(u,n){
   var nvia=ultimos.filter(function(d){return mSt(d.st,'via');}).length;
   var nagd=ultimos.filter(function(d){return mSt(d.st,'agd');}).length;
   // Placas com OS de manutencao em aberto (sem Data Finalizacao) E com a Data Inicio de
-  // Manutencao preenchida -> usado no card "Manutencao" (veiculo efetivamente em manutencao)
+  // Manutencao preenchida -> usado no card "Manutencao" (veiculo efetivamente em manutencao).
+  // O card conta apenas placas CAVALO unicas (placasManInicio), mas para efeito de "localizar
+  // placa" tambem precisamos marcar como coberta a Placa Manutencao (ex: carreta/implemento),
+  // que pode ser diferente do cavalo e e a placa ativa na Frota que estava sumindo do dashboard.
   var placasManInicio={};
+  var placasManCobertura={};
   _M.filter(function(m){return !m.dtfin&&pD(m.dtin);}).forEach(function(m){
-    var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
-    if(p)placasManInicio[p]=true;
+    var pc=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+    var pm=(m.pman||'').replace(/-/g,'').toUpperCase().trim();
+    if(pc){placasManInicio[pc]=true;placasManCobertura[pc]=true;}
+    if(pm)placasManCobertura[pm]=true;
   });
   // Placas com OS de manutencao em aberto (sem Data Finalizacao) E com a Data de Chegada
   // preenchida -> usado no card "Ag. Descarga + Manutencao"
@@ -1166,7 +1172,9 @@ function aCards(u,n){
   // Card Manutencao: mostra TODAS as placas cavalo com OS aberta e Data Inicio de Manutencao
   // preenchida, independente do status que a placa tenha na planilha de Programacao (ela pode
   // aparecer tanto no card de Manutencao quanto no card do status de viagem ao mesmo tempo).
-  _placasManUnicas=placasManInicio;
+  // _placasManUnicas usa a cobertura ampla (cavalo + manutencao) para o botao "Localizar Placa";
+  // o card numerico continua usando placasManInicio (so cavalo), sem mudanca de comportamento visual.
+  _placasManUnicas=placasManCobertura;
   var nman=Object.keys(placasManInicio).length;
   // Ag Descarga + Manutencao: placas cujo status atual e Ag Descarga E que tambem tem OS de
   // manutencao em aberto com Data de Chegada preenchida (contam nos dois cards ao mesmo tempo)
