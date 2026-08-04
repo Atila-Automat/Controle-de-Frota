@@ -1062,12 +1062,20 @@ function buscar(){
   }).catch(function(){_D=[];}));
   p.push(fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSESmQLyhqDzTATbg1jG72A8Vl1TKkDnz7VvekYkaD4S3_K40VS_YG48-ht7MCeViwI5zqsVFaDYkjm/pub?gid=2110992986&single=true&output=csv').then(function(r){return r.text();}).then(function(csv){
     var lns=parseCSV(csv);lns.shift();
+    // Sequencia atual da planilha de Manutencao (0-indexed):
+    // 0 Motorista, 1 Placa Cavalo, 2 Placa Manutencao, 3 Tipo, 4 Data Chegada,
+    // 5 Data Abertura OS, 6 Data Inicial, 7 Dias em Manutencao, 8 Previsao Liberacao,
+    // 9 Justificativa OS, 10 Servico, 11 Status (coluna so de referencia visual na
+    // planilha - o dashboard continua calculando o status sozinho via manStatus(),
+    // por isso o indice 11 nao e mapeado aqui), 12 Justificativa Manutencao, 13 KM,
+    // 14 Numero da OS, 15 Data Finalizacao. Colunas "Data peca" e "Peca solicitada"
+    // foram removidas da planilha.
     _M=lns.map(function(c){
       return {mot:c[0]||'',pcav:c[1]||'',pman:c[2]||'',tipo:c[3]||'',
         dtch:c[4]||'',dtab:c[5]||'',dtin:c[6]||'',diasmanut:c[7]||'',
         prev:c[8]||'',justos:c[9]||'',serv:c[10]||'',
-        dtpeca:c[11]||'',pecasolic:c[12]||'',justman:c[13]||'',km:c[14]||'',
-        os:c[15]||'',dtfin:c[16]||''};
+        justman:c[12]||'',km:c[13]||'',
+        os:c[14]||'',dtfin:c[15]||''};
     }).filter(function(m){return placaValida(m.pcav);});
   }).catch(function(){_M=[];}));
   Promise.all(p).then(function(){
@@ -1530,7 +1538,7 @@ function renderMan(q,filtro){
 // Mescla varios registros duplicados (mesma Placa Cavalo + mesma Placa Manutencao) em um so,
 // usando para cada campo o primeiro valor nao vazio encontrado entre os registros.
 function mergeManItems(itens){
-  var keys=['mot','pcav','pman','tipo','dtch','dtab','dtin','diasmanut','prev','justos','serv','dtpeca','pecasolic','justman','km','os','dtfin'];
+  var keys=['mot','pcav','pman','tipo','dtch','dtab','dtin','diasmanut','prev','justos','serv','justman','km','os','dtfin'];
   var out={};
   keys.forEach(function(k){
     out[k]='';
@@ -1872,7 +1880,7 @@ function atualizarDetalhamentoManut(){
   var rod=document.getElementById('rm-tipo-footer');
   if(rod)rod.innerHTML=tipoFooterHtml();
 }
-// Monta a linha unica (Motorista ... Peca Solicitada), omitindo campos vazios.
+// Monta a linha unica de detalhes (Motorista, OS, KM, datas, previsao), omitindo campos vazios.
 // Dt. Finalizacao fica de fora: nesta lista so entram OS em aberto, entao
 // seria sempre "Em aberto" - o badge de estagio ja comunica isso.
 function mfieldsLine(m){
@@ -1884,11 +1892,6 @@ function mfieldsLine(m){
   if(m.dtab)f.push('<b>Abert</b>'+fD(m.dtab));
   if(m.dtin)f.push('<b>Inicio</b>'+fD(m.dtin));
   if(m.prev)f.push('<b>Prev</b>'+fD(m.prev));
-  if(m.pecasolic||m.dtpeca){
-    var t=esc(m.pecasolic||'Peca nao especificada');
-    if(m.dtpeca)t+=' ('+fD(m.dtpeca)+')';
-    f.push('<b>Peca</b>'+t);
-  }
   return f.length?f.join(' &middot; '):'<span style="color:var(--text-3)">Sem dados adicionais</span>';
 }
 
