@@ -787,7 +787,7 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
       <div class="card c-agm" id="card-agm" onclick="filtrarCard('agm')">
         <div class="card-top"><span class="card-icon"><i class="fa-solid fa-hourglass-half"></i></span><span class="card-pct" id="p-agm" style="visibility:hidden">-</span></div>
         <div class="card-val" id="v-agm">0</div>
-        <div class="card-lbl">Ag. Desc + Manut.</div><div class="card-sub">desc + manut pendente</div><div class="card-mark"></div>
+        <div class="card-lbl">Com Manutenção + Programação</div><div class="card-sub">manut. ativa + programação</div><div class="card-mark"></div>
       </div>
     </div>
   </div>
@@ -1157,36 +1157,37 @@ function aCards(u,n){
   var nagi=ultimos.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=ultimos.filter(function(d){return mSt(d.st,'via');}).length;
   var nagd=ultimos.filter(function(d){return mSt(d.st,'agd');}).length;
-  // Placas com OS de manutencao em aberto (sem Data Finalizacao) E com a Data Inicio de
-  // Manutencao preenchida -> usado no card "Manutencao" (veiculo efetivamente em manutencao).
-  // O card conta apenas placas CAVALO unicas (placasManInicio), mas para efeito de "localizar
-  // placa" tambem precisamos marcar como coberta a Placa Manutencao (ex: carreta/implemento),
-  // que pode ser diferente do cavalo e e a placa ativa na Frota que estava sumindo do dashboard.
-  var placasManInicio={};
+  // Placas cavalo com OS de manutencao em aberto (sem Data Finalizacao) E no estagio
+  // "Ag. Inicio Manut." ou "Em Manutencao" (dab preenchido sem dtin, ou dtin preenchido).
+  // Estagios "chegada" e "abertura" (ainda sem OS de manutencao propriamente iniciada) nao
+  // entram em nenhum dos dois cards abaixo.
+  var placasManAtiva={};
   var placasManCobertura={};
-  _M.filter(function(m){return !m.dtfin&&pD(m.dtin);}).forEach(function(m){
+  _M.forEach(function(m){
+    if(m.dtfin)return;
+    var estagio=manStatus(m);
+    if(estagio!=='inicio'&&estagio!=='ativa')return;
     var pc=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
     var pm=(m.pman||'').replace(/-/g,'').toUpperCase().trim();
-    if(pc){placasManInicio[pc]=true;placasManCobertura[pc]=true;}
+    if(pc){placasManAtiva[pc]=true;placasManCobertura[pc]=true;}
     if(pm)placasManCobertura[pm]=true;
   });
-  // Placas com OS de manutencao em aberto (sem Data Finalizacao) E com a Data de Chegada
-  // preenchida -> usado no card "Ag. Descarga + Manutencao"
-  var placasManChegada={};
-  _M.filter(function(m){return !m.dtfin&&pD(m.dtch);}).forEach(function(m){
-    var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
-    if(p)placasManChegada[p]=true;
-  });
-  // Card Manutencao: mostra TODAS as placas cavalo com OS aberta e Data Inicio de Manutencao
-  // preenchida, independente do status que a placa tenha na planilha de Programacao (ela pode
-  // aparecer tanto no card de Manutencao quanto no card do status de viagem ao mesmo tempo).
-  // _placasManUnicas usa a cobertura ampla (cavalo + manutencao) para o botao "Localizar Placa";
-  // o card numerico continua usando placasManInicio (so cavalo), sem mudanca de comportamento visual.
+  // _placasManUnicas usa a cobertura ampla (cavalo + manutencao) para o botao "Localizar Placa".
   _placasManUnicas=placasManCobertura;
-  var nman=Object.keys(placasManInicio).length;
-  // Ag Descarga + Manutencao: placas cujo status atual e Ag Descarga E que tambem tem OS de
-  // manutencao em aberto com Data de Chegada preenchida (contam nos dois cards ao mesmo tempo)
-  var nagm=ultimos.filter(function(d){return mSt(d.st,'agd')&&placasManChegada[(d.placa||'').toUpperCase()];}).length;
+  // Ultimo status de cada placa na planilha de Programacao, pra decidir em qual dos dois
+  // cards a placa cavalo em manutencao ativa (inicio/ativa) deve cair.
+  var statusPorPlaca={};
+  ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
+  // Card "Manutencao": placa cavalo em manutencao ativa (Ag Inicio Manut. ou Em Manutencao)
+  // CUJO ultimo status na planilha de Programacao e Vazio.
+  // Card "Com Manutencao + Programacao": placa cavalo em manutencao ativa cujo ultimo status
+  // na planilha de Programacao NAO e Vazio (ou a placa nem aparece na Programacao).
+  var nman=0,nagm=0;
+  Object.keys(placasManAtiva).forEach(function(p){
+    var st=statusPorPlaca[p];
+    if(st&&mSt(st,'vaz')){nman++;}
+    else{nagm++;}
+  });
   // Vazios com historico
   var nvaz=calcVazios().length;
   document.getElementById('v-evc').textContent=nevc;document.getElementById('p-evc').textContent=pct(nevc);
@@ -1378,7 +1379,7 @@ function sC(s){var v=(s||'').toLowerCase();if(v.indexOf('viagem para carregament
 function sIcon(cls){var m={'s-evc':'fa-route','s-agc':'fa-box','s-agi':'fa-flag','s-via':'fa-truck-fast','s-agd':'fa-warehouse','s-vaz':'fa-box-open','s-man':'fa-screwdriver-wrench','s-out':'fa-circle-question'};return'<i class="fa-solid '+(m[cls]||'fa-circle')+'"></i>';}
 function ivB(iv){var v=(iv||'').toLowerCase().trim();if(v==='ida')return'<span class="iv-ida"><i class="fa-solid fa-arrow-right"></i>Ida</span>';if(v==='volta')return'<span class="iv-volta"><i class="fa-solid fa-arrow-left"></i>Volta</span>';return'<span class="iv-nd">-</span>';}
 
-var TITS={tot:{t:'Todos os veiculos',b:'Total',bc:''},evc:{t:'Em Viagem para Carregamento',b:'Em Viagem p/ Carreg.',bc:'c-evc'},agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},agm:{t:'Ag. Descarga + Manutencao',b:'Ag. Desc + Manut.',bc:'c-agm'},man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'},vaz:{t:'Veiculos Vazios',b:'Vazios',bc:'c-vaz'}};
+var TITS={tot:{t:'Todos os veiculos',b:'Total',bc:''},evc:{t:'Em Viagem para Carregamento',b:'Em Viagem p/ Carreg.',bc:'c-evc'},agc:{t:'Ag. Carregamento',b:'Ag. Carregamento',bc:'c-agc'},agi:{t:'Ag. Inicio de Viagem',b:'Ag. Inicio Viagem',bc:'c-agi'},via:{t:'Em Viagem',b:'Em Viagem',bc:'c-via'},agd:{t:'Ag. Descarga',b:'Ag. Descarga',bc:'c-agd'},agm:{t:'Com Manutencao + Programacao',b:'Com Manut. + Programacao',bc:'c-agm'},man:{t:'Veiculos em Manutencao',b:'Manutencao',bc:'c-man'},vaz:{t:'Veiculos Vazios',b:'Vazios',bc:'c-vaz'}};
 function filtrarCard(k){
   _card=k;
   ['tot','evc','agc','agi','via','agd','agm','man','vaz'].forEach(function(c){
@@ -1466,16 +1467,21 @@ function renderVia(k,q){
 
 function renderMan(q,filtro){
   var ultimos=ultimaPorPlaca();
-  var placasAgd2=filtro==='agm'?ultimos.filter(function(d){return mSt(d.st,'agd');}).map(function(d){return d.placa.toUpperCase();}):[];
-  // Base: aplica busca e o criterio proprio do card (agm = so placas em Ag Descarga), mas
-  // AINDA SEM o filtro dos chips de status - serve tanto pra contar placas por status quanto
-  // como ponto de partida pra lista final.
+  var statusPorPlaca={};
+  if(filtro==='agm')ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
+  // Base: aplica busca e o criterio proprio do card (agm = so placas cavalo em manutencao
+  // ativa - estagio Ag Inicio Manut. ou Em Manutencao - cujo ultimo status na Programacao
+  // NAO e Vazio), mas AINDA SEM o filtro dos chips de status - serve tanto pra contar placas
+  // por status quanto como ponto de partida pra lista final.
   var base=_M.filter(function(m){
     if(q&&(m.pcav+m.pman+m.os+m.serv+m.mot).toLowerCase().indexOf(q)<0)return false;
     if(filtro==='agm'){
-      // Placa cujo status atual e Ag Descarga
+      if(m.dtfin)return false;
+      var estagio=manStatus(m);
+      if(estagio!=='inicio'&&estagio!=='ativa')return false;
       var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
-      if(placasAgd2.indexOf(p)<0)return false;
+      var st=statusPorPlaca[p];
+      if(st&&mSt(st,'vaz'))return false;
     }
     return true;
   });
