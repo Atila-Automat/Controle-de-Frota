@@ -1168,11 +1168,16 @@ function aCards(u,n){
   // Placas cavalo com Data de Chegada preenchida E sem Data de Finalizacao - ja chegaram na
   // manutencao e ainda estao em processo (cobre os estagios Ag. Abertura OS, Ag. Inicio Manut.
   // e Em Manutencao; so o estagio "Ag. Chegada", que ainda nao tem Data de Chegada, fica fora).
+  // IMPORTANTE: quando o item em manutencao e uma carreta/dolly do conjunto, a coluna "Placa
+  // cavalo" fica preenchida so como referencia/agrupamento (a placa real esta em pman e o Tipo
+  // diz "1º carreta"/"2º carreta"/"Dolly") - isso NAO significa que o cavalo esta em manutencao,
+  // entao so contamos pc quando Tipo = "Cavalo".
   var placasManAtiva={};
   var placasManCobertura={};
   _M.forEach(function(m){
     if(m.dtfin||!pD(m.dtch))return;
-    var pc=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+    var ehCavalo=(m.tipo||'').trim().toLowerCase()==='cavalo';
+    var pc=ehCavalo?(m.pcav||'').replace(/-/g,'').toUpperCase().trim():'';
     var pm=(m.pman||'').replace(/-/g,'').toUpperCase().trim();
     if(pc){placasManAtiva[pc]=true;placasManCobertura[pc]=true;}
     if(pm)placasManCobertura[pm]=true;
@@ -1484,16 +1489,28 @@ function renderMan(q,filtro){
   }else{
     _manColsCurrent=MAN_COLS;
   }
-  // Base: aplica busca e o criterio proprio do card (agm = so placas cavalo com Data de
-  // Chegada preenchida e sem Data de Finalizacao - ou seja, ja chegaram e ainda estao em
-  // processo de manutencao - cujo ultimo status na Programacao NAO e Vazio), mas AINDA SEM o
-  // filtro dos chips de status - serve tanto pra contar placas por status quanto como ponto
-  // de partida pra lista final.
+  // Placas cavalo que qualificam pro card agm: precisa ter uma linha com Tipo="Cavalo",
+  // Data de Chegada preenchida e sem Data de Finalizacao (mesmo criterio usado em aCards).
+  // Linhas de carreta/dolly do MESMO conjunto NAO qualificam a placa cavalo sozinhas - a coluna
+  // "Placa cavalo" nelas e so referencia/agrupamento, quem esta de fato em manutencao e a carreta.
+  var pcavsQualAgm={};
+  if(filtro==='agm'){
+    _M.forEach(function(m){
+      if(m.dtfin||!pD(m.dtch))return;
+      if((m.tipo||'').trim().toLowerCase()!=='cavalo')return;
+      var pc=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+      if(pc)pcavsQualAgm[pc]=true;
+    });
+  }
+  // Base: aplica busca e o criterio proprio do card (agm = so grupos de placa cavalo
+  // qualificados acima, cujo ultimo status na Programacao NAO e Vazio), mas AINDA SEM o filtro
+  // dos chips de status - serve tanto pra contar placas por status quanto como ponto de partida
+  // pra lista final.
   var base=_M.filter(function(m){
     if(q&&(m.pcav+m.pman+m.os+m.serv+m.mot).toLowerCase().indexOf(q)<0)return false;
     if(filtro==='agm'){
-      if(m.dtfin||!pD(m.dtch))return false;
       var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+      if(!pcavsQualAgm[p])return false;
       var st=statusPorPlaca[p];
       if(st&&mSt(st,'vaz'))return false;
     }
