@@ -1006,6 +1006,14 @@ var MAN_COLS=[
   {key:'diasagini',lbl:'Tempo Ag. Inicio Manut.',type:'num',get:function(m){var hj=hoje();return diffDias(pD(m.dtab),pD(m.dtin)||hj);}},
   {key:'diasmanut',lbl:'Tempo em Manut.',type:'num',get:function(m){return diasEmManut(m);}}
 ];
+// Coluna extra, exibida so no card "Com Manutencao + Programacao", com o ultimo status da
+// placa (cavalo) na planilha de Programacao. _manUltStatusPorPlaca e preenchido em renderMan.
+var _manUltStatusPorPlaca={};
+var COL_ULT_STATUS_PROG={key:'ultstatus',lbl:'Ult. Status Programacao',type:'str',get:function(m){
+  var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+  return _manUltStatusPorPlaca[p]||'';
+}};
+var _manColsCurrent=MAN_COLS;
 
 function ordenarCol(tableKey,key){
   var st=_sort[tableKey];
@@ -1157,16 +1165,13 @@ function aCards(u,n){
   var nagi=ultimos.filter(function(d){return mSt(d.st,'agi');}).length;
   var nvia=ultimos.filter(function(d){return mSt(d.st,'via');}).length;
   var nagd=ultimos.filter(function(d){return mSt(d.st,'agd');}).length;
-  // Placas cavalo com OS de manutencao em aberto (sem Data Finalizacao) E no estagio
-  // "Ag. Inicio Manut." ou "Em Manutencao" (dab preenchido sem dtin, ou dtin preenchido).
-  // Estagios "chegada" e "abertura" (ainda sem OS de manutencao propriamente iniciada) nao
-  // entram em nenhum dos dois cards abaixo.
+  // Placas cavalo com Data de Chegada preenchida E sem Data de Finalizacao - ja chegaram na
+  // manutencao e ainda estao em processo (cobre os estagios Ag. Abertura OS, Ag. Inicio Manut.
+  // e Em Manutencao; so o estagio "Ag. Chegada", que ainda nao tem Data de Chegada, fica fora).
   var placasManAtiva={};
   var placasManCobertura={};
   _M.forEach(function(m){
-    if(m.dtfin)return;
-    var estagio=manStatus(m);
-    if(estagio!=='inicio'&&estagio!=='ativa')return;
+    if(m.dtfin||!pD(m.dtch))return;
     var pc=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
     var pm=(m.pman||'').replace(/-/g,'').toUpperCase().trim();
     if(pc){placasManAtiva[pc]=true;placasManCobertura[pc]=true;}
@@ -1175,13 +1180,13 @@ function aCards(u,n){
   // _placasManUnicas usa a cobertura ampla (cavalo + manutencao) para o botao "Localizar Placa".
   _placasManUnicas=placasManCobertura;
   // Ultimo status de cada placa na planilha de Programacao, pra decidir em qual dos dois
-  // cards a placa cavalo em manutencao ativa (inicio/ativa) deve cair.
+  // cards a placa cavalo com Data de Chegada preenchida (chegou pra manutencao) deve cair.
   var statusPorPlaca={};
   ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
-  // Card "Manutencao": placa cavalo em manutencao ativa (Ag Inicio Manut. ou Em Manutencao)
-  // CUJO ultimo status na planilha de Programacao e Vazio.
-  // Card "Com Manutencao + Programacao": placa cavalo em manutencao ativa cujo ultimo status
-  // na planilha de Programacao NAO e Vazio (ou a placa nem aparece na Programacao).
+  // Card "Manutencao": placa cavalo que ja chegou pra manutencao (Data de Chegada preenchida,
+  // sem Data de Finalizacao) CUJO ultimo status na planilha de Programacao e Vazio.
+  // Card "Com Manutencao + Programacao": mesma placa (chegou pra manutencao) cujo ultimo
+  // status na planilha de Programacao NAO e Vazio (ou a placa nem aparece na Programacao).
   var nman=0,nagm=0;
   Object.keys(placasManAtiva).forEach(function(p){
     var st=statusPorPlaca[p];
@@ -1468,17 +1473,26 @@ function renderVia(k,q){
 function renderMan(q,filtro){
   var ultimos=ultimaPorPlaca();
   var statusPorPlaca={};
-  if(filtro==='agm')ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
-  // Base: aplica busca e o criterio proprio do card (agm = so placas cavalo em manutencao
-  // ativa - estagio Ag Inicio Manut. ou Em Manutencao - cujo ultimo status na Programacao
-  // NAO e Vazio), mas AINDA SEM o filtro dos chips de status - serve tanto pra contar placas
-  // por status quanto como ponto de partida pra lista final.
+  ultimos.forEach(function(d){if(d.placa)statusPorPlaca[d.placa.toUpperCase()]=d.st;});
+  _manUltStatusPorPlaca=statusPorPlaca;
+  // Coluna extra "Ult. Status Programacao" so aparece na tabela do card "Com Manutencao +
+  // Programacao" (agm), logo depois da coluna Status.
+  if(filtro==='agm'){
+    _manColsCurrent=MAN_COLS.slice();
+    var iSt=_manColsCurrent.findIndex(function(c){return c.key==='status';});
+    _manColsCurrent.splice(iSt+1,0,COL_ULT_STATUS_PROG);
+  }else{
+    _manColsCurrent=MAN_COLS;
+  }
+  // Base: aplica busca e o criterio proprio do card (agm = so placas cavalo com Data de
+  // Chegada preenchida e sem Data de Finalizacao - ou seja, ja chegaram e ainda estao em
+  // processo de manutencao - cujo ultimo status na Programacao NAO e Vazio), mas AINDA SEM o
+  // filtro dos chips de status - serve tanto pra contar placas por status quanto como ponto
+  // de partida pra lista final.
   var base=_M.filter(function(m){
     if(q&&(m.pcav+m.pman+m.os+m.serv+m.mot).toLowerCase().indexOf(q)<0)return false;
     if(filtro==='agm'){
-      if(m.dtfin)return false;
-      var estagio=manStatus(m);
-      if(estagio!=='inicio'&&estagio!=='ativa')return false;
+      if(m.dtfin||!pD(m.dtch))return false;
       var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
       var st=statusPorPlaca[p];
       if(st&&mSt(st,'vaz'))return false;
@@ -1500,7 +1514,7 @@ function renderMan(q,filtro){
   // independente do status que a placa tenha na planilha de Programacao - so filtra pelos
   // estagios de status atualmente selecionados nos chips.
   _fM=base.filter(function(m){return _manStatusF[manStatus(m)];});
-  _fM=applySort(_fM,MAN_COLS,_sort.man);
+  _fM=applySort(_fM,_manColsCurrent,_sort.man);
   if(!_fM.length){document.getElementById('rc').textContent='0 registros';document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
   // Agrupa por Placa Cavalo (preservando a ordem ja aplicada pela ordenacao). Dentro de cada
   // grupo, registros que tem a MESMA Placa Manutencao sao o mesmo item (normalmente linhas
@@ -1539,7 +1553,7 @@ function renderMan(q,filtro){
       }
     }
   });
-  document.getElementById('tc').innerHTML='<table style="min-width:1500px"><thead><tr>'+thSort('man',MAN_COLS)+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('tc').innerHTML='<table style="min-width:1500px"><thead><tr>'+thSort('man',_manColsCurrent)+'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 // Mescla varios registros duplicados (mesma Placa Cavalo + mesma Placa Manutencao) em um so,
 // usando para cada campo o primeiro valor nao vazio encontrado entre os registros.
@@ -1577,13 +1591,18 @@ function manCellHtml(key,m){
     case 'diasagab':return dkMan(diffDias(pD(m.dtch),pD(m.dtab)||hj));
     case 'diasagini':return dkMan(diffDias(pD(m.dtab),pD(m.dtin)||hj));
     case 'diasmanut':return dkMan(diasEmManut(m));
+    case 'ultstatus':{
+      var p=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+      var st=_manUltStatusPorPlaca[p];
+      return st?('<span class="sp '+sC(st)+'">'+sIcon(sC(st))+esc(st)+'</span>'):'<span class="dk-n">-</span>';
+    }
   }
   return '-';
 }
 // Linha normal (item unico ou item dentro de um grupo expandido)
 function manRowHtml(m,i,sub){
   var r='<tr class="'+(sub?'man-sub':'')+'" onclick="abrirMan('+i+')">';
-  MAN_COLS.forEach(function(c){
+  _manColsCurrent.forEach(function(c){
     var content=manCellHtml(c.key,m);
     if(sub&&c.key==='pcav')content='<span class="man-sub-arrow">&#8618;</span>'+content;
     r+='<td>'+content+'</td>';
@@ -1608,7 +1627,7 @@ function manAggVal(col,itens){
 // Linha-resumo do grupo, com botao de expandir/recolher e contagem de itens
 function manGroupHeaderHtml(g,aberto){
   var r='<tr class="man-group" onclick="toggleManGroup(\''+g.placa.replace(/'/g,"\\'")+'\')">';
-  MAN_COLS.forEach(function(c,ci){
+  _manColsCurrent.forEach(function(c,ci){
     if(ci===1){
       r+='<td><button class="man-expand-btn" title="'+(aberto?'Recolher':'Expandir')+'">'+(aberto?'&#8722;':'&#43;')+'</button><span class="placa"><i class="fa-solid fa-truck"></i>'+esc(g.placa)+'</span><span class="man-group-badge">'+g.itens.length+'</span></td>';
     }else{
