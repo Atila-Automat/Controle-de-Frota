@@ -383,6 +383,8 @@ tr.man-sub:hover td{background:#FFF3E9}
 .dk{display:inline-block;min-width:34px;text-align:center;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:var(--r-sm)}
 .dk-ok{background:#DCFCE7;color:#166534}.dk-w{background:#FEF3C7;color:#92400E}.dk-a{background:#FEE2E2;color:#9F1239}.dk-n{color:var(--text-3);font-size:.72rem}
 .dc{font-size:.74rem;color:var(--text-1);font-weight:600}
+.dc-man-fin{font-size:.74rem;font-weight:700;color:#9F1239;background:#FEE2E2;border:1px solid #FECACA;padding:2px 7px;border-radius:6px;cursor:help;display:inline-flex;align-items:center;gap:4px}
+.dc-man-fin i{font-size:.68rem}
 .empty{text-align:center;padding:64px 20px;color:var(--text-2);font-size:.85rem;font-weight:500}
 .empty::before{content:"\1F4ED";display:block;font-size:2rem;margin-bottom:10px;opacity:.5}
 .tfoot{font-size:.68rem;color:var(--text-3);padding:10px 20px;text-align:right;border-top:1px solid var(--border);background:#FAFBFC;flex-shrink:0;font-weight:600}
@@ -1330,6 +1332,35 @@ function calcDiasAgDescarga(d){
   if(isMDiasBranco(d.cli))return df>1?df-1:0;
   return df>=0?df+1:0;
 }
+// Retorna a OS de manutencao ja finalizada (Data de Finalizacao preenchida) mais recente
+// para a placa cavalo informada, ou null se nao houver nenhuma.
+function ultimaManutFinalizada(placa){
+  if(!placa)return null;
+  var pl=String(placa).toUpperCase().trim();
+  var achou=null,achouDt=null;
+  _M.forEach(function(m){
+    if(!m.dtfin)return;
+    var pc=(m.pcav||'').replace(/-/g,'').toUpperCase().trim();
+    if(pc!==pl)return;
+    var dtf=pD(m.dtfin);
+    if(!dtf)return;
+    if(!achouDt||dtf>achouDt){achouDt=dtf;achou=m;}
+  });
+  return achou;
+}
+// Para uma placa no card Vazios, verifica se ela ficou disponivel de fato so depois do
+// termino de uma manutencao (Data de Finalizacao mais recente que a data "natural" de vazio,
+// ex: data de descarregamento). Retorna a OS correspondente, ou null se nao se aplica.
+function vazioManutOverride(d){
+  var v=(d.st||'').toLowerCase();
+  if(v!=='vazio')return null;
+  var man=ultimaManutFinalizada(d.placa);
+  if(!man)return null;
+  var natural=d.d8||d.d6||d.d4||d.d3||d.d2||'';
+  var dtf=pD(man.dtfin),dtn=pD(natural);
+  if(dtf&&(!dtn||dtf>dtn))return man;
+  return null;
+}
 function getDataStatus(d){
   var v=(d.st||'').toLowerCase();
   if(v.indexOf('viagem para carregamento')>=0)return d.dvc||d.d2||'';
@@ -1337,7 +1368,22 @@ function getDataStatus(d){
   if(v.indexOf('nicio')>=0)return d.d3||'';
   if(v==='em viagem'||v==='viagem')return d.d4||'';
   if(v.indexOf('descarga')>=0||v.indexOf('descarregamento')>=0)return d.d6||d.d7||d.d5||d.d4||'';
-  return d.d8||d.d6||d.d4||d.d3||d.d2||'';
+  var natural=d.d8||d.d6||d.d4||d.d3||d.d2||'';
+  var man=vazioManutOverride(d);
+  if(man)return man.dtfin;
+  return natural;
+}
+// Monta o HTML da celula "Data Status": normal, ou em destaque vermelho com tooltip
+// quando a data exibida vem da Data de Finalizacao de uma manutencao (veiculo so ficou
+// realmente disponivel apos sair da manutencao, e nao na data do descarregamento original).
+function dataStatusCellHTML(d){
+  var man=vazioManutOverride(d);
+  if(man){
+    var natural=d.d8||d.d6||d.d4||d.d3||d.d2||'';
+    var tip='Disponivel a partir de '+fD(man.dtfin)+' (fim da manutencao OS '+(man.os||'-')+'). Descarregamento original em '+(natural?fD(natural):'-')+'.';
+    return '<span class="dc-man-fin" title="'+esc(tip)+'"><i class="fa-solid fa-screwdriver-wrench"></i>'+fD(man.dtfin)+'</span>';
+  }
+  return '<span class="dc">'+fD(getDataStatus(d))+'</span>';
 }
 function renderVaz(q){
   var vazios=calcVazios();
@@ -1349,8 +1395,6 @@ function renderVaz(q){
   document.getElementById('rc').textContent=_fV.length+' registro'+(_fV.length!==1?'s':'');
   if(!_fV.length){document.getElementById('tc').innerHTML='<div class="empty">Nenhum veiculo vazio com historico.</div>';return;}
   var rows=_fV.map(function(d,i){
-    // Data status para vazio = data do descarregamento (d8)
-    var dtStatus=d.d8||'';
     var ds=calcDias(d);
     var r='<tr onclick="abrirVia('+i+')">';
     r+='<td>'+esc(d.cli||'-')+'</td>';
@@ -1363,7 +1407,7 @@ function renderVaz(q){
     r+='<td>'+esc(d.ori||'-')+'</td>';
     r+='<td>'+esc(d.dst||'-')+'</td>';
     r+='<td><span class="cte">'+esc(d.cte||'-')+'</span></td>';
-    r+='<td><span class="dc">'+fD(dtStatus)+'</span></td>';
+    r+='<td>'+dataStatusCellHTML(d)+'</td>';
     r+='<td>'+dB(ds)+'</td>';
     r+='<td><span class="sp s-vaz">'+sIcon('s-vaz')+'Vazio</span></td>';
     r+='<td></td><td></td><td></td>';
@@ -1461,7 +1505,7 @@ function renderVia(k,q){
     r+='<td>'+esc(d.ori||'-')+'</td>';
     r+='<td>'+esc(d.dst||'-')+'</td>';
     r+='<td><span class="cte">'+esc(d.cte||'-')+'</span></td>';
-    r+='<td><span class="dc">'+fD(getDataStatus(d))+'</span></td>';
+    r+='<td>'+dataStatusCellHTML(d)+'</td>';
     r+='<td>'+dB(ds)+'</td>';
     r+='<td><span class="sp '+sC(d.st)+'">'+sIcon(sC(d.st))+esc(d.st||'-')+'</span></td>';
     r+='<td>'+agStatusHTML(d)+'</td>';
