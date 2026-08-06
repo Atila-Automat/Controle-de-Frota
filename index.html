@@ -1564,10 +1564,14 @@ function renderMan(q,filtro){
   _fM=applySort(_fM,_manColsCurrent,_sort.man);
   if(!_fM.length){document.getElementById('rc').textContent='0 registros';document.getElementById('tc').innerHTML='<div class="empty">Nenhum registro de manutencao.</div>';return;}
   // Agrupa por Placa Cavalo (preservando a ordem ja aplicada pela ordenacao). Dentro de cada
-  // grupo, registros que tem a MESMA Placa Manutencao sao o mesmo item (normalmente linhas
-  // duplicadas/incompletas na planilha) e sao mesclados em uma unica linha, usando o primeiro
-  // valor nao vazio de cada campo. So sobra um botao "+" para expandir quando a placa cavalo
-  // tiver de fato mais de um item DISTINTO (Placas de Manutencao diferentes).
+  // grupo, registros que tem a MESMA Placa Manutencao E A MESMA Data de Chegada sao o mesmo
+  // item (normalmente linhas duplicadas/incompletas na planilha, ex: a mesma OS quebrada em
+  // 2 linhas) e sao mesclados em uma unica linha, usando o primeiro valor nao vazio de cada
+  // campo. A Data de Chegada entra na chave porque, quando o item em manutencao e o proprio
+  // Cavalo, a Placa em Manutencao fica igual a Placa Cavalo - sem a data, duas OS DISTINTAS
+  // do cavalo em datas diferentes (ex: uma finalizada e outra nova) seriam incorretamente
+  // tratadas como duplicadas e mescladas, perdendo a OS mais recente. So sobra um botao "+"
+  // para expandir quando a placa cavalo tiver de fato mais de um item DISTINTO.
   var grupos=[],gi={};
   _fM.forEach(function(m){
     var p=(m.pcav||'(sem placa)').toUpperCase().trim()||'(sem placa)';
@@ -1577,7 +1581,7 @@ function renderMan(q,filtro){
   grupos.forEach(function(g){
     var porPman={},ordem=[];
     g.itens.forEach(function(m){
-      var pk=(m.pman||m.pcav||'').toUpperCase().trim()||'(sem placa manut)';
+      var pk=((m.pman||m.pcav||'').toUpperCase().trim()||'(sem placa manut)')+'|'+(m.dtch||'').trim();
       if(!(pk in porPman)){porPman[pk]=[];ordem.push(pk);}
       porPman[pk].push(m);
     });
