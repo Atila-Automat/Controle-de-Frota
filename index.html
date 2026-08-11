@@ -152,6 +152,17 @@ body::before{
 .bref i{font-size:.74rem}
 .bref:hover{background:var(--brand-dark);transform:translateY(-1px);box-shadow:0 6px 16px rgba(242,102,30,.35)}
 .bref:active{transform:translateY(0) scale(.97)}
+.drbtn{
+  display:flex;align-items:center;gap:6px;
+  background:#ECFDF5;color:#065F46;
+  font-size:.72rem;font-weight:700;padding:6px 13px 6px 10px;border-radius:var(--r-pill);
+  border:1px solid #A7F3D0;text-transform:uppercase;letter-spacing:.04em;
+  box-shadow:var(--sh-sm);cursor:pointer;font-family:inherit;
+  transition:transform .12s ease,box-shadow .12s ease,background .12s ease;
+}
+.drbtn i{font-size:.72rem}
+.drbtn:hover{background:#D1FAE5;transform:translateY(-1px)}
+.drbtn:active{transform:translateY(0) scale(.97)}
 
 /* ── LAYOUT PRINCIPAL ──────────────────────────────────────────────── */
 .main{
@@ -609,8 +620,8 @@ tr.man-sub:hover td{background:#FFF3E9}
   @page{margin:8mm}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
   body *{visibility:hidden}
-  #ov-resumoman,#ov-resumoman *{visibility:visible}
-  #ov-resumoman{position:static!important;background:none!important;backdrop-filter:none!important;display:block!important;padding:0!important;z-index:1}
+  #ov-resumoman,#ov-resumoman *,#ov-diarias,#ov-diarias *{visibility:visible}
+  #ov-resumoman,#ov-diarias{position:static!important;background:none!important;backdrop-filter:none!important;display:block!important;padding:0!important;z-index:1}
   .side-panel{position:static!important;width:100%!important;max-width:100%!important;height:auto!important;box-shadow:none!important;animation:none!important;overflow:visible!important}
   .rm-header{position:static!important}
   .rm-header-actions,.rm-close{display:none!important}
@@ -695,6 +706,28 @@ tr.man-sub:hover td{background:#FFF3E9}
 @media(max-width:900px){.rm-cols2{grid-template-columns:1fr}.rm-kpis{grid-template-columns:repeat(2,1fr)}}
 
 .rm-table-wrap{max-height:340px;overflow-y:auto;border-radius:var(--r-sm);border:1px solid var(--border-soft)}
+.dr-filtros{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.dr-fgrp{display:flex;flex-direction:column;gap:5px}
+.dr-fgrp label{font-size:.64rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em}
+.dr-fgrp select,.dr-fgrp input[type=date]{font-family:inherit;font-size:.78rem;font-weight:600;color:var(--text-1);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;min-width:150px}
+.dr-fgrp select:focus,.dr-fgrp input[type=date]:focus{outline:none;border-color:var(--brand)}
+.dr-flimpar{display:flex;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--border);color:var(--text-2);font-size:.72rem;font-weight:700;padding:8px 13px;border-radius:var(--r-sm);cursor:pointer;font-family:inherit}
+.dr-flimpar:hover{background:var(--border-soft)}
+.dr-mdb-tag{display:inline-flex;align-items:center;font-size:.6rem;font-weight:800;color:#6D28D9;background:#EDE9FE;border:1px solid #DDD6FE;padding:1px 6px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em;margin-left:6px;vertical-align:middle}
+.dr-leg{display:flex;flex-direction:column;gap:2px;line-height:1.35}
+.dr-leg-dt{font-size:.68rem;color:var(--text-2);font-weight:600;white-space:nowrap}
+.dr-leg-dt i{color:var(--text-3);margin-right:3px;width:11px;text-align:center}
+.dr-badge{display:inline-flex;align-items:center;justify-content:center;min-width:30px;padding:2px 9px;border-radius:var(--r-pill);font-size:.74rem;font-weight:800;font-variant-numeric:tabular-nums}
+.dr-badge.grn{background:#DCFCE7;color:#166534}
+.dr-badge.amb{background:#FFFBEB;color:#92400E}
+.dr-badge.red{background:#FEE2E2;color:#DC2626}
+.dr-badge.gry{background:var(--bg);color:var(--text-3)}
+.dr-total-badge{font-size:.9rem;font-weight:800;color:var(--brand-dark)}
+.dr-empty{padding:40px 20px;text-align:center;color:var(--text-3);font-size:.82rem;font-weight:600}
+.dr-tfoot td{font-weight:800!important;color:var(--text-1)!important;background:var(--bg);border-top:2px solid var(--border)!important}
+@media print{
+  .dr-filtros{display:none!important}
+}
 .rm-table{width:100%;border-collapse:collapse;font-size:.78rem}
 .rm-table thead th{position:sticky;top:0;background:var(--bg);color:var(--text-2);font-weight:700;text-transform:uppercase;font-size:.64rem;letter-spacing:.05em;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
 .rm-table tbody td{padding:9px 12px;border-bottom:1px solid var(--border-soft);color:var(--text-1);font-weight:500}
@@ -733,8 +766,8 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
     <div class="tt"><h1>Painel Operacional da Frota</h1><p><i class="fa-solid fa-satellite-dish"></i>Monitoramento em Tempo Real</p></div>
   </div>
   <div class="tr">
-    <div class="live"><div class="ldot"></div>ao vivo</div>
     <button class="locbtn" id="btn-locplaca" onclick="abrirLocalizarPlaca()" style="display:none"><i class="fa-solid fa-magnifying-glass-location"></i>Localizar Placa</button>
+    <button class="drbtn" id="btn-diarias" onclick="abrirDiarias()"><i class="fa-solid fa-file-invoice-dollar"></i>Diárias</button>
     <span class="cd"><i class="fa-regular fa-clock"></i><span id="cd">Atualiza em 5:00</span></span>
     <button class="bref" onclick="buscar()"><i class="fa-solid fa-arrow-rotate-right"></i>Atualizar</button>
   </div>
@@ -939,6 +972,28 @@ button:focus-visible,input:focus-visible,th.th-sort:focus-visible{outline:2px so
       </div>
     </div>
     <div class="rm-body" id="rm-body"></div>
+  </div>
+</div>
+
+<!-- PAINEL LATERAL: CONSULTA DE DIARIAS -->
+<div class="overlay side-overlay" id="ov-diarias" onclick="fecharFora(event,'ov-diarias')">
+  <div class="side-panel" id="dr-panel">
+    <div class="rm-header">
+      <div class="rm-header-left">
+        <span class="rm-header-icon" style="background:rgba(16,185,129,.16);color:#10B981;border-color:rgba(16,185,129,.3)"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+        <div>
+          <div class="rm-header-title">Consulta de Diárias</div>
+          <div class="rm-header-sub" id="dr-sub">Carregando...</div>
+        </div>
+      </div>
+      <div class="rm-header-actions">
+        <button class="rm-action-btn" onclick="imprimirDiarias()" title="Imprimir"><i class="fa-solid fa-print"></i>Imprimir</button>
+        <button class="rm-action-btn" onclick="exportarCSVDiarias()" title="Exportar CSV"><i class="fa-solid fa-file-csv"></i>CSV</button>
+        <button class="rm-action-btn dl" id="dr-btn-img" onclick="baixarImagemDiarias()" title="Baixar como imagem"><i class="fa-solid fa-image"></i>Baixar Imagem</button>
+        <button class="rm-close" onclick="fechar('ov-diarias')" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="rm-body" id="dr-body"></div>
   </div>
 </div>
 
@@ -2180,9 +2235,225 @@ function baixarImagemResumoManut(){
 }
 
 
+// ═══════════════════════════════════════════════════════════════════
+// CONSULTA DE DIARIAS (aguardando carregamento + aguardando descarga)
+// ═══════════════════════════════════════════════════════════════════
+// Regra de contagem: cliente "M Dias Branco" tem contagem exclusiva dos
+// extremos (nao conta o dia de chegada nem o dia do evento seguinte);
+// os demais clientes contam de forma inclusiva (os dois extremos entram
+// na contagem). Ex.: chegou dia 9 e descarregou dia 11 -> M Dias Branco
+// conta 1 diaria (dia 10); demais clientes contam 3 diarias (9,10,11).
+// So entram na consulta viagens com carregamento E descarregamento ja
+// realizados (Data Carregamento e Data Descarregamento preenchidas).
+var DR_FILTRO={cli:'',de:'',ate:''};
+var DR_DATA_ALL=[];
+
+function diasCarregDiarias(d){
+  if(!d.d2||!d.d3)return null;
+  var dori=pD(d.d2),dcarr=pD(d.d3);
+  if(!dori||!dcarr)return null;
+  var df=Math.round((dcarr-dori)/86400000);
+  if(isMDiasBranco(d.cli))return df>1?df-1:0;
+  return df>=0?df+1:0;
+}
+function diasDescargaDiarias(d){
+  if(!d.d6||!d.d8)return null;
+  var ddst=pD(d.d6),ddesc=pD(d.d8);
+  if(!ddst||!ddesc)return null;
+  var df=Math.round((ddesc-ddst)/86400000);
+  if(isMDiasBranco(d.cli))return df>1?df-1:0;
+  return df>=0?df+1:0;
+}
+function totalDiariasViagem(d){return (diasCarregDiarias(d)||0)+(diasDescargaDiarias(d)||0);}
+
+function elegiveisDiarias(){
+  // Viagens com o ciclo completo: carregamento e descarregamento ja realizados.
+  return _D.filter(function(d){return d.d3&&d.d8;});
+}
+
+function abrirDiarias(){
+  DR_DATA_ALL=elegiveisDiarias();
+  popularClientesDiarias();
+  renderDiarias();
+  document.getElementById('ov-diarias').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function popularClientesDiarias(){
+  var sel=document.getElementById('dr-f-cli');
+  var atual=DR_FILTRO.cli;
+  var clientes={};
+  DR_DATA_ALL.forEach(function(d){if(d.cli)clientes[d.cli]=true;});
+  var lista=Object.keys(clientes).sort(function(a,b){return a.localeCompare(b,'pt-BR');});
+  var h='<option value="">Todos os clientes</option>';
+  lista.forEach(function(c){h+='<option value="'+esc(c)+'"'+(c===atual?' selected':'')+'>'+esc(c)+'</option>';});
+  if(sel){
+    sel.innerHTML=h;
+    if(lista.indexOf(atual)<0)DR_FILTRO.cli='';
+  }
+}
+
+function filtrarListaDiarias(){
+  return DR_DATA_ALL.filter(function(d){
+    if(DR_FILTRO.cli&&d.cli!==DR_FILTRO.cli)return false;
+    if(DR_FILTRO.de||DR_FILTRO.ate){
+      var dd=pD(d.d8);
+      if(!dd)return false;
+      var ddOnly=new Date(dd.getFullYear(),dd.getMonth(),dd.getDate());
+      if(DR_FILTRO.de){var de=new Date(DR_FILTRO.de+'T00:00:00');if(ddOnly<de)return false;}
+      if(DR_FILTRO.ate){var at=new Date(DR_FILTRO.ate+'T00:00:00');if(ddOnly>at)return false;}
+    }
+    return true;
+  }).sort(function(a,b){return (pD(b.d8)||0)-(pD(a.d8)||0);});
+}
+
+function aplicarFiltroDiarias(){
+  DR_FILTRO.cli=document.getElementById('dr-f-cli').value;
+  DR_FILTRO.de=document.getElementById('dr-f-de').value;
+  DR_FILTRO.ate=document.getElementById('dr-f-ate').value;
+  renderDiarias();
+}
+function limparFiltroDiarias(){
+  DR_FILTRO={cli:'',de:'',ate:''};
+  renderDiarias();
+}
+
+function diasBadgeClass(n){
+  if(n===null||n===undefined)return'gry';
+  if(n<=2)return'grn';
+  if(n<=5)return'amb';
+  return'red';
+}
+function diasBadgeHTML(n){
+  return '<span class="dr-badge '+diasBadgeClass(n)+'">'+(n===null?'-':n+'d')+'</span>';
+}
+
+function renderDiarias(){
+  var rows=filtrarListaDiarias();
+  document.getElementById('dr-sub').textContent=rows.length+' viagem(ns) concluida(s)'+(DR_FILTRO.cli?' - '+DR_FILTRO.cli:'')+' - atualizado agora';
+
+  var totalDiarias=0,maior=null;
+  rows.forEach(function(d){
+    var t=totalDiariasViagem(d);
+    totalDiarias+=t;
+    if(!maior||t>maior.t)maior={d:d,t:t};
+  });
+  var media=rows.length?Math.round((totalDiarias/rows.length)*10)/10:0;
+
+  var h='';
+  h+='<div class="dr-filtros">';
+  h+='<div class="dr-fgrp"><label>Cliente</label><select id="dr-f-cli" onchange="aplicarFiltroDiarias()"></select></div>';
+  h+='<div class="dr-fgrp"><label>Descarga de</label><input type="date" id="dr-f-de" value="'+esc(DR_FILTRO.de)+'" onchange="aplicarFiltroDiarias()"></div>';
+  h+='<div class="dr-fgrp"><label>Descarga ate</label><input type="date" id="dr-f-ate" value="'+esc(DR_FILTRO.ate)+'" onchange="aplicarFiltroDiarias()"></div>';
+  h+='<button class="dr-flimpar" onclick="limparFiltroDiarias()"><i class="fa-solid fa-eraser"></i>Limpar filtros</button>';
+  h+='</div>';
+
+  h+='<div class="rm-kpis">';
+  h+='<div class="rm-kpi blue"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-truck-fast"></i></span><span class="rm-kpi-lbl">Viagens<br>Concluidas</span></div><div class="rm-kpi-val">'+rows.length+'</div><div class="rm-kpi-sub">no filtro atual</div></div>';
+  h+='<div class="rm-kpi orange"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-calendar-days"></i></span><span class="rm-kpi-lbl">Total de<br>Diarias</span></div><div class="rm-kpi-val">'+totalDiarias+'</div><div class="rm-kpi-sub">soma de todas as viagens</div></div>';
+  h+='<div class="rm-kpi purple"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-chart-simple"></i></span><span class="rm-kpi-lbl">Media de Diarias<br>por Viagem</span></div><div class="rm-kpi-val">'+media+'</div><div class="rm-kpi-sub">'+rows.length+' viagem(ns)</div></div>';
+  h+='<div class="rm-kpi red"><div class="rm-kpi-top"><span class="rm-kpi-icon"><i class="fa-solid fa-triangle-exclamation"></i></span><span class="rm-kpi-lbl">Maior Diaria<br>Individual</span></div><div class="rm-kpi-val">'+(maior?maior.t+'d':'-')+'</div><div class="rm-kpi-sub">'+(maior?esc(maior.d.placa||'-'):'sem dados')+'</div></div>';
+  h+='</div>';
+
+  h+='<div class="rm-card">';
+  h+='<div class="rm-dcard-head"><div class="rm-section-title" style="margin-bottom:0"><i class="fa-solid fa-list-check"></i>Diarias por Viagem</div></div>';
+  if(!rows.length){
+    h+='<div class="dr-empty">Nenhuma viagem concluida encontrada com esses filtros.</div>';
+  }else{
+    h+='<div class="rm-table-wrap"><table class="rm-table"><thead><tr>';
+    h+='<th>Cliente</th><th>Placa</th><th>Motorista</th><th>Remessa / CTE</th><th>Ag. Carregamento</th><th>Ag. Descarga</th><th>Total</th>';
+    h+='</tr></thead><tbody>';
+    rows.forEach(function(d){
+      var dc=diasCarregDiarias(d),dd=diasDescargaDiarias(d),tot=(dc||0)+(dd||0);
+      var mdb=isMDiasBranco(d.cli);
+      h+='<tr>';
+      h+='<td>'+esc(d.cli||'-')+(mdb?'<span class="dr-mdb-tag">M Dias</span>':'')+'</td>';
+      h+='<td><b>'+esc(d.placa||'-')+'</b></td>';
+      h+='<td>'+esc(d.mot||'-')+'</td>';
+      h+='<td>'+esc(d.rem||'-')+(d.cte?' / '+esc(d.cte):'')+'</td>';
+      h+='<td><div class="dr-leg"><span class="dr-leg-dt"><i class="fa-solid fa-location-dot"></i>'+fD(d.d2)+' &rarr; '+fD(d.d3)+'</span>'+diasBadgeHTML(dc)+'</div></td>';
+      h+='<td><div class="dr-leg"><span class="dr-leg-dt"><i class="fa-solid fa-flag-checkered"></i>'+fD(d.d6)+' &rarr; '+fD(d.d8)+'</span>'+diasBadgeHTML(dd)+'</div></td>';
+      h+='<td><span class="dr-total-badge">'+tot+'d</span></td>';
+      h+='</tr>';
+    });
+    h+='</tbody><tfoot><tr class="dr-tfoot"><td colspan="6" style="text-align:right">Total de diarias no filtro</td><td>'+totalDiarias+'d</td></tr></tfoot>';
+    h+='</table></div>';
+  }
+  h+='</div>';
+
+  document.getElementById('dr-body').innerHTML=h;
+  popularClientesDiarias();
+}
+
+function imprimirDiarias(){window.print();}
+
+function csvSafeField(s){
+  s=String(s===null||s===undefined?'':s);
+  if(s.indexOf(';')>=0||s.indexOf('"')>=0||s.indexOf('\n')>=0){s='"'+s.replace(/"/g,'""')+'"';}
+  return s;
+}
+function exportarCSVDiarias(){
+  var rows=filtrarListaDiarias();
+  if(!rows.length){mostrarToast('Nenhum registro para exportar com esses filtros.');return;}
+  var header=['Cliente','Placa','Motorista','Remessa','CTE','Chegada Origem','Data Carregamento','Dias Ag. Carregamento','Chegada Destino','Data Descarregamento','Dias Ag. Descarga','Total Dias'];
+  var linhas=[header.join(';')];
+  var totalDiarias=0;
+  rows.forEach(function(d){
+    var dc=diasCarregDiarias(d),dd=diasDescargaDiarias(d),tot=(dc||0)+(dd||0);
+    totalDiarias+=tot;
+    linhas.push([
+      csvSafeField(d.cli),csvSafeField(d.placa),csvSafeField(d.mot),csvSafeField(d.rem),csvSafeField(d.cte),
+      fD(d.d2),fD(d.d3),dc===null?'-':dc,
+      fD(d.d6),fD(d.d8),dd===null?'-':dd,
+      tot
+    ].join(';'));
+  });
+  linhas.push(['TOTAL','','','','','','','','','','',totalDiarias].join(';'));
+  var csv='\uFEFF'+linhas.join('\r\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var link=document.createElement('a');
+  var stamp=new Date().toISOString().slice(0,10);
+  link.href=URL.createObjectURL(blob);
+  link.download='diarias-'+stamp+'.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
+}
+
+function baixarImagemDiarias(){
+  if(typeof html2canvas==='undefined'){
+    mostrarToast('Nao foi possivel carregar o gerador de imagem. Verifique sua conexao e tente novamente.');
+    return;
+  }
+  var btn=document.getElementById('dr-btn-img');
+  var painel=document.getElementById('dr-panel');
+  var alvo=document.getElementById('dr-body');
+  var textoOrig=btn.innerHTML;
+  btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>Gerando...';
+  btn.disabled=true;
+  painel.classList.add('rm-capturing');
+  html2canvas(alvo,{backgroundColor:'#F5F7FA',scale:2,useCORS:true,height:alvo.scrollHeight,windowHeight:alvo.scrollHeight}).then(function(canvas){
+    var link=document.createElement('a');
+    var stamp=new Date().toISOString().slice(0,10);
+    link.download='diarias-'+stamp+'.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    painel.classList.remove('rm-capturing');
+    btn.innerHTML=textoOrig;
+    btn.disabled=false;
+  }).catch(function(err){
+    console.error('Falha ao gerar imagem da consulta de diarias:',err);
+    mostrarToast('Nao foi possivel gerar a imagem. Tente novamente.');
+    painel.classList.remove('rm-capturing');
+    btn.innerHTML=textoOrig;
+    btn.disabled=false;
+  });
+}
+
 function fechar(id){document.getElementById(id).classList.remove('show');document.body.style.overflow='';}
 function fecharFora(ev,id){if(ev.target===document.getElementById(id))fechar(id);}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');fechar('ov-loc');fechar('ov-resumoman');}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){fechar('ov-via');fechar('ov-man');fechar('ov-loc');fechar('ov-resumoman');fechar('ov-diarias');}});
 var seg=300;
 setInterval(function(){seg--;if(seg<=0){seg=300;buscar();}var m=Math.floor(seg/60),s=seg%60;document.getElementById('cd').textContent='Atualiza em '+m+':'+(s<10?'0':'')+s;},1000);
 
