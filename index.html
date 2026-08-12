@@ -1473,9 +1473,13 @@ function renderVaz(q){
 }
 
 function calcDias(d){
+  // Contagem inclusiva: conta o dia de entrada no status ATE hoje, incluindo os dois
+  // extremos. Ex.: entrou no status dia 10/08 e hoje e dia 12/08 -> 10,11,12 = 3 dias.
+  // (Regra vale so para os cards do painel principal; a Consulta de Diarias tem sua
+  // propria contagem, com excecao especifica pro cliente M Dias Branco, e nao muda aqui.)
   var r=getDataStatus(d);if(!r)return null;
   var dt=pD(r);if(!dt)return null;
-  var hj=hoje();var df=Math.round((hj-dt)/86400000);return df>0?df-1:0;
+  var hj=hoje();var df=Math.round((hj-dt)/86400000);return df>=0?df+1:0;
 }
 function dB(n){if(n===null)return'<span class="dk-n">-</span>';if(n<=2)return'<span class="dk dk-ok">'+n+'d</span>';if(n<=6)return'<span class="dk dk-w">'+n+'d</span>';return'<span class="dk dk-a">'+n+'d</span>';}
 function dkMan(n){if(n===null)return'<span class="dk-n">-</span>';var cl=n<1?'dk-ok':(n<=2?'dk-w':'dk-a');return'<span class="dk '+cl+'">'+n+'d</span>';}
