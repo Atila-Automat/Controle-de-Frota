@@ -1325,12 +1325,27 @@ function abrirLocalizarPlaca(){
 
 // Retorna a linha "vazio" de cada placa cuja ULTIMA informacao incluida na planilha
 // tem status Vazio, e que NAO esta em manutencao ativa (manutencao tem prioridade sobre vazio)
+// Retorna se a placa esta com status "Ativada" na planilha Frota. Se a placa nao for
+// encontrada na Frota (planilha ainda nao carregou ou linha ausente), assume ativa=true
+// por seguranca, para nao esconder indevidamente uma placa valida por falta de dado.
+function ativaFrota(placa){
+  if(!_F||!_F.length)return true;
+  var p=(placa||'').toUpperCase();
+  for(var i=0;i<_F.length;i++){if(_F[i].placa===p)return _F[i].ativa;}
+  return true;
+}
 function calcVazios(){
   // Placas com OS de manutencao em aberto (sem data de finalizacao)
   var placasManut=_M.filter(function(m){return !m.dtfin;}).map(function(m){return (m.pcav||'').replace(/-/g,'');});
   return ultimaPorPlaca().filter(function(d){
     if(placasManut.indexOf(d.placa)>=0)return false;
-    return mSt(d.st,'vaz');
+    if(!mSt(d.st,'vaz'))return false;
+    // Placa com status diferente de "Ativada" na planilha Frota (ex: vendida, baixada) sai do
+    // card Vazios - fica so como historico na planilha/Localizar Placa, ja que nao faz mais
+    // parte da frota disponivel. Nao afeta os demais cards (Em Viagem, Manutencao etc.): a
+    // placa continua aparecendo neles normalmente ate chegar ao estagio Vazio.
+    if(!ativaFrota(d.placa))return false;
+    return true;
   });
 }
 
