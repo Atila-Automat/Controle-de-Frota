@@ -1213,9 +1213,6 @@ function ultimaPorPlaca(lista){
   return Object.keys(porPlaca).map(function(p){return porPlaca[p];});
 }
 function aCards(u,n){
-  var tot=u?n:(_D.length+_M.length);_tot=tot;
-  document.getElementById('v-tot').textContent=tot;
-  document.getElementById('p-tot').textContent='100%';
   var ultimos=ultimaPorPlaca();
   var nevc=ultimos.filter(function(d){return mSt(d.st,'evc');}).length;
   var nagc=ultimos.filter(function(d){return mSt(d.st,'agc');}).length;
@@ -1255,6 +1252,12 @@ function aCards(u,n){
   });
   // Vazios com historico
   var nvaz=calcVazios().length;
+  // Total Veiculos: conta APENAS as placas com status "Ativada" na planilha Frota (contagem
+  // simples, independente de terem ou nao programacao/manutencao no momento).
+  var tot=(_F&&_F.length)?_F.filter(function(f){return f.ativa;}).length:(u?n:(_D.length+_M.length));
+  _tot=tot;
+  document.getElementById('v-tot').textContent=tot;
+  document.getElementById('p-tot').textContent='100%';
   document.getElementById('v-evc').textContent=nevc;document.getElementById('p-evc').textContent=pct(nevc);
   document.getElementById('v-agc').textContent=nagc;document.getElementById('p-agc').textContent=pct(nagc);
   document.getElementById('v-agi').textContent=nagi;document.getElementById('p-agi').textContent=pct(nagi);
@@ -1555,9 +1558,20 @@ function toggleManStatusF(key){
 
 function renderVia(k,q){
   var buscando=k==='tot'&&!!q;
+  // Placas com OS de manutencao em aberto (sem data de finalizacao) - usado abaixo pra nao
+  // esconder do card Total uma placa inativa que ainda esta em manutencao (mesma logica do
+  // calcVazios).
+  var placasManutAberta=_M.filter(function(m){return !m.dtfin;}).map(function(m){return (m.pcav||'').replace(/-/g,'');});
   _fV=ultimaPorPlaca().filter(function(d){
     if(!buscando&&mSt(d.st,'vaz')&&!_vaz)return false;
     if(k!=='tot'&&!mSt(d.st,k))return false;
+    // No card Total Veiculos (incluindo quando ha busca), uma placa com status Vazio e que
+    // esta com status diferente de "Ativada" na Frota (ex: vendida) e sem manutencao aberta
+    // nao deve aparecer - ela ja nao faz mais parte da frota disponivel, entao nao mostramos
+    // a ultima programacao dela como se estivesse "Vazio"/disponivel. Mesma regra do card
+    // Vazios, so que aplicada aqui tambem quando ha busca por texto (que antes ignorava esse
+    // filtro).
+    if(k==='tot'&&mSt(d.st,'vaz')&&placasManutAberta.indexOf(d.placa)<0&&!ativaFrota(d.placa))return false;
     if(!buscando&&_ivF==='ida'&&(d.iv||'').toLowerCase()!=='ida')return false;
     if(!buscando&&_ivF==='volta'&&(d.iv||'').toLowerCase()!=='volta')return false;
     if(q&&(d.cli+d.placa+d.mot+d.rem+d.prod+d.ori+d.dst+d.cte).toLowerCase().indexOf(q)<0)return false;
