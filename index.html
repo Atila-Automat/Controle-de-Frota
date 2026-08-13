@@ -705,7 +705,7 @@ tr.man-sub:hover td{background:#FFF3E9}
 .rm-cols2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:900px){.rm-cols2{grid-template-columns:1fr}.rm-kpis{grid-template-columns:repeat(2,1fr)}}
 
-.rm-table-wrap{max-height:340px;overflow-y:auto;border-radius:var(--r-sm);border:1px solid var(--border-soft)}
+.rm-table-wrap{border-radius:var(--r-sm);border:1px solid var(--border-soft)}
 .dr-filtros{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
 .dr-fgrp{display:flex;flex-direction:column;gap:5px}
 .dr-fgrp label{font-size:.64rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em}
@@ -713,24 +713,26 @@ tr.man-sub:hover td{background:#FFF3E9}
 .dr-fgrp select:focus,.dr-fgrp input[type=date]:focus{outline:none;border-color:var(--brand)}
 .dr-flimpar{display:flex;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--border);color:var(--text-2);font-size:.72rem;font-weight:700;padding:8px 13px;border-radius:var(--r-sm);cursor:pointer;font-family:inherit}
 .dr-flimpar:hover{background:var(--border-soft)}
-.dr-mdb-tag{display:inline-flex;align-items:center;font-size:.6rem;font-weight:800;color:#6D28D9;background:#EDE9FE;border:1px solid #DDD6FE;padding:1px 6px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em;margin-left:6px;vertical-align:middle}
-.dr-leg{display:flex;flex-direction:column;gap:2px;line-height:1.35}
-.dr-leg-dt{font-size:.68rem;color:var(--text-2);font-weight:600;white-space:nowrap}
-.dr-leg-dt i{color:var(--text-3);margin-right:3px;width:11px;text-align:center}
-.dr-badge{display:inline-flex;align-items:center;justify-content:center;min-width:30px;padding:2px 9px;border-radius:var(--r-pill);font-size:.74rem;font-weight:800;font-variant-numeric:tabular-nums}
+.dr-mdb-tag{display:inline-flex;align-items:center;font-size:.58rem;font-weight:800;color:#6D28D9;background:#EDE9FE;border:1px solid #DDD6FE;padding:1px 5px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em;margin-left:5px;vertical-align:middle}
+.dr-leg{display:flex;flex-direction:column;gap:1px;line-height:1.3}
+.dr-leg-dt{font-size:.66rem;color:var(--text-2);font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.dr-leg-dt i{color:var(--text-3);width:10px;text-align:center;flex-shrink:0}
+.dr-leg-loc{font-size:.66rem;color:var(--text-3);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.dr-tipo-tag{display:inline-flex;align-items:center;font-size:.66rem;font-weight:700;color:var(--text-2);background:var(--bg);border:1px solid var(--border-soft);padding:2px 7px;border-radius:6px;white-space:nowrap}
+.dr-badge{display:inline-flex;align-items:center;justify-content:center;min-width:26px;padding:1px 8px;border-radius:var(--r-pill);font-size:.7rem;font-weight:800;font-variant-numeric:tabular-nums}
 .dr-badge.grn{background:#DCFCE7;color:#166534}
 .dr-badge.amb{background:#FFFBEB;color:#92400E}
 .dr-badge.red{background:#FEE2E2;color:#DC2626}
 .dr-badge.gry{background:var(--bg);color:var(--text-3)}
-.dr-total-badge{font-size:.9rem;font-weight:800;color:var(--brand-dark)}
+.dr-total-badge{font-size:.84rem;font-weight:800;color:var(--brand-dark)}
 .dr-empty{padding:40px 20px;text-align:center;color:var(--text-3);font-size:.82rem;font-weight:600}
 .dr-tfoot td{font-weight:800!important;color:var(--text-1)!important;background:var(--bg);border-top:2px solid var(--border)!important}
 @media print{
   .dr-filtros{display:none!important}
 }
-.rm-table{width:100%;border-collapse:collapse;font-size:.78rem}
-.rm-table thead th{position:sticky;top:0;background:var(--bg);color:var(--text-2);font-weight:700;text-transform:uppercase;font-size:.64rem;letter-spacing:.05em;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
-.rm-table tbody td{padding:9px 12px;border-bottom:1px solid var(--border-soft);color:var(--text-1);font-weight:500}
+.rm-table{width:100%;border-collapse:collapse;font-size:.74rem}
+.rm-table thead th{position:sticky;top:0;background:var(--bg);color:var(--text-2);font-weight:700;text-transform:uppercase;font-size:.6rem;letter-spacing:.04em;padding:6px 9px;text-align:left;border-bottom:1px solid var(--border)}
+.rm-table tbody td{padding:5px 9px;border-bottom:1px solid var(--border-soft);color:var(--text-1);font-weight:500}
 .rm-table tbody tr:last-child td{border-bottom:none}
 .rm-table tbody tr:hover{background:var(--bg)}
 .rm-days-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-pill);font-size:.72rem;font-weight:800}
@@ -2394,7 +2396,7 @@ function renderDiarias(){
     h+='<div class="dr-empty">Nenhuma viagem concluida encontrada com esses filtros.</div>';
   }else{
     h+='<div class="rm-table-wrap"><table class="rm-table"><thead><tr>';
-    h+='<th>Cliente</th><th>Placa</th><th>Motorista</th><th>Remessa / CTE</th><th>Ag. Carregamento</th><th>Ag. Descarga</th><th>Total</th>';
+    h+='<th>Cliente</th><th>Placa</th><th>Tipo</th><th>Motorista</th><th>Remessa/CTE</th><th>Ag. Carregamento</th><th>Ag. Descarga</th><th>Total</th>';
     h+='</tr></thead><tbody>';
     rows.forEach(function(d){
       var dc=diasCarregDiarias(d),dd=diasDescargaDiarias(d),tot=(dc||0)+(dd||0);
@@ -2402,14 +2404,15 @@ function renderDiarias(){
       h+='<tr>';
       h+='<td>'+esc(d.cli||'-')+(mdb?'<span class="dr-mdb-tag">M Dias</span>':'')+'</td>';
       h+='<td><b>'+esc(d.placa||'-')+'</b></td>';
+      h+='<td><span class="dr-tipo-tag">'+esc(d.tipo||'-')+'</span></td>';
       h+='<td>'+esc(d.mot||'-')+'</td>';
       h+='<td>'+esc(d.rem||'-')+(d.cte?' / '+esc(d.cte):'')+'</td>';
-      h+='<td><div class="dr-leg"><span class="dr-leg-dt"><i class="fa-solid fa-location-dot"></i>'+fD(d.d2)+' &rarr; '+fD(d.d3)+'</span>'+diasBadgeHTML(dc)+'</div></td>';
-      h+='<td><div class="dr-leg"><span class="dr-leg-dt"><i class="fa-solid fa-flag-checkered"></i>'+fD(d.d6)+' &rarr; '+fD(d.d8)+'</span>'+diasBadgeHTML(dd)+'</div></td>';
+      h+='<td><div class="dr-leg"><span class="dr-leg-dt"><i class="fa-solid fa-location-dot"></i>'+fD(d.d2)+' &rarr; '+fD(d.d3)+diasBadgeHTML(dc)+'</span><span class="dr-leg-loc" title="'+esc(d.ori||'')+'">'+esc(d.ori||'-')+'</span></div></td>';
+      h+='<td><div class="dr-leg"><span class="dr-leg-dt"><i class="fa-solid fa-flag-checkered"></i>'+fD(d.d6)+' &rarr; '+fD(d.d8)+diasBadgeHTML(dd)+'</span><span class="dr-leg-loc" title="'+esc(d.dst||'')+'">'+esc(d.dst||'-')+'</span></div></td>';
       h+='<td><span class="dr-total-badge">'+tot+'d</span></td>';
       h+='</tr>';
     });
-    h+='</tbody><tfoot><tr class="dr-tfoot"><td colspan="6" style="text-align:right">Total de diarias no filtro</td><td>'+totalDiarias+'d</td></tr></tfoot>';
+    h+='</tbody><tfoot><tr class="dr-tfoot"><td colspan="7" style="text-align:right">Total de diarias no filtro</td><td>'+totalDiarias+'d</td></tr></tfoot>';
     h+='</table></div>';
   }
   h+='</div>';
@@ -2428,20 +2431,20 @@ function csvSafeField(s){
 function exportarCSVDiarias(){
   var rows=filtrarListaDiarias();
   if(!rows.length){mostrarToast('Nenhum registro para exportar com esses filtros.');return;}
-  var header=['Cliente','Placa','Motorista','Remessa','CTE','Chegada Origem','Data Carregamento','Dias Ag. Carregamento','Chegada Destino','Data Descarregamento','Dias Ag. Descarga','Total Dias'];
+  var header=['Cliente','Placa','Tipo Veiculo','Motorista','Remessa','CTE','Origem','Chegada Origem','Data Carregamento','Dias Ag. Carregamento','Destino','Chegada Destino','Data Descarregamento','Dias Ag. Descarga','Total Dias'];
   var linhas=[header.join(';')];
   var totalDiarias=0;
   rows.forEach(function(d){
     var dc=diasCarregDiarias(d),dd=diasDescargaDiarias(d),tot=(dc||0)+(dd||0);
     totalDiarias+=tot;
     linhas.push([
-      csvSafeField(d.cli),csvSafeField(d.placa),csvSafeField(d.mot),csvSafeField(d.rem),csvSafeField(d.cte),
-      fD(d.d2),fD(d.d3),dc===null?'-':dc,
-      fD(d.d6),fD(d.d8),dd===null?'-':dd,
+      csvSafeField(d.cli),csvSafeField(d.placa),csvSafeField(d.tipo),csvSafeField(d.mot),csvSafeField(d.rem),csvSafeField(d.cte),
+      csvSafeField(d.ori),fD(d.d2),fD(d.d3),dc===null?'-':dc,
+      csvSafeField(d.dst),fD(d.d6),fD(d.d8),dd===null?'-':dd,
       tot
     ].join(';'));
   });
-  linhas.push(['TOTAL','','','','','','','','','','',totalDiarias].join(';'));
+  linhas.push(['TOTAL','','','','','','','','','','','','','',totalDiarias].join(';'));
   var csv='\uFEFF'+linhas.join('\r\n');
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   var link=document.createElement('a');
